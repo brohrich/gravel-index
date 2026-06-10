@@ -353,24 +353,24 @@
   </div>
   <div class="fitpanel" id="fitpanel">
     <div class="fitpanel-head">
-      <div><span class="fp-title"><span class="dot">◎</span> Your fit target</span><span class="fp-sub">where you want the bars — from the bottom bracket</span></div>
+      <div><span class="fp-title"><span class="dot">◎</span> Your reference fit</span><span class="fp-sub">the published Stack/Reach of a bike you know fits</span></div>
       <div class="fp-presets">
-        <button class="fp-reset" onclick="setPreset('2017')">↺ 2017 fit (484 / 620)</button>
-        <button class="fp-reset fp-current" onclick="setPreset('current')">◎ Current me (450 / 625)</button>
+        <button class="fp-reset fp-current" onclick="setPreset('current')">◎ My bikes (555 / 379)</button>
+        <button class="fp-reset" onclick="setPreset('journeyer')">↺ Journeyer (552 / 372)</button>
       </div>
     </div>
     <div class="fitpanel-controls">
       <div class="fp-slider">
-        <label>Reach (bars from BB) <b id="reachVal">484</b> mm</label>
-        <input type="range" id="reachSlider" min="420" max="510" step="1" value="484" />
-        <span class="fp-hint">your bikes: SuperSix+80mm ≈449 · Otso+100mm ≈472 · Journeyer ≈435 · 2017 = 484</span>
+        <label>Reference Reach <b id="reachVal">379</b> mm</label>
+        <input type="range" id="reachSlider" min="360" max="400" step="1" value="379" />
+        <span class="fp-hint">your SuperSix 379 · Otso 385 · Journeyer 372 — longer = more stretched</span>
       </div>
       <div class="fp-slider">
-        <label>Bar height (from BB) <b id="stackVal">620</b> mm</label>
-        <input type="range" id="stackSlider" min="575" max="665" step="1" value="620" />
-        <span class="fp-hint">2017 = 620 · higher = more upright (good for less flexibility)</span>
+        <label>Reference Stack <b id="stackVal">555</b> mm</label>
+        <input type="range" id="stackSlider" min="530" max="590" step="1" value="555" />
+        <span class="fp-hint">your bikes ≈ 555 — taller = bars sit higher</span>
       </div>
-      <p class="fp-explain">These two sliders are <b>where your hands actually sit, measured from the bottom bracket</b> — the same X/Y your 2017 fit reported (484 / 620). Set them to a position you know: e.g. <b>450</b> ≈ your SuperSix with today's 80mm stem. For each bike the tool then works out the <b>stem</b> to land that reach and the <b>spacers</b> (stack above the head tube) to land that height — and flags a frame that's <b>too tall to get your bars low enough</b>. The <b>2017 fit</b> preset is your measured position; <b>Current me</b> is your shorter, slightly higher position today. Estimates, not a substitute for a fitting.</p>
+      <p class="fp-explain">These are the <b>published Stack &amp; Reach</b> (same numbers every bike lists) of a bike you <b>know</b> fits. Default = your <b>SuperSix / Otso, 555 / 379</b>. Each card then shows that bike's published Stack/Reach for the closest size and <b>how far it is from your reference</b> — e.g. "+9 reach" means 9 mm longer, so you'd run a ~10 mm shorter stem. You only need to move these to explore a <b>different</b> fit than your current bikes — like the shorter Journeyer (372 reach). Otherwise leave them and just read the gaps.</p>
       <div class="fp-note">↕ <b>Saddle height &amp; crank length move together.</b> A shorter crank drops the pedal at the bottom of the stroke, so raise your saddle by the same amount to keep leg extension — from 172.5&nbsp;mm: 170 = <b>+2.5&nbsp;mm</b>, 165 = <b>+7.5&nbsp;mm</b>, 160 = <b>+12.5&nbsp;mm</b> saddle. Each size here ships a different stock crank, so when a size-down also shortens the crank, plan to re-set saddle height. Your reference: <b>172.5&nbsp;mm cranks, saddle ≈ 71&nbsp;cm</b> (BB → saddle top, approx. from the Journeyer demo).</div>
       <div class="fp-ref">
         <div class="fp-ref-title">Your bikes &amp; demos — what they taught us</div>
@@ -384,7 +384,7 @@
             <tr><td>Journeyer demo — 53</td><td>552 / 372</td><td>69.5°</td><td>38</td><td>confident ✓</td></tr>
           </tbody>
         </table>
-        <div class="fp-ref-note">Your SuperSix and Otso are <b>nearly the same fit</b> (555 / ~380) yet descend completely differently — that's the <b>1.6° slacker head angle + bigger tires</b>, not reach (an 80mm stem didn't fix the SuperSix). For <b>reach</b>: your 2017 hands sat at X≈484 / Y≈620; the Journeyer's short stem brought them <b>~40mm closer at the same height</b>. So — short stem for reach; slack HTA + big tires for descending.</div>
+        <div class="fp-ref-note">Your SuperSix and Otso have <b>nearly the same published fit</b> (555 / ~380) yet descend completely differently — that's the <b>1.6° slacker head angle + bigger tires</b>, not reach (an 80mm stem didn't fix the SuperSix). The Journeyer you liked was a touch shorter (552 / 372). So — pick a frame near your reference Stack/Reach, fine-tune reach with stem length, and chase <b>slack HTA + big tires</b> for descending.</div>
       </div>
     </div>
   </div>
@@ -679,35 +679,31 @@ function crankDisp(c){
   if(c==="—"||c==="?"||c==="unverified") return "unverified";
   return c+" mm";
 }
-// Target is the EFFECTIVE bar position from the BB: t.reach = horizontal (X), t.stack = height (Y).
-// For a frame with reach R / stack S: stem ≈ (targetX − R)/0.87 ; aboveHT = targetY − S (headset+spacers+stem stack).
-const STEM_K = 0.87;
+// Compare a frame's PUBLISHED stack/reach to the rider's reference fit box (t.stack / t.reach).
+// reachGap/stackGap are in the same published mm as every bike's spec sheet.
+const STEM_K = 0.87; // ~horizontal fraction of a stem's length
 function fitForRow(g, t){
   const S = parseFloat(g[1]), R = parseFloat(g[2]);
   if(isNaN(S) || isNaN(R)) return null;
-  const stem = Math.round(((t.reach - R)/STEM_K)/5)*5; // stem to land the bars at target reach
-  const aboveHT = Math.round(t.stack - S);             // stack above the head tube needed to hit target height
-  let stemPen;
-  if(stem < 60 || stem > 135) stemPen = 40 + Math.abs(stem-95)*0.5;
-  else if(stem < 80) stemPen = (80-stem)*0.8;
-  else if(stem > 115) stemPen = (stem-115)*0.8;
-  else stemPen = 0;
-  let stackPen;
-  if(aboveHT < 25) stackPen = (25-aboveHT)*1.6;        // frame runs tall — bars can't get low enough
-  else if(aboveHT > 95) stackPen = (aboveHT-95)*1.0;   // big spacer tower
-  else stackPen = Math.abs(aboveHT-63)*0.08;
-  const cost = stemPen + stackPen + Math.max(0, 25-aboveHT)*0.1;
+  const reachGap = Math.round(R - t.reach);   // +ve = this frame is LONGER than your reference
+  const stackGap = Math.round(S - t.stack);   // +ve = this frame is TALLER than your reference
+  const stemDelta = -Math.round((reachGap/STEM_K)/5)*5; // stem change vs your current (−ve = shorter)
+  const cost = Math.abs(stackGap) + 0.5*Math.abs(reachGap) + Math.max(0, stackGap-20)*0.4;
+  const ar = Math.abs(reachGap);
   let verdict;
-  if(stem>=80 && stem<=120 && aboveHT>=35 && aboveHT<=92) verdict="good";
-  else if(stem>=68 && stem<=130 && aboveHT>=18 && aboveHT<=108) verdict="ok";
+  if(ar<=12 && stackGap>=-22 && stackGap<=18) verdict="good";
+  else if(ar<=25 && stackGap>=-45 && stackGap<=38) verdict="ok";
   else verdict="poor";
-  return { S, R, stem, aboveHT, cost, verdict, crank:g[6] };
+  return { S, R, reachGap, stackGap, stemDelta, cost, verdict, crank:g[6] };
 }
-function spacerNote(a){
-  if(a < 25) return "frame runs tall — slammed, limited drop";
-  if(a < 45) return "low spacer stack";
-  if(a <= 92) return "normal spacers";
-  return "tall spacer stack";
+function stemHint(d){
+  if(d===0) return "~same stem as your current";
+  return "~"+Math.abs(d)+"mm "+(d<0?"shorter":"longer")+" stem than your current";
+}
+function stackHint(g){
+  if(g>=18) return "front ~"+g+"mm taller (bars higher)";
+  if(g<=-15) return "front ~"+Math.abs(g)+"mm lower (add spacers)";
+  return "~same bar height";
 }
 function bestFit(b, t){
   const fits = b.geo.map((g,i)=>{ const f=fitForRow(g,t); return f?Object.assign(f,{idx:i, size:g[0]}):null; }).filter(Boolean);
@@ -732,7 +728,7 @@ function descendInfo(b){
   return { label, cls, score, hta:h };
 }
 
-const state = { q:"", sort:"fit", filters:new Set(), compare:new Set(), target:{ reach:484, stack:620 } }; // effective bar position from BB (X reach, Y height)
+const state = { q:"", sort:"fit", filters:new Set(), compare:new Set(), target:{ reach:379, stack:555 } }; // reference frame stack/reach (default = the rider's SuperSix/Otso)
 const MAX_COMPARE = 4;
 const grid = document.getElementById('grid');
 const ctEl = document.getElementById('ct');
@@ -794,8 +790,8 @@ function render(){
     const di = descendInfo(b);
     const fitHtml = bf
       ? `<div class="fitblock ${bf.verdict}">
-           <div class="fl1"><span class="fitsize">Best fit: <b>${bf.size}</b></span><span class="fitdot ${bf.verdict}"></span></div>
-           <div class="fitmeta"><span class="em">≈${bf.stem}mm stem</span> to hit your reach · stock crank <span class="em">${crankDisp(bf.crank)}</span><br>${spacerNote(bf.aboveHT)} (bars ${bf.aboveHT}mm above head tube)</div>
+           <div class="fl1"><span class="fitsize">Closest size: <b>${bf.size}</b> · <span class="em">${bf.S} / ${bf.R}</span></span><span class="fitdot ${bf.verdict}"></span></div>
+           <div class="fitmeta">vs your <span class="em">${state.target.stack}/${state.target.reach}</span>: <span class="em">${bf.reachGap>=0?'+':''}${bf.reachGap} reach · ${bf.stackGap>=0?'+':''}${bf.stackGap} stack</span><br>→ ${stemHint(bf.stemDelta)}${Math.abs(bf.stackGap)>=15?' · '+stackHint(bf.stackGap):''}</div>
          </div>`
       : `<div class="fitblock"><div class="fitnone">Geometry unverified — fit can't be computed</div></div>`;
     card.innerHTML = `
@@ -832,13 +828,14 @@ function openModal(idx){
   const geoRows = b.geo.map((g,i)=>{
     const f = fitForRow(g, t);
     const isRec = bf && bf.idx===i;
-    const stemCell = f ? `≈${f.stem}` : '—';
+    const gapCell = f ? `${f.reachGap>=0?'+':''}${f.reachGap} / ${f.stackGap>=0?'+':''}${f.stackGap}` : '—';
+    const stemCell = f ? (f.stemDelta===0?'0' : (f.stemDelta<0?'−':'+')+Math.abs(f.stemDelta)) : '—';
     const fitCell = f ? `<span class="fitpill ${f.verdict}">${f.verdict}</span>` : '—';
-    return `<tr class="${isRec?'rec':''}"><td>${g[0]}${isRec?' ◀':''}</td><td>${g[1]}</td><td>${g[2]}</td><td>${g[3]}</td><td>${g[4]}</td><td>${g[5]}</td><td>${crankDisp(g[6])}</td><td>${stemCell}</td><td>${fitCell}</td></tr>`;
+    return `<tr class="${isRec?'rec':''}"><td>${g[0]}${isRec?' ◀':''}</td><td>${g[1]}</td><td>${g[2]}</td><td>${g[3]}</td><td>${g[4]}</td><td>${g[5]}</td><td>${crankDisp(g[6])}</td><td>${gapCell}</td><td>${stemCell}</td><td>${fitCell}</td></tr>`;
   }).join('');
   const srcLinks = b.sources.map((s,i)=>`<a class="src ${i===0?'primary':''}" href="${s[1]}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>${s[0]}</a>`).join('');
   const fitSummary = bf
-    ? `<div class="kv hi"><div class="k">Best fit for you (bars at ${t.reach}/${t.stack} from BB)</div><div class="v">Size ${bf.size} · ≈${bf.stem}mm stem · ${spacerNote(bf.aboveHT)} · ${crankDisp(bf.crank)} crank</div></div>`
+    ? `<div class="kv hi"><div class="k">Closest size vs your ${t.stack}/${t.reach}</div><div class="v">${bf.size}: ${bf.S}/${bf.R} · ${bf.reachGap>=0?'+':''}${bf.reachGap} reach / ${bf.stackGap>=0?'+':''}${bf.stackGap} stack · ${stemHint(bf.stemDelta)}</div></div>`
     : `<div class="kv"><div class="k">Best fit for you</div><div class="v" style="font-size:12.5px">Geometry unverified</div></div>`;
   const di = descendInfo(b);
   const descKv = di.score>=0
@@ -870,12 +867,12 @@ function openModal(idx){
         <ul class="build-list">${buildRows}</ul>
       </div>
       <div class="mb-section">
-        <h3>Geometry &amp; fit (bars at reach ${t.reach} / height ${t.stack} from BB)</h3>
+        <h3>Geometry — published, vs your reference ${t.stack} / ${t.reach}</h3>
         <table class="geo">
-          <thead><tr><th>Size</th><th>Stack</th><th>Reach</th><th>STA</th><th>HTA</th><th>WB</th><th>Crank</th><th>Stem est.</th><th>Fit</th></tr></thead>
+          <thead><tr><th>Size</th><th>Stack</th><th>Reach</th><th>STA</th><th>HTA</th><th>WB</th><th>Crank</th><th>ΔR/ΔS</th><th>Stem</th><th>Fit</th></tr></thead>
           <tbody>${geoRows}</tbody>
         </table>
-        <div class="geo-note">◀ = best-fit size for your target. <b>Stem est.</b> = stem to put the bars at your target reach (${t.reach}mm from BB). <b>Crank</b> = stock length that size ships with. Estimates — confirm at a fitting.</div>
+        <div class="geo-note">◀ = closest size to your reference. <b>Stack / Reach</b> are the manufacturer's published numbers. <b>ΔR/ΔS</b> = reach &amp; stack gap vs your reference. <b>Stem</b> = stem change from your current to match the reach (−ve = shorter). <b>Crank</b> = stock length that size ships with.</div>
       </div>
       <div class="mb-section">
         <h3>Mounts</h3>
@@ -932,10 +929,11 @@ function openCompare(){
   const head = `<tr><th class="rowlabel"></th>`+ids.map(i=>{const b=BIKES[i];return `<th class="cmp-bikehead"><div class="b">${b.brand}</div><div class="m">${b.model}</div><div class="y">${b.year}</div><button onclick="removeCompare(${i})">remove</button></th>`;}).join('')+`</tr>`;
   const row=(label,fn)=>`<tr><td class="rowlabel">${label}</td>`+bikes.map((b,k)=>fn(b,fits[k])).join('')+`</tr>`;
   const body =
-    row('Best fit for you', (b,f)=>`<td class="${(f&&f.cost===minCost)?'win':''}">${f?`Size ${f.size} · <span class="fitpill ${f.verdict}">${f.verdict}</span>`:'—'}</td>`) +
-    row('Stem to hit your reach', (b,f)=>`<td>${f?'≈'+f.stem+'mm':'—'}</td>`) +
+    row('Closest size', (b,f)=>`<td class="${(f&&f.cost===minCost)?'win':''}">${f?`${f.size} · <span class="fitpill ${f.verdict}">${f.verdict}</span>`:'—'}</td>`) +
+    row('Stack / Reach (that size)', (b,f)=>`<td>${f?`${f.S} / ${f.R}`:'—'}</td>`) +
+    row('vs your reference', (b,f)=>`<td>${f?`${f.reachGap>=0?'+':''}${f.reachGap} reach / ${f.stackGap>=0?'+':''}${f.stackGap} stack`:'—'}</td>`) +
+    row('Stem vs your current', (b,f)=>`<td>${f?(f.stemDelta===0?'~same':`${Math.abs(f.stemDelta)}mm ${f.stemDelta<0?'shorter':'longer'}`):'—'}</td>`) +
     row('Stock crank (that size)', (b,f)=>`<td>${f?crankDisp(f.crank):'—'}</td>`) +
-    row('Bars above head tube', (b,f)=>`<td>${f?`${f.aboveHT}mm — ${spacerNote(f.aboveHT)}`:'—'}</td>`) +
     row('Cranks by size', b=>`<td style="white-space:normal;max-width:220px">${b.crankNote}</td>`) +
     row('Hits both priorities', b=>{const p=isPriority(b);return `<td><span class="cmp-prio ${p?'yes':'no'}">${p?'★ Yes':'No'}</span></td>`;}) +
     row('Descending (HTA)', (b,f,k)=>{const d=descs[bikes.indexOf(b)];return `<td class="${(d.score>=0&&d.score===maxDesc)?'win':''}">⛰ ${d.label}${d.hta!=null?` · ${d.hta}°`:''}</td>`;}) +
@@ -949,7 +947,7 @@ function openCompare(){
     row('Links', b=>`<td><a class="cmp-src" href="${b.sources[0][1]}" target="_blank" rel="noopener">${b.brand} page ↗</a></td>`);
   cmpPanel.innerHTML = `
     <div class="modal-head"><button class="close" onclick="closeCompare()" aria-label="Close">×</button>
-      <div class="card-cat">Side-by-side · ${ids.length} bikes · bars at reach ${t.reach} / height ${t.stack} from BB</div><h2>Compare</h2></div>
+      <div class="card-cat">Side-by-side · ${ids.length} bikes · vs your reference ${t.stack} / ${t.reach}</div><h2>Compare</h2></div>
     <div class="cmp-scroll"><table class="cmp-table"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
   cmpBack.classList.add('open');
   document.body.style.overflow='hidden';
@@ -971,11 +969,11 @@ function syncTarget(){
 reachSlider.addEventListener('input', syncTarget);
 stackSlider.addEventListener('input', syncTarget);
 function setPreset(which){
-  if(which==='current'){ reachSlider.value=450; stackSlider.value=625; }
-  else { reachSlider.value=484; stackSlider.value=620; }
+  if(which==='journeyer'){ reachSlider.value=372; stackSlider.value=552; }
+  else { reachSlider.value=379; stackSlider.value=555; }
   syncTarget();
 }
-function resetTarget(){ setPreset('2017'); }
+function resetTarget(){ setPreset('current'); }
 
 document.getElementById('search').addEventListener('input', e=>{ state.q=e.target.value; render(); });
 document.getElementById('sort').addEventListener('change', e=>{ state.sort=e.target.value; render(); });
