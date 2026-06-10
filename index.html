@@ -393,7 +393,7 @@
 
 <footer>
   <div class="wrap">
-    Data gathered 2026-06-10 from manufacturer geometry/spec charts and reputable reviews; every spec is cited in the detail view. Per-size crank lengths are from manufacturer spec sheets where available. Best-fit size, stem, and spacer notes are <em>estimates</em> from your target stack/reach — confirm with a professional fitting. Prices USD MSRP. Always confirm specs on the manufacturer's site before purchase.
+    Data gathered 2026-06-10 from manufacturer geometry/spec charts and reputable reviews; every spec is cited in the detail view. Per-size crank lengths are from manufacturer spec sheets where available. Best-fit size, stem, and spacer notes are <em>estimates</em> from your target stack/reach — confirm with a professional fitting. Prices USD MSRP.
   </div>
 </footer>
 
@@ -642,6 +642,42 @@ const BIKES = [
     tag:"Frameset with narrow Q-factor — 650b clearance king, build it your way.",
     fit:"Short reach (M 370) — pair a longer stem for a race fit. Double-dropped chainstays maximize clearance. Frameset, so you pick crank length. Shines on 650b for big rubber.",
     sources:[["OPEN WI.DE (official)","https://opencycle.com/open-wide"],["CyclingWeekly — WI.DE 2.0","https://www.cyclingweekly.com/products/new-open-wi-de-2-0-takes-gravel-clearances-to-a-whole-new-level-with-provision-for-gargantuan-66mm-tyres"]] },
+
+  { brand:"Giant", model:"Revolt Advanced Pro", year:"2026", cat:"Race · Gravel", category:"race",
+    frame:"Advanced-grade composite; D-Fuse SLR seatpost + Contact SLR XR D-Fuse bar; flip-chip dropout; downtube storage", clearance:53, clearanceText:"53 mm (long flip-chip; ~45 mm short)",
+    di2:"no-us", crankNote:"170 (XS/S) → 172.5 (M/ML) → 175 (L/XL), per size",
+    priceNum:7000, priceText:"No US GRX Di2 — current US builds are SRAM AXS (GRX Di2 has appeared on the Revolt abroad / in prior years)",
+    builds:[["SRAM Force AXS E1 2x12 (Advanced Pro 0)","$7,000"],["SRAM Rival AXS E1 2x12 (Advanced Pro 1)","$5,600"]],
+    sizes:"XS, S, M, ML, L, XL", weight:null, weightText:"Not published by Giant; BikeRadar measured ~8.34 kg (Pro 0)",
+    mounts:"Downtube internal storage (bag incl.), top-tube bag, fork & rear-dropout accessory mounts; bottle cages (fender provision unverified)",
+    geo:[["S","570","381","73.5°","71.0°","1020","170"],["M","586","387","73.5°","71.5°","1026","172.5"],["ML","602","391","73.0°","72.0°","1031","172.5"]],
+    tag:"Giant's carbon gravel-race platform — 53 mm clearance + flip-chip — but US builds are SRAM AXS, not GRX Di2.",
+    fit:"Tall stack vs your 555 target (S already 570; M/ML run taller still) — expect a low/no-spacer setup. Flip-chip dropout extends wheelbase + clearance. Cranks step 170→172.5→175 by size (size-down to S gets 170 mm; no stock 160/165). GRX Di2 isn't offered on the US Revolt — only SRAM AXS.",
+    sources:[["Revolt Advanced Pro 0 (2026)","https://www.giant-bicycles.com/us/revolt-advanced-pro-0"],["Revolt Advanced Pro 1 (2026)","https://www.giant-bicycles.com/us/revolt-advanced-pro-1"],["Revolt Advanced Pro lineup","https://www.giant-bicycles.com/us/bikes-revolt-advanced-pro"],["BikeRadar — Revolt Advanced Pro 0","https://www.bikeradar.com/reviews/bikes/gravel-bikes/giant-revolt-advanced-pro-0-2025-review"]] },
+
+  { brand:"Giant", model:"Revolt Advanced", year:"2026", cat:"Gravel · All-road", category:"race",
+    frame:"Advanced-grade composite; D-Fuse seatpost + Contact SL XR D-Fuse alloy bar; flip-chip dropout; downtube storage", clearance:53, clearanceText:"53 mm (long flip-chip; 45 mm short)",
+    di2:"no", crankNote:"170 (XS/S) → 172.5 (M/ML) → 175 (L/XL), per size",
+    priceNum:4500, priceText:"No electronic build at this grade in the US — top trim is mechanical GRX RX820 (EU has listed a GRX Di2 Advanced; not US)",
+    builds:[["Shimano GRX RX820 mech 2x12 (Advanced 0)","$4,500"],["SRAM Apex 1 mech 1x12 (Advanced 1)","$3,200"],["Shimano GRX RX610 mech 2x12 (Advanced 2)","$2,800"],["Shimano CUES U6030 1x11 (Advanced 3)","$2,350"]],
+    sizes:"XS, S, M, ML, L, XL", weight:null, weightText:"Not published by Giant (unverified)",
+    mounts:"Downtube internal storage (bag incl.), top-tube / fork / rear-dropout accessory mounts, bottle cages (fender provision unverified)",
+    geo:[["S","570","381","73.5°","71.0°","1020","170"],["M","586","387","73.5°","71.5°","1026","172.5"],["ML","602","391","73.0°","72.0°","1031","172.5"]],
+    tag:"Same third-gen Revolt frame at a value carbon grade — 53 mm clearance, but mechanical-only in the US (no Di2).",
+    fit:"Shares the Advanced Pro's geometry (tall S 570 stack vs your 555 target). Top US build is mechanical GRX 820 — electronic shifting isn't offered at this grade domestically. Cranks 170→172.5→175 by size; no stock 160/165.",
+    sources:[["Revolt Advanced 0 (2026)","https://www.giant-bicycles.com/us/revolt-advanced-0"],["Revolt Advanced lineup","https://www.giant-bicycles.com/us/bikes-revolt-advanced"],["Revolt Advanced 1 (geometry/spec)","https://www.giant-bicycles.com/us/revolt-advanced-1"]] },
+
+  { brand:"Giant", model:"Revolt X Advanced Pro", year:"2024", cat:"Adventure · Suspension", category:"adventure",
+    frame:"Advanced-grade composite + 40 mm-travel gravel suspension fork (Fox 32 TC / RockShox Rudy XPLR by trim)", clearance:53, clearanceText:"53 mm (long flip-chip; 45 mm short)",
+    di2:"no", crankNote:"170 (XS/S) → 172.5 (M/ML) → 175 (L/XL), per size",
+    priceNum:7500, priceText:"SRAM AXS only (1x) — no GRX Di2 offered; likely sold-through/discontinued for 2026 (confirm dealer stock)",
+    builds:[["SRAM Force AXS 1x12 mullet + Fox 32 TC 40 mm (Pro 0)","$7,500"],["SRAM Rival AXS 1x12 mullet + RockShox Rudy Ultimate 40 mm (Pro 1)","$5,500"],["SRAM Apex AXS 1x12 + RockShox Rudy 40 mm (Pro 2)","$4,100"]],
+    sizes:"XS, S, M, ML, L, XL", weight:9.53, weightText:"9.53 kg (Pro 0, M); reviews ~10.0–10.5 kg (M/L–L)",
+    mounts:"Bottle mounts (seat tube + over/under downtube), top-tube bag bosses; suspension/dropper seatpost; downtube storage unverified",
+    geo:[["S","560","387","73.5°","71.0°","1024","170"],["M","576","389","73.5°","71.5°","1026","172.5"],["ML","592","393","73.0°","72.0°","1031","172.5"]],
+    tag:"Suspension Revolt (40 mm fork) — 53 mm clearance and a calm front end, but SRAM-only and ~9.5 kg.",
+    fit:"40 mm fork + flip-chip = the calmest-descending Revolt, but it's ~9.5 kg and 1x SRAM AXS only (no Di2). Suspension lowers/slackens the front vs the rigid Revolt (S stack 560 is closer to your 555 target). Cranks 170→172.5→175; no stock 160/165. Newest model year is 2024 — verify it's still in stock.",
+    sources:[["Revolt X Advanced Pro 0 (2024)","https://www.giant-bicycles.com/us/revolt-x-advanced-pro-0"],["Revolt X Advanced Pro 1","https://www.giant-bicycles.com/us/revolt-x-advanced-pro-1"],["Revolt X Advanced Pro 2","https://www.giant-bicycles.com/us/revolt-x-advanced-pro-2"],["GranFondo — Revolt X review","https://granfondo-cycling.com/giant-revolt-x-review/"]] },
 
   { brand:"ENVE", model:"Fray", year:"2025", cat:"Excluded · All-road", category:"excluded",
     frame:"Carbon all-road chassis (integrated cockpit)", clearance:35, clearanceText:"35 mm (~40 mm w/ 1x)",
