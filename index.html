@@ -102,6 +102,26 @@
   .fp-ref-note b { color: var(--text); }
   .fitpanel.collapsed .fitpanel-controls { display: none; }
 
+  /* Learnings panel */
+  .learnpanel { margin: 16px 0 4px; border: 1px solid var(--line2); border-radius: 14px; background: linear-gradient(180deg, rgba(217,138,78,.05), var(--bg2)); overflow: hidden; }
+  .lp-head { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+  .lp-title { font-family: var(--display); font-weight: 700; font-size: 1.2rem; }
+  .lp-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 8px; }
+  .lp-body { padding: 18px 20px; display: grid; grid-template-columns: 1.45fr 1fr; gap: 22px; }
+  .lp-insights { display: grid; gap: 13px; align-content: start; }
+  .lp-card { border-left: 2px solid var(--lime); padding: 1px 0 1px 13px; }
+  .lp-k { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); margin-bottom: 5px; }
+  .lp-card p { font-size: 13px; color: var(--text); line-height: 1.6; }
+  .lp-card p b { color: var(--lime); }
+  .lp-recs { background: rgba(199,240,50,.05); border: 1px solid rgba(199,240,50,.22); border-radius: 11px; padding: 14px 16px; align-self: start; }
+  .lp-recs ul { list-style: none; margin-top: 8px; }
+  .lp-recs li { font-size: 12.5px; color: var(--text); line-height: 1.5; padding: 7px 0 7px 17px; position: relative; border-bottom: 1px solid var(--line); }
+  .lp-recs li:last-child { border-bottom: none; }
+  .lp-recs li::before { content: "→"; position: absolute; left: 0; color: var(--lime); }
+  .lp-recs li b { color: var(--lime); }
+  .learnpanel.collapsed .lp-body { display: none; }
+  @media (max-width: 760px){ .lp-body { grid-template-columns: 1fr; } }
+
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(335px, 1fr)); gap: 16px; padding: 24px 0 60px; }
   .card { background: linear-gradient(180deg, var(--surface), var(--bg2)); border: 1px solid var(--line); border-radius: 14px; padding: 20px; cursor: pointer; position: relative; overflow: hidden; transition: transform .2s cubic-bezier(.2,.7,.3,1), border-color .2s, box-shadow .2s; animation: rise .5s both; }
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
@@ -270,6 +290,7 @@
       </label>
       <select id="sort" class="sort">
         <option value="fit">Sort: Best fit for me</option>
+        <option value="descend">Sort: Calmest descender</option>
         <option value="featured">Sort: Featured</option>
         <option value="priceAsc">Price: Low → High</option>
         <option value="priceDesc">Price: High → Low</option>
@@ -278,8 +299,10 @@
         <option value="weight">Weight: Light → Heavy</option>
       </select>
       <div class="chips" id="chips">
+        <span class="chip fp-toggle on" data-act="learnpanel">💡 Learnings</span>
         <span class="chip fp-toggle on" data-act="fitpanel">◎ Fit target</span>
         <span class="chip" data-f="both">★ Hits both priorities</span>
+        <span class="chip" data-f="calm">⛰ Calm descender</span>
         <span class="chip" data-f="clear50">≥50mm clearance</span>
         <span class="chip" data-f="di2">GRX Di2</span>
         <span class="chip" data-f="showExcluded">Show non-gravel</span>
@@ -287,12 +310,47 @@
     </div>
     <div class="meta-row">
       <span class="count"><b id="ct">0</b> bikes shown</span>
-      <span class="legend">Fit dot: <span style="color:var(--lime)">● good</span> · <span style="color:var(--amber)">● workable</span> · <span style="color:var(--red)">● compromised</span> &nbsp;|&nbsp; Clearance: <span style="color:var(--lime)">≥50</span>/<span style="color:var(--amber)">47–49</span>/<span style="color:var(--rust)">&lt;47</span></span>
+      <span class="legend">Fit dot: <span style="color:var(--lime)">● good</span>/<span style="color:var(--amber)">● workable</span>/<span style="color:var(--red)">● compromised</span> &nbsp;|&nbsp; ⛰ descending = slacker head angle + bigger tires (vs your Otso 71.5°/53mm)</span>
     </div>
   </div>
 </div>
 
 <div class="wrap">
+  <div class="learnpanel" id="learnpanel">
+    <div class="lp-head"><span class="lp-title">💡 What the research taught me</span><span class="lp-sub">the fit + descending insights behind these picks</span></div>
+    <div class="lp-body">
+      <div class="lp-insights">
+        <div class="lp-card">
+          <div class="lp-k">The natural experiment</div>
+          <p>My 2017 SuperSix (555/379, <b>73.1°</b> head angle, ~28mm tires) and my Otso Waheela C (555/385, <b>71.5°</b>, 32mm) are nearly identical in fit — yet I only descend confidently on the Otso. A shorter 80mm stem on the SuperSix didn't change that. <b>So reach isn't the lever — descending confidence comes from a slacker head angle + bigger tires.</b></p>
+        </div>
+        <div class="lp-card">
+          <div class="lp-k">Reach is a stem, not a frame size</div>
+          <p>The Journeyer's 70–80mm stem put my hands ~40mm closer than 2017 at the same bar height. I can get a short cockpit at a sane size with a short stem — I don't need to size down for it (and sizing down mostly costs the stack/bar height I want to keep).</p>
+        </div>
+        <div class="lp-card">
+          <div class="lp-k">Saddle &amp; crank move together</div>
+          <p>A shorter crank means raising the saddle by the same amount (172.5→165 = +7.5mm). Each frame size ships a different stock crank, so I check it per size.</p>
+        </div>
+        <div class="lp-card">
+          <div class="lp-k">Sizing down ≠ better descending</div>
+          <p>A smaller frame (Otso S vs M: −14 stack / −10 reach / −0.5° HTA) is a fit refinement, not a descending fix — the head angle &amp; tire clearance that matter are shared across sizes. Worth a test ride, but it won't transform descending the way slack-HTA + big tires did.</p>
+        </div>
+      </div>
+      <div class="lp-recs">
+        <div class="lp-k">Recommendations</div>
+        <ul>
+          <li>Target <b>≤71° head angle + ≥50mm tires</b> — at least as calm as my Otso (71.5° / 53mm). Sort by <b>"Calmest descender"</b> or filter <b>⛰ Calm descender</b>.</li>
+          <li><b>GRX Di2 + "Calm" at my size:</b> <b>XDS XLAB GT8</b> &amp; <b>Ridley ASTR</b> (~71° / 52–55mm). BMC Kaius too, but US builds are SRAM.</li>
+          <li><b>SRAM, "Calm" + huge tires:</b> <b>Allied Able</b> &amp; <b>Lauf Seigla</b> (70.5° / 57mm), <b>Crux 5</b> (55mm); ENVE MOG is close ("Stable").</li>
+          <li>Watch the <b>per-size head angle</b>: Pinarello Grevil reads slack at size 50 but steepens to ~72° in my size — only "Balanced." Check the badge, not the brochure.</li>
+          <li>Avoid the <b>steep aero frames</b> (Áspero / Áspero-5, Grail, Kanzo Fast, Factor Ostro) — 42–45mm tires, nervous like the SuperSix.</li>
+          <li>Cheap test first: slacken the Otso <b>Tuning Chip</b> + run 40–45mm tires; test-ride a Small.</li>
+          <li>Book a fresh <b>professional fit</b> (overdue since 2017) before buying.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
   <div class="fitpanel" id="fitpanel">
     <div class="fitpanel-head">
       <div><span class="fp-title"><span class="dot">◎</span> Your fit target</span><span class="fp-sub">drives the best-fit size on every card</span></div>
@@ -316,16 +374,18 @@
       <p class="fp-explain"><b>2017 fit</b> = Stack 554 / Reach 379 (≈ your 54 SuperSix). <b>Current me</b> = Stack 560 / Reach 370 with a 90mm stem baseline — your 2017 *height* but a shorter reach and the shorter stems you favor now (drawn from the Journeyer demo below). Each card computes the <b>best-fit size</b>, the <b>stem</b> it'd take, and the <b>stock crank</b> that size ships with. Reach is corrected with stem length; stack you can raise with spacers but can't easily drop below the frame — so a too-tall frame is the real dealbreaker. Estimates, not a substitute for a fitting.</p>
       <div class="fp-note">↕ <b>Saddle height &amp; crank length move together.</b> A shorter crank drops the pedal at the bottom of the stroke, so raise your saddle by the same amount to keep leg extension — from 172.5&nbsp;mm: 170 = <b>+2.5&nbsp;mm</b>, 165 = <b>+7.5&nbsp;mm</b>, 160 = <b>+12.5&nbsp;mm</b> saddle. Each size here ships a different stock crank, so when a size-down also shortens the crank, plan to re-set saddle height. Your reference: <b>172.5&nbsp;mm cranks, saddle ≈ 71&nbsp;cm</b> (BB → saddle top, approx. from the Journeyer demo).</div>
       <div class="fp-ref">
-        <div class="fp-ref-title">Your reference fits — where your hands actually sat</div>
+        <div class="fp-ref-title">Your bikes &amp; demos — what they taught us</div>
         <table class="fp-ref-table">
-          <thead><tr><th>Reference</th><th>Stack / Reach</th><th>Stem</th><th>~Bar reach (X)</th><th>~Bar height (Y)</th></tr></thead>
+          <thead><tr><th>Reference</th><th>Stack / Reach</th><th>HTA</th><th>Tires</th><th>Descends</th></tr></thead>
           <tbody>
-            <tr><td>2017 fit (measured)</td><td>554 / 379</td><td>120</td><td>484</td><td>620</td></tr>
-            <tr><td>Journeyer 51 (demo)</td><td>528 / 368</td><td>70</td><td>~430</td><td>~597</td></tr>
-            <tr><td>Journeyer 53 (demo)</td><td>552 / 372</td><td>80</td><td>~443</td><td>~620</td></tr>
+            <tr><td>2017 SuperSix EVO 54 (road)</td><td>555 / 379</td><td>73.1°</td><td>~28mm</td><td>nervous ✗</td></tr>
+            <tr><td>Otso Waheela C — M (your "54")</td><td>555 / 385</td><td>71.5°</td><td>32 (→53)</td><td>confident ✓</td></tr>
+            <tr><td>Otso Waheela C — S (the "52")</td><td>541 / 375</td><td>71.0°</td><td>→53</td><td>size-down Q</td></tr>
+            <tr><td>Journeyer demo — 51</td><td>528 / 368</td><td>69.5°</td><td>38</td><td>confident ✓</td></tr>
+            <tr><td>Journeyer demo — 53</td><td>552 / 372</td><td>69.5°</td><td>38</td><td>confident ✓</td></tr>
           </tbody>
         </table>
-        <div class="fp-ref-note">The 2022 Journeyer Apex 1 (drop bar, 69.5° HTA, non-e-bike) you descended better on put your hands <b>~40 mm closer</b> than 2017 at <b>~the same height</b> (size 53) — driven by the <b>short stem + slack steering</b>, not a tiny frame. Hence the "Current me" preset: keep the height, shorten the reach.</div>
+        <div class="fp-ref-note">Your SuperSix and Otso are <b>nearly the same fit</b> (555 / ~380) yet descend completely differently — that's the <b>1.6° slacker head angle + bigger tires</b>, not reach (an 80mm stem didn't fix the SuperSix). For <b>reach</b>: your 2017 hands sat at X≈484 / Y≈620; the Journeyer's short stem brought them <b>~40mm closer at the same height</b>. So — short stem for reach; slack HTA + big tires for descending.</div>
       </div>
     </div>
   </div>
@@ -654,6 +714,22 @@ function bestFit(b, t){
   fits.sort((a,c)=> (a.cost-c.cost) || (a.S-c.S));
   return fits[0];
 }
+// Descending confidence ≈ slacker head angle + bigger tires (benchmark: rider's Otso = 71.5° / 53mm)
+function htaOf(b){
+  const vals = b.geo.map(g=>parseFloat(g[4])).filter(v=>!isNaN(v));
+  if(!vals.length) return NaN;
+  return vals[Math.floor(vals.length/2)]; // representative mid-size (HTA can steepen with size)
+}
+function descendInfo(b){
+  const h = htaOf(b), c = b.clearance;
+  if(isNaN(h)) return { label:"—", cls:"", score:-1, hta:null };
+  let label, cls, score;
+  if(h <= 71.0 && c >= 50){ label="Calm"; cls="good"; score=3; }
+  else if(h <= 71.5 && c >= 50){ label="Stable"; cls="good"; score=2; }
+  else if(h <= 71.75 || c >= 50){ label="Balanced"; cls="warn"; score=1; }
+  else { label="Quick"; cls="bad"; score=0; }
+  return { label, cls, score, hta:h };
+}
 
 const state = { q:"", sort:"fit", filters:new Set(), compare:new Set(), target:{ stack:554, reach:379, baseStem:120 } };
 const MAX_COMPARE = 4;
@@ -666,6 +742,7 @@ function passes(b){
   if(state.filters.has("both") && !isPriority(b)) return false;
   if(state.filters.has("clear50") && b.clearance<50) return false;
   if(state.filters.has("di2") && b.di2!=="yes") return false;
+  if(state.filters.has("calm") && descendInfo(b).score < 2) return false;
   return true;
 }
 function sortBikes(list){
@@ -675,6 +752,14 @@ function sortBikes(list){
   else if(s==="priceAsc") arr.sort((a,b)=> (a.priceNum??9e9)-(b.priceNum??9e9));
   else if(s==="priceDesc") arr.sort((a,b)=> (b.priceNum??-1)-(a.priceNum??-1));
   else if(s==="weight") arr.sort((a,b)=> (a.weight??9e9)-(b.weight??9e9));
+  else if(s==="descend") arr.sort((a,b)=>{
+      if(a.category==="excluded" && b.category!=="excluded") return 1;
+      if(b.category==="excluded" && a.category!=="excluded") return -1;
+      const da=descendInfo(a), db=descendInfo(b);
+      if(db.score!==da.score) return db.score-da.score;
+      if((da.hta??99)!==(db.hta??99)) return (da.hta??99)-(db.hta??99);
+      return b.clearance-a.clearance;
+    });
   else if(s==="fit") arr.sort((a,b)=>{
       if(a.category==="excluded" && b.category!=="excluded") return 1;
       if(b.category==="excluded" && a.category!=="excluded") return -1;
@@ -705,6 +790,7 @@ function render(){
     card.className = "card" + (isPriority(b)?" priority":"") + (b.category==="excluded"?" excluded":"");
     card.style.animationDelay = (Math.min(i,12)*0.035)+"s";
     card.onclick = ()=> openModal(idx);
+    const di = descendInfo(b);
     const fitHtml = bf
       ? `<div class="fitblock ${bf.verdict}">
            <div class="fl1"><span class="fitsize">Best fit: <b>${bf.size}</b></span><span class="fitdot ${bf.verdict}"></span></div>
@@ -723,6 +809,7 @@ function render(){
         <div class="spec"><div class="k">Elec. price</div><div class="v">${fmtPrice(b)}</div></div>
       </div>
       <div class="badges">
+        ${di.score>=0?`<span class="badge ${di.cls}">⛰ ${di.label} · ${di.hta}°</span>`:''}
         <span class="badge ${di2Class[b.di2]}">${di2Label[b.di2]}</span>
         ${b.weight?`<span class="badge">${b.weight} kg</span>`:''}
         <span class="badge">cranks: ${b.crankNote.split(',')[0]}</span>
@@ -752,6 +839,10 @@ function openModal(idx){
   const fitSummary = bf
     ? `<div class="kv hi"><div class="k">Best fit for you (${t.stack}/${t.reach})</div><div class="v">Size ${bf.size} · ≈${bf.stem}mm stem · ${crankDisp(bf.crank)} crank</div></div>`
     : `<div class="kv"><div class="k">Best fit for you</div><div class="v" style="font-size:12.5px">Geometry unverified</div></div>`;
+  const di = descendInfo(b);
+  const descKv = di.score>=0
+    ? `<div class="kv"><div class="k">Descending (HTA ${di.hta}°)</div><div class="v" style="color:var(--${di.cls==='good'?'lime':di.cls==='warn'?'amber':'red'})">⛰ ${di.label}${di.score>=2?' — slack + big tires':di.score===0?' — steep / narrow':''}</div></div>`
+    : '';
   modal.innerHTML = `
     <div class="modal-head">
       <button class="close" onclick="closeModal()" aria-label="Close">×</button>
@@ -764,6 +855,7 @@ function openModal(idx){
         <h3>At a glance</h3>
         <div class="kv-grid">
           ${fitSummary}
+          ${descKv}
           <div class="kv"><div class="k">Tire clearance</div><div class="v" style="color:var(--${clearClass(b.clearance)==='lime'?'lime':clearClass(b.clearance)==='amber'?'amber':'rust'})">${b.clearanceText}</div></div>
           <div class="kv"><div class="k">Electronic build</div><div class="v">${fmtPrice(b)}</div></div>
           <div class="kv"><div class="k">Cranks by size</div><div class="v" style="font-size:12px">${b.crankNote}</div></div>
@@ -834,6 +926,8 @@ function openCompare(){
   const minWeight = weights.length?Math.min(...weights):null;
   const fitCosts = fits.map(f=>f?f.cost:null).filter(v=>v!=null);
   const minCost = fitCosts.length?Math.min(...fitCosts):null;
+  const descs = bikes.map(b=>descendInfo(b));
+  const maxDesc = Math.max(...descs.map(d=>d.score));
   const head = `<tr><th class="rowlabel"></th>`+ids.map(i=>{const b=BIKES[i];return `<th class="cmp-bikehead"><div class="b">${b.brand}</div><div class="m">${b.model}</div><div class="y">${b.year}</div><button onclick="removeCompare(${i})">remove</button></th>`;}).join('')+`</tr>`;
   const row=(label,fn)=>`<tr><td class="rowlabel">${label}</td>`+bikes.map((b,k)=>fn(b,fits[k])).join('')+`</tr>`;
   const body =
@@ -843,6 +937,7 @@ function openCompare(){
     row('Reach / Stack vs target', (b,f)=>`<td>${f?`${f.reachDelta>=0?'+':''}${Math.round(f.reachDelta)} / ${f.stackDelta>=0?'+':''}${Math.round(f.stackDelta)}`:'—'}</td>`) +
     row('Cranks by size', b=>`<td style="white-space:normal;max-width:220px">${b.crankNote}</td>`) +
     row('Hits both priorities', b=>{const p=isPriority(b);return `<td><span class="cmp-prio ${p?'yes':'no'}">${p?'★ Yes':'No'}</span></td>`;}) +
+    row('Descending (HTA)', (b,f,k)=>{const d=descs[bikes.indexOf(b)];return `<td class="${(d.score>=0&&d.score===maxDesc)?'win':''}">⛰ ${d.label}${d.hta!=null?` · ${d.hta}°`:''}</td>`;}) +
     row('Tire clearance', b=>`<td class="${b.clearance===maxClear?'win':''}">${b.clearanceText}</td>`) +
     row('Electronic price', b=>`<td class="${(b.priceNum!=null&&b.priceNum===minPrice)?'win':''}">${fmtPrice(b)}</td>`) +
     row('Groupset / Di2', b=>`<td>${di2Label[b.di2]}</td>`) +
@@ -887,6 +982,7 @@ document.getElementById('sort').addEventListener('change', e=>{ state.sort=e.tar
 document.getElementById('chips').addEventListener('click', e=>{
   const chip = e.target.closest('.chip'); if(!chip) return;
   if(chip.dataset.act==='fitpanel'){ chip.classList.toggle('on'); document.getElementById('fitpanel').classList.toggle('collapsed'); return; }
+  if(chip.dataset.act==='learnpanel'){ chip.classList.toggle('on'); document.getElementById('learnpanel').classList.toggle('collapsed'); return; }
   const f = chip.dataset.f; if(!f) return;
   if(state.filters.has(f)){ state.filters.delete(f); chip.classList.remove('on'); }
   else { state.filters.add(f); chip.classList.add('on'); }
