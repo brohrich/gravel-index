@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gravel Index — Bike Research Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0c0d0a;
+    --bg2: #121410;
+    --surface: #181a14;
+    --surface2: #1f221a;
+    --line: #2c3024;
+    --line2: #3a3f2e;
+    --text: #ece9dd;
+    --muted: #8e9182;
+    --faint: #5f6356;
+    --lime: #c7f032;
+    --lime-dim: #9bbd2a;
+    --amber: #f0b53a;
+    --rust: #d98a4e;
+    --red: #d96a5e;
+    --shadow: 0 18px 40px -16px rgba(0,0,0,.7);
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --display: "Bricolage Grotesque", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(circle at 12% -5%, rgba(199,240,50,.07), transparent 45%),
+      radial-gradient(circle at 95% 0%, rgba(217,138,78,.06), transparent 40%),
+      repeating-linear-gradient(115deg, rgba(255,255,255,.012) 0 1px, transparent 1px 26px);
+    min-height: 100vh;
+  }
+  ::selection { background: var(--lime); color: #111; }
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 6px; border: 2px solid var(--bg2); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--lime-dim); }
+
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 22px; }
+
+  /* ---- Header ---- */
+  header {
+    border-bottom: 1px solid var(--line);
+    padding: 40px 0 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--lime);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .eyebrow::before { content: ""; width: 30px; height: 1px; background: var(--lime); display: inline-block; }
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2.6rem, 7vw, 5.4rem);
+    line-height: .92;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+  }
+  h1 .slash { color: var(--lime); }
+  h1 em { font-style: normal; -webkit-text-stroke: 1.4px var(--text); color: transparent; }
+  .sub {
+    margin-top: 18px;
+    max-width: 640px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .reqs {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .req {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    padding: 5px 11px;
+    border: 1px solid var(--line2);
+    border-radius: 100px;
+    color: var(--text);
+    background: var(--surface);
+  }
+  .req b { color: var(--lime); font-weight: 600; }
+  .header-links { margin-top: 22px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .hl {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .03em;
+    color: var(--text); text-decoration: none;
+    border-bottom: 1px solid var(--line2); padding-bottom: 3px;
+    transition: .2s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .hl:hover { color: var(--lime); border-color: var(--lime); }
+  .hl svg { width: 13px; height: 13px; }
+
+  /* ---- Controls ---- */
+  .controls {
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(12,13,10,.86);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    padding: 16px 0;
+    margin-bottom: 28px;
+  }
+  .controls-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .search {
+    flex: 1 1 220px; min-width: 180px; position: relative;
+  }
+  .search input {
+    width: 100%; background: var(--surface); border: 1px solid var(--line2);
+    color: var(--text); font-family: var(--mono); font-size: 13px;
+    padding: 11px 14px 11px 38px; border-radius: 10px; outline: none; transition: .2s;
+  }
+  .search input:focus { border-color: var(--lime); box-shadow: 0 0 0 3px rgba(199,240,50,.12); }
+  .search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--faint); }
+  select.sort {
+    background: var(--surface); border: 1px solid var(--line2); color: var(--text);
+    font-family: var(--mono); font-size: 12.5px; padding: 11px 34px 11px 14px; border-radius: 10px;
+    outline: none; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e9182' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+  }
+  select.sort:focus { border-color: var(--lime); }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .03em;
+    padding: 9px 13px; border-radius: 100px; border: 1px solid var(--line2);
+    background: var(--surface); color: var(--muted); cursor: pointer; transition: .16s; user-select: none;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--line2); color: var(--text); transform: translateY(-1px); }
+  .chip.on { background: var(--lime); color: #14160c; border-color: var(--lime); font-weight: 600; }
+  .meta-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px; flex-wrap: wrap; gap: 8px; }
+  .count { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+  .count b { color: var(--lime); }
+  .legend { font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: .03em; }
+
+  /* ---- Grid ---- */
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 16px; padding-bottom: 60px;
+  }
+  .card {
+    background: linear-gradient(180deg, var(--surface), var(--bg2));
+    border: 1px solid var(--line); border-radius: 14px; padding: 20px;
+    cursor: pointer; position: relative; overflow: hidden;
+    transition: transform .2s cubic-bezier(.2,.7,.3,1), border-color .2s, box-shadow .2s;
+    animation: rise .5s both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .card:hover { transform: translateY(-4px); border-color: var(--line2); box-shadow: var(--shadow); }
+  .card.priority { border-color: rgba(199,240,50,.5); }
+  .card.priority::before {
+    content: "BOTH ✓"; position: absolute; top: 14px; right: -34px; transform: rotate(45deg);
+    background: var(--lime); color: #14160c; font-family: var(--mono); font-weight: 600;
+    font-size: 9.5px; letter-spacing: .12em; padding: 4px 40px; box-shadow: 0 2px 8px rgba(0,0,0,.4);
+  }
+  .card.excluded { opacity: .58; }
+  .card-cat {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 9px;
+  }
+  .card-brand { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--lime-dim); text-transform: uppercase; }
+  .card-model { font-family: var(--display); font-weight: 700; font-size: 1.42rem; line-height: 1.04; letter-spacing: -.01em; margin: 2px 0 3px; }
+  .card-year { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .card-tag {
+    margin-top: 11px; font-size: 12px; color: var(--text); padding: 7px 10px;
+    background: var(--surface2); border-left: 2px solid var(--lime); border-radius: 0 6px 6px 0;
+  }
+  .specs { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+  .spec { background: var(--bg2); padding: 10px 11px; }
+  .spec .k { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+  .spec .v { font-family: var(--mono); font-size: 14px; font-weight: 500; margin-top: 3px; }
+  .v.lime { color: var(--lime); }
+  .v.amber { color: var(--amber); }
+  .v.rust { color: var(--rust); }
+  .v.muted { color: var(--muted); }
+  .badges { margin-top: 13px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .02em; padding: 4px 9px; border-radius: 6px; border: 1px solid var(--line2); color: var(--muted); }
+  .badge.good { color: var(--lime); border-color: rgba(199,240,50,.4); background: rgba(199,240,50,.07); }
+  .badge.bad { color: var(--red); border-color: rgba(217,106,94,.3); }
+  .badge.warn { color: var(--amber); border-color: rgba(240,181,58,.3); }
+  .card-foot { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+  .view-link { font-family: var(--mono); font-size: 11.5px; color: var(--lime); letter-spacing: .04em; display: inline-flex; align-items: center; gap: 6px; }
+  .view-link svg { width: 13px; height: 13px; transition: transform .2s; }
+  .card:hover .view-link svg { transform: translateX(3px); }
+  .ext { color: var(--muted); display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 11px; text-decoration: none; border-bottom: 1px solid transparent; }
+  .ext:hover { color: var(--text); border-color: var(--line2); }
+
+  .empty { grid-column: 1/-1; text-align: center; padding: 70px 20px; color: var(--muted); font-family: var(--mono); }
+
+  /* ---- Modal ---- */
+  .modal-back {
+    position: fixed; inset: 0; background: rgba(6,7,4,.78); backdrop-filter: blur(6px);
+    z-index: 100; display: none; align-items: flex-start; justify-content: center;
+    padding: 40px 20px; overflow-y: auto;
+  }
+  .modal-back.open { display: flex; animation: fade .2s; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--line2); border-radius: 16px;
+    max-width: 760px; width: 100%; box-shadow: 0 30px 80px -20px rgba(0,0,0,.8);
+    animation: pop .28s cubic-bezier(.2,.8,.3,1); position: relative;
+  }
+  @keyframes pop { from { opacity: 0; transform: translateY(20px) scale(.98); } to { opacity: 1; transform: none; } }
+  .modal-head { padding: 26px 28px 20px; border-bottom: 1px solid var(--line); position: relative; }
+  .modal-head .card-cat { margin-bottom: 6px; }
+  .modal-head h2 { font-family: var(--display); font-weight: 800; font-size: 2.1rem; line-height: 1; letter-spacing: -.015em; }
+  .modal-head .yr { font-family: var(--mono); font-size: 12px; color: var(--faint); margin-top: 6px; }
+  .close {
+    position: absolute; top: 22px; right: 22px; width: 34px; height: 34px; border-radius: 9px;
+    background: var(--surface); border: 1px solid var(--line2); color: var(--muted); cursor: pointer;
+    font-size: 18px; display: flex; align-items: center; justify-content: center; transition: .18s;
+  }
+  .close:hover { color: var(--lime); border-color: var(--lime); }
+  .modal-body { padding: 22px 28px 28px; }
+  .mb-section { margin-bottom: 24px; }
+  .mb-section h3 {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--lime); margin-bottom: 12px; display: flex; align-items: center; gap: 9px;
+  }
+  .mb-section h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .kv { background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 11px 13px; }
+  .kv .k { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+  .kv .v { font-size: 14px; margin-top: 4px; font-family: var(--mono); }
+  .prose { color: var(--text); font-size: 14.5px; }
+  .build-list { list-style: none; }
+  .build-list li { font-family: var(--mono); font-size: 13px; padding: 8px 0; border-bottom: 1px dashed var(--line); display: flex; justify-content: space-between; gap: 14px; }
+  .build-list li:last-child { border-bottom: none; }
+  .build-list .price { color: var(--lime); font-weight: 500; white-space: nowrap; }
+
+  table.geo { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12.5px; }
+  table.geo th, table.geo td { padding: 9px 8px; text-align: right; border-bottom: 1px solid var(--line); }
+  table.geo th { color: var(--faint); font-weight: 500; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  table.geo td:first-child, table.geo th:first-child { text-align: left; color: var(--lime); }
+  table.geo tr:hover td { background: var(--surface); }
+
+  .src-links { display: flex; flex-wrap: wrap; gap: 9px; }
+  .src {
+    display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 12px;
+    padding: 9px 13px; border: 1px solid var(--line2); border-radius: 9px; background: var(--surface);
+    color: var(--text); text-decoration: none; transition: .18s;
+  }
+  .src:hover { border-color: var(--lime); color: var(--lime); transform: translateY(-2px); }
+  .src svg { width: 12px; height: 12px; opacity: .7; }
+  .src.primary { background: var(--lime); color: #14160c; border-color: var(--lime); font-weight: 600; }
+  .src.primary svg { opacity: 1; }
+  .src.primary:hover { color: #14160c; transform: translateY(-2px); box-shadow: 0 8px 18px -6px rgba(199,240,50,.5); }
+
+  /* ---- Compare ---- */
+  .cmp-btn {
+    margin-top: 12px; width: 100%; font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em;
+    padding: 9px; border-radius: 8px; border: 1px solid var(--line2); background: transparent;
+    color: var(--muted); cursor: pointer; transition: .16s;
+  }
+  .cmp-btn:hover { border-color: var(--lime); color: var(--lime); }
+  .cmp-btn.on { background: rgba(199,240,50,.12); border-color: var(--lime); color: var(--lime); font-weight: 600; }
+  body.tray-open { padding-bottom: 96px; }
+
+  .cmp-tray {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    background: rgba(18,20,16,.94); backdrop-filter: blur(14px); border-top: 1px solid var(--line2);
+    transform: translateY(110%); transition: transform .3s cubic-bezier(.2,.8,.3,1); box-shadow: 0 -10px 30px -12px rgba(0,0,0,.7);
+  }
+  .cmp-tray.show { transform: translateY(0); }
+  .cmp-tray-inner { display: flex; align-items: center; gap: 16px; padding: 14px 0; flex-wrap: wrap; }
+  .cmp-label { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); }
+  .cmp-items { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; min-width: 180px; }
+  .cmp-pill {
+    display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11.5px;
+    background: var(--surface); border: 1px solid var(--line2); border-radius: 100px; padding: 6px 8px 6px 13px; color: var(--text);
+  }
+  .cmp-pill button { background: none; border: none; color: var(--faint); cursor: pointer; font-size: 14px; line-height: 1; padding: 0 2px; transition: .15s; }
+  .cmp-pill button:hover { color: var(--red); }
+  .cmp-actions { display: flex; gap: 10px; align-items: center; }
+  .cmp-clear { font-family: var(--mono); font-size: 11.5px; background: none; border: none; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .cmp-clear:hover { color: var(--text); }
+  .cmp-go {
+    font-family: var(--mono); font-size: 12.5px; font-weight: 600; letter-spacing: .03em; padding: 11px 20px;
+    border-radius: 10px; border: none; background: var(--lime); color: #14160c; cursor: pointer; transition: .18s;
+  }
+  .cmp-go:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -6px rgba(199,240,50,.5); }
+  .cmp-go:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .cmp-panel {
+    background: var(--bg2); border: 1px solid var(--line2); border-radius: 16px; width: 100%;
+    max-width: 1100px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.8); animation: pop .28s cubic-bezier(.2,.8,.3,1);
+  }
+  .cmp-panel .modal-head h2 { font-size: 1.8rem; }
+  .cmp-scroll { overflow-x: auto; padding: 6px 10px 14px; }
+  table.cmp-table { border-collapse: collapse; width: 100%; min-width: 560px; }
+  table.cmp-table th, table.cmp-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.cmp-table thead th { position: sticky; top: 0; background: var(--bg2); border-bottom: 1px solid var(--line2); }
+  table.cmp-table .rowlabel { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); white-space: nowrap; background: var(--bg2); position: sticky; left: 0; z-index: 2; }
+  table.cmp-table thead .rowlabel { z-index: 3; }
+  .cmp-bikehead .b { font-family: var(--mono); font-size: 11px; color: var(--lime-dim); letter-spacing: .05em; text-transform: uppercase; }
+  .cmp-bikehead .m { font-family: var(--display); font-weight: 700; font-size: 1.15rem; line-height: 1.05; margin: 2px 0; }
+  .cmp-bikehead .y { font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+  .cmp-bikehead button { margin-top: 8px; background: none; border: 1px solid var(--line2); border-radius: 7px; color: var(--muted); font-family: var(--mono); font-size: 10px; padding: 4px 9px; cursor: pointer; transition: .15s; }
+  .cmp-bikehead button:hover { color: var(--red); border-color: var(--red); }
+  table.cmp-table td { font-family: var(--mono); font-size: 12.5px; color: var(--text); }
+  td.win { color: var(--lime); font-weight: 600; }
+  td.win::after { content: " ◀ best"; font-size: 9px; color: var(--lime-dim); letter-spacing: .08em; }
+  .cmp-geo { line-height: 1.7; }
+  .cmp-prio { font-family: var(--mono); font-size: 11px; }
+  .cmp-prio.yes { color: var(--lime); }
+  .cmp-prio.no { color: var(--muted); }
+  .cmp-src { color: var(--lime); text-decoration: none; border-bottom: 1px solid var(--line2); font-size: 11.5px; }
+  .cmp-src:hover { border-color: var(--lime); }
+
+  footer { border-top: 1px solid var(--line); padding: 30px 0 50px; color: var(--faint); font-family: var(--mono); font-size: 11.5px; line-height: 1.8; }
+  footer a { color: var(--muted); }
+  @media (max-width: 560px) {
+    .specs { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Gravel Bike Research // 2026</div>
+    <h1>The Gravel <span class="slash">/</span> <em>Index</em></h1>
+    <p class="sub">An interactive dossier of high-end race-gravel bikes — sortable, filterable, fully sourced. Built for a US buyer chasing big clearance, electronic shifting, and a confident, sized-down race position.</p>
+    <div class="reqs">
+      <span class="req">Use: <b>race / fast gravel</b></span>
+      <span class="req">Groupset: <b>GRX / Dura-Ace Di2</b></span>
+      <span class="req">Clearance: <b>&ge;50&nbsp;mm</b></span>
+      <span class="req">Cranks: <b>160/165&nbsp;mm</b></span>
+      <span class="req">Bias: <b>size down</b></span>
+    </div>
+    <div class="header-links">
+      <a class="hl" href="https://github.com/brohrich/gravel-index" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 .1 1.7 1.3 2.6 1 .1-.6.4-1 .7-1.3-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.1-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.7.8 1.1 1.8 1.1 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="controls-row">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="text" placeholder="Search brand or model…" />
+      </label>
+      <select id="sort" class="sort">
+        <option value="featured">Sort: Featured</option>
+        <option value="priceAsc">Price: Low → High</option>
+        <option value="priceDesc">Price: High → Low</option>
+        <option value="clearance">Clearance: High → Low</option>
+        <option value="name">Name: A → Z</option>
+        <option value="weight">Weight: Light → Heavy</option>
+      </select>
+      <div class="chips" id="chips">
+        <span class="chip" data-f="both">★ Hits both priorities</span>
+        <span class="chip" data-f="clear50">≥50mm clearance</span>
+        <span class="chip" data-f="di2">GRX Di2</span>
+        <span class="chip" data-f="crank165">165mm crank</span>
+        <span class="chip" data-f="showExcluded">Show non-gravel</span>
+      </div>
+    </div>
+    <div class="meta-row">
+      <span class="count"><b id="ct">0</b> bikes shown</span>
+      <span class="legend">Clearance: <span style="color:var(--lime)">lime ≥50</span> · <span style="color:var(--amber)">amber 47–49</span> · <span style="color:var(--rust)">rust &lt;47</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>
+  <div class="wrap">
+    Data gathered 2026-06-10 from manufacturer geometry charts and reputable reviews; every spec is cited in the detail view. Prices are USD MSRP. Items marked <em>unverified</em> need confirmation before purchase. Geometry shown for the 2–3 sizes nearest the rider this was built for. Always confirm specs on the manufacturer's site before purchase.
+  </div>
+</footer>
+
+<div class="modal-back" id="modalBack">
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<div class="cmp-tray" id="cmpTray">
+  <div class="wrap cmp-tray-inner">
+    <span class="cmp-label">Compare</span>
+    <div class="cmp-items" id="cmpItems"></div>
+    <div class="cmp-actions">
+      <button class="cmp-clear" onclick="clearCompare()">Clear all</button>
+      <button class="cmp-go" id="cmpGo" onclick="openCompare()">Compare <span id="cmpCount">0</span> →</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-back" id="cmpBack">
+  <div class="cmp-panel" id="cmpPanel" role="dialog" aria-modal="true"></div>
+</div>
+
+<script>
+const BIKES = [
+  {
+    brand:"XDS", model:"XLAB GT8", year:"2026", cat:"Race · Value", category:"race",
+    frame:"Carbon (Toray T800), UDH", clearance:55, clearanceText:"55 mm (700×45c stock)",
+    di2:"yes", crank165:"yes", crankText:"165 / 170 / 172.5 mm",
+    priceNum:3199, priceText:"$3,199 — GRX Di2 1x + power meter + carbon wheels (only build)",
+    builds:[["GRX RX717/RX715 Di2 1x12 + Branta C45 wheels + power meter","$3,199"]],
+    sizes:"XS, S, M, L, XL, XXL", weight:8.78, weightText:"8.78 kg (M, complete)",
+    mounts:"Internal downtube storage (bag incl.), 3rd-bottle, top-tube bag, fork-leg mounts",
+    geo:[["S","540","379","75°","70°","1032"],["M","565","384","74°","71°","1031"],["L","584","392","74°","71°","1046"]],
+    tag:"Value blowout: Di2 + power meter + carbon wheels at ~⅓ rivals' price.",
+    fit:"Between M and L for 178 cm — M racier, L more stable on descents. 1x-only limits top-end road gearing. US support via Jenson USA, Go Grava, Power Meter City (thinner dealer network).",
+    sources:[["XDS GT8 (official)","https://xds.co/products/gt8"],["Jenson USA","https://www.jensonusa.com/xds-x-lab-gt8-bike"],["Velo review","https://velo.outsideonline.com/gravel/gravel-gear/xds-x-lab-gt8-review/"],["Go Grava (US dealer)","https://gograva.com/collections/xds-xlab-bikes"]]
+  },
+  {
+    brand:"Pinarello", model:"Grevil F7", year:"2025", cat:"Race", category:"race",
+    frame:"Toray T900 carbon, Adaptive Seatpost (~10 mm flex)", clearance:50, clearanceText:"50 mm (1x) / 47 mm (2x)",
+    di2:"yes", crank165:"no", crankText:"170 mm stock (47–55) — no short-crank option",
+    priceNum:7000, priceText:"$7,000 — Grevil F7 Shimano GRX 825 Di2 1x12",
+    builds:[["GRX 825 Di2 1x12 (F7)","$7,000"],["SRAM RED XPLR AXS (F9)","higher"],["SRAM Rival XPLR AXS (F5)","lower"]],
+    sizes:"47, 50, 53, 55, 57.5, 60", weight:null, weightText:"Frameset ~1,490 g (complete unverified)",
+    mounts:"Fidlock magnetic frame-bag mount, bottle cages, internal storage; rack-capable",
+    geo:[["50","583","384","73.75°","70.75°","1047"],["53","598","390","73.5°","71.75°","1043"],["55","614","398","73.0°","72.0°","1053"]],
+    tag:"Only marquee race bike with a stock GRX Di2 build at the clearance target.",
+    fit:"MTB-inspired long top tube paired with short stems for off-road control. Pinarello size labels are inconsistent across sources — confirm exact size at a dealer fit.",
+    sources:[["Pinarello Grevil F7 GRX Di2","https://pinarello.com/usa/en/bikes/gravel/competition/new-grevil-f/new-grevil-f7-shimano-grx-825-di2"],["BikeRadar 2025 Grevil F","https://www.bikeradar.com/news/2025-pinarello-grevil-f"],["99 Spokes","https://99spokes.com/bikes/pinarello/2025/grevil-f7-shimano-grx-825-di2"]]
+  },
+  {
+    brand:"Ridley", model:"ASTR / ASTR RS", year:"2025", cat:"Race", category:"race",
+    frame:"Carbon — RS Ultra-HM (~890 g) / ASTR HM (~1,090 g)", clearance:52, clearanceText:"52 mm (1x) / 47 mm (2x)",
+    di2:"yes", crank165:"no", crankText:"172.5 mm stock — no short-crank option",
+    priceNum:6967, priceText:"~$6,967 (ASTR RS GRX Di2; Ridley US lists EUR — confirm USD)",
+    builds:[["GRX RX820 Di2 2x12 (ASTR RS)","~$6,967*"],["GRX Di2 (base ASTR, configurator upgrade)","+€1,736 over mech"]],
+    sizes:"XS, S, M, L, XL", weight:null, weightText:"Frame 890 g (RS) / 1,090 g (ASTR); complete unverified",
+    mounts:"3rd-bottle, recessed top-tube bag, frame-bag braze-ons; no rack/fender",
+    geo:[["S","550","392","74°","71.0°","1027"],["M","571","406","74°","71.5°","1043"],["L","595","419","74°","71.5°","—"]],
+    tag:"Newest dedicated race-gravel platform — best all-round criteria match.",
+    fit:"Steep 74° STA aids climbing; 71.5° HTA + short 425 mm chainstays keep it lively yet composed. 178 cm sits between S (aggressive) and M (natural reach 406).",
+    sources:[["Ridley ASTR (official)","https://www.ridley-bikes.com/en_US/bikes/SBIASTRID023"],["Bikerumor — ASTR RS","https://bikerumor.com/ridley-astr-rs-lightweight-aero-carbon-gravel-race-bike/"],["Velo — 52mm clearance","https://velo.outsideonline.com/gravel/gravel-gear/ridley-astr-rs-fast-gravel-bike-52mm-clearance/"]]
+  },
+  {
+    brand:"BMC", model:"Kaius 01", year:"2026", cat:"Race", category:"race",
+    frame:"High-modulus carbon (2026 gen, ~63 g lighter)", clearance:52, clearanceText:"52 mm",
+    di2:"partial", crank165:"unverified", crankText:"Unverified (test bike 170 mm)",
+    priceNum:6199, priceText:"US builds are SRAM AXS; GRX Di2 listed 'compatible' but no confirmed US build",
+    builds:[["SRAM Rival XPLR AXS (THREE)","$6,199"],["SRAM Force AXS (TWO)","$8,999"],["SRAM RED XPLR AXS (ONE)","$12,999"],["Frameset","$5,099"]],
+    sizes:"47, 51, 54, 56, 58, 61", weight:7.1, weightText:"~7.1 kg claimed (54)",
+    mounts:"3rd-bottle under downtube, top-tube pouch, cargo plate, integrated chain catcher",
+    geo:[["51","—","—","—","71°","—"],["54","—","—","—","71°","—"],["56","—","—","—","71°","—"]],
+    tag:"≥50 mm clearance, but US builds are SRAM — Di2 only 'compatible'.",
+    fit:"2026 redesign raised trail (68→72 mm) and lengthened wheelbase for descending stability, fixing the original's twitchiness. 1x-only. Full per-size geometry not yet published (unverified).",
+    sources:[["GranFondo 2026 review","https://granfondo-cycling.com/bmc-kaius-01-2026-review/"],["BikeRadar 2026 Kaius","https://www.bikeradar.com/news/2026-bmc-kaius"],["BMC US (prior-gen GRX Di2)","https://us.bmc-switzerland.com/products/kaius-01-three-bikes-bmc-26a-000001"]]
+  },
+  {
+    brand:"Canyon", model:"Grizl CF", year:"2026", cat:"Adventure", category:"adventure",
+    frame:"Carbon (CF); frame ~1,110 g (M)", clearance:54, clearanceText:"54 mm (50 mm w/ fenders)",
+    di2:"no-us", crank165:"unverified", crankText:"Unverified (expect 170–175 by size)",
+    priceNum:2599, priceText:"No US GRX Di2; US top-Shimano is mechanical GRX. Electronic in US = SRAM Apex AXS",
+    builds:[["SRAM Apex XPLR AXS (CF 6) — electronic","$2,599"],["Mechanical GRX (CF 8 ESC)","$4,699"],["GRX Di2 (CF 8 Di2)","not sold in US"]],
+    sizes:"3XS – 2XL", weight:9.2, weightText:"~9.2 kg complete; frame ~1,110 g (M)",
+    mounts:"Full: front/rear fender, rear rack, 3 bottles, top-tube bag — 23 inserts",
+    geo:[["M","579","402","73.5°","71.5°","1045"],["L","605","409","73.5°","72.0°","1055"]],
+    tag:"Clearance + mounts king (54 mm, 23 inserts) — but no US Di2 and an adventure fit.",
+    fit:"Adventure geometry: taller stack, slacker, longer wheelbase — stable under load, not a pure race tool. Chainstay 435 mm.",
+    sources:[["Canyon Grizl lineup","https://www.canyon.com/en-us/gravel-bikes/adventure/grizl/"],["Canyon geometry PDF","https://www.canyon.com/en-us/productpdf/geometry/?pid=2844"],["n minus 1 — 2026 review","https://nminus1bikes.substack.com/p/2026-canyon-grizl-cf-gravel-bike-review"]]
+  },
+  {
+    brand:"ENVE", model:"MOG", year:"2025", cat:"Race", category:"race",
+    frame:"ENVE M.O.D carbon, T47, fender-compatible (~950 g frame)", clearance:50, clearanceText:"50 mm",
+    di2:"no", crank165:"yes", crankText:"165 / 170 / 172.5 mm",
+    priceNum:8250, priceText:"SRAM AXS only — sold as full chassis (frame/fork/bar/stem/post)",
+    builds:[["Foundation Force XPLR AXS","$8,250"],["Premium Force XPLR AXS","$9,750"],["Premium RED XPLR AXS","$11,250"],["Frame-only","$4,100"]],
+    sizes:"49, 52, 54, 56, 58, 60", weight:null, weightText:"Frame ~950 g (56); complete unverified",
+    mounts:"Integrated downtube Cargo Bay (~0.6 L); fender-compatible",
+    geo:[["54","565","389","73.75°","71.25°","1027"],["56","587","397","73.5°","71.25°","1042"]],
+    tag:"Best SRAM option at ≥50 mm with factory 165 mm cranks.",
+    fit:"Slightly taller stack + 71.25° HTA = confidence on descents while staying fast. Chainstay 420 mm. If you'd accept SRAM AXS, a top pick.",
+    sources:[["ENVE MOG (official)","https://enve.com/products/mog"],["MOG specs","https://enve.com/pages/mog-specs"],["ENVE Force XPLR crank lengths","https://eu.enve.com/products/mog-foundation-force-xplr"]]
+  },
+  {
+    brand:"Allied", model:"Able", year:"2025", cat:"Race", category:"race",
+    frame:"US-made carbon, threaded BB, UDH, internal storage", clearance:57, clearanceText:"57 mm (700×45 min)",
+    di2:"no", crank165:"unverified", crankText:"Build-to-order — short cranks likely specifiable (confirm)",
+    priceNum:6730, priceText:"SRAM / wireless only (1x frame)",
+    builds:[["SRAM Rival AXS Mullet","$6,730"],["SRAM Force XPLR AXS","$8,000"],["SRAM RED XPLR AXS","$11,055"],["Frameset","~$4,500"]],
+    sizes:"48, 52, 54, 56, 58, 61", weight:null, weightText:"Frame ~950 g (56); complete unverified",
+    mounts:"Internal storage + bottle mounts; fender/rack/3rd-bottle unverified (contact Allied)",
+    geo:[["52","540","390","75.0°","70.5°","1039"],["54","555","395","74.0°","70.5°","1049"],["56","575","400","74.0°","70.5°","1061"]],
+    tag:"Clearance leader (57 mm) with race reach; US hand-built.",
+    fit:"Slack 70.5° HTA + 55 mm offset = stable, confident descending while keeping race reach. SRAM/wireless-only is the catch for a Di2 buyer.",
+    sources:[["Allied Able (official)","https://alliedcycleworks.com/collections/able"],["BikeRadar 2025 Able","https://www.bikeradar.com/news/2025-allied-able"],["Escape Collective review","https://escapecollective.com/2025-allied-able-review-big-tires-for-fast-gravel/"]]
+  },
+  {
+    brand:"Lauf", model:"Seigla", year:"2025", cat:"Race", category:"race",
+    frame:"Carbon; leaf-spring 'Grit' fork on most builds", clearance:57, clearanceText:"57 mm (fits 2.25\" 29er)",
+    di2:"no", crank165:"unverified", crankText:"SRAM Wide DUB cranks; 165 mm availability unverified",
+    priceNum:4790, priceText:"SRAM only — proprietary 73 mm DUB-Wide BB blocks GRX",
+    builds:[["Race Wireless E1","$4,790"],["Ultimate","$6,190"],["Ultimate R","$6,990"],["Frameset","$2,090"]],
+    sizes:"XS, S, M, L, XL", weight:null, weightText:"Frame ~1,163 g (M); complete varies by build",
+    mounts:"3 bottle cages + bento-box mount; no rack/fender",
+    geo:[["M","608","394","72.5°","70.5°","1040"],["L","639","405","72.4°","70.5°","1061"]],
+    tag:"Clearance leader (57 mm) + light leaf-spring front compliance.",
+    fit:"Short 425 mm chainstays, low/fast race position carried from the True Grit; the Grit fork adds front control on rough descents without telescoping-fork weight. Geo runs tall — size carefully.",
+    sources:[["Lauf Seigla (official)","https://www.laufcycles.com/product/lauf-seigla"],["Seigla tire clearance","https://www.laufcycles.com/support/seigla-tire-clearance"],["Bikerumor","https://bikerumor.com/lauf-seigla-gravel-bike/"]]
+  },
+  {
+    brand:"Specialized", model:"Crux 5", year:"2026", cat:"Race", category:"race",
+    frame:"FACT carbon (S-Works frame ~789 g)", clearance:55, clearanceText:"55 mm (up from 47); fits 52T ring",
+    di2:"no", crank165:"unverified", crankText:"170 mm stock; 160/165 likely aftermarket swap",
+    priceNum:5800, priceText:"New gen is SRAM AXS only. (Any 'GRX Di2 Crux' for sale is the OLD 47 mm frame.)",
+    builds:[["SRAM Rival XPLR AXS (Comp)","~$5,800"],["SRAM Force XPLR AXS (Expert)","~$7,000"],["S-Works SRAM RED XPLR AXS","~$14,000"]],
+    sizes:"49, 52, 54, 56, 58, 61", weight:7.1, weightText:"S-Works ~7.1–7.2 kg; frame ~789 g",
+    mounts:"Race frame: 2 bottle cages only",
+    geo:[["52","547","382","74.5°","70.75°","1016"],["54","560","388","74.5°","71.0°","1026"],["56","578","400","74.0°","71.5°","1039"]],
+    tag:"Clearance jumped to 55 mm — but the new generation is SRAM-only.",
+    fit:"Pure race/CX-derived platform — low STR, 425 mm chainstays, aggressive front end; descending-confident. New gen adds aero shaping (~15 W claimed).",
+    sources:[["BikeRadar — 2026 Crux 5","https://www.bikeradar.com/news/2026-specialized-crux-5"],["Cyclingnews","https://www.cyclingnews.com/bikes/gravel/new-specialized-crux-goes-all-in-on-aero-gravel-with-a-15-watt-improvement-new-geometry-and-lighter-builds/"],["GranFondo S-Works Crux 2026","https://granfondo-cycling.com/specialized-s-works-crux-2026-review/"]]
+  },
+  {
+    brand:"Specialized", model:"Diverge STR", year:"2024", cat:"Endurance", category:"endurance",
+    frame:"FACT 11r carbon, front + rear Future Shock suspension", clearance:47, clearanceText:"47 mm (650b × 2.1\")",
+    di2:"no", crank165:"unverified", crankText:"SRAM Rival 1x; 160/165 likely aftermarket",
+    priceNum:5500, priceText:"SRAM AXS only",
+    builds:[["SRAM Rival eTap AXS / GX mullet (Expert)","$5,500"],["S-Works Diverge STR","~$12,500"]],
+    sizes:"49, 52, 54, 56, 58, 61", weight:10, weightText:"~10 kg (54 Expert)",
+    mounts:"3 bottles, top-tube bag, front/rear rack + fender mounts, SWAT storage",
+    geo:[["52","576","374","74.25°","70.5°","1027"],["54","593","383","74.0°","71.25°","1034"],["56","609","392","74.0°","71.75°","1044"]],
+    tag:"Comfort-first endurance bike (front + rear Future Shock) — not a racer.",
+    fit:"Much taller stack and more relaxed front end than the Crux; rear Future Shock gives up to 30 mm axle travel. Heavier; included for contrast.",
+    sources:[["Specialized Diverge STR Expert","https://www.specialized.com/us/en/diverge-str-expert-sram-rival-etap-axs--gx-eagle-axs/p/221357"],["Bikepacking review","https://bikepacking.com/bikes/specialized-diverge-str-review/"]]
+  },
+  {
+    brand:"Cervélo", model:"Áspero", year:"2025", cat:"Race", category:"race",
+    frame:"Carbon, T47 threaded BB, TrailMixer flip-chip fork", clearance:45, clearanceText:"45 mm (650b up to 48 mm)",
+    di2:"yes", crank165:"limited", crankText:"170 mm Shimano builds; 165 only on SRAM small sizes",
+    priceNum:7050, priceText:"$7,050 — Shimano GRX RX825 Di2 1x",
+    builds:[["GRX RX825 Di2 1x","$7,050"],["SRAM Rival XPLR AXS","$5,800"],["Frameset","$2,700"]],
+    sizes:"48, 51, 54, 56, 58, 61", weight:null, weightText:"Unverified (not published)",
+    mounts:"3 bottle positions, top-tube bag compatible, 650b compatible",
+    geo:[["51","530","379","74.0°","71.5°","999"],["54","555","388","73.5°","72.0°","1010"],["56","580","397","73.0°","72.0°","1028"]],
+    tag:"Clean GRX Di2 race bike — but clearance only 45 mm.",
+    fit:"TrailMixer flip-chip preserves trail with bigger front tires. Moderate stack; 178 cm between 54 (racier) and 56.",
+    sources:[["Cervélo Áspero","https://www.cervelo.com/en-US/bikes/aspero"],["Velo review","https://velo.outsideonline.com/gravel/gravel-gear/review-cervelo-aspero-2/"]]
+  },
+  {
+    brand:"Cervélo", model:"Áspero-5", year:"2025", cat:"Race", category:"race",
+    frame:"Carbon (~1,023 g frame), T47, UDH", clearance:45, clearanceText:"45 mm (optimized 40 f / 44 r)",
+    di2:"yes", crank165:"limited", crankText:"170 mm Shimano builds; 165 only on SRAM small sizes",
+    priceNum:8850, priceText:"$8,850 — Shimano GRX RX825 Di2 1x",
+    builds:[["GRX RX825 Di2 1x","$8,850"],["SRAM Force AXS","$9,000"],["SRAM RED AXS","$12,650"],["Frameset","$5,500"]],
+    sizes:"48, 51, 54, 56, 58, 61", weight:null, weightText:"Frame ~1,023 g; complete unverified",
+    mounts:"3 bottle positions, top-tube bag, downtube storage (no rack)",
+    geo:[["51","525","377","73.6°","71.1°","1002"],["54","550","386","73.1°","71.6°","1012"],["56","575","395","72.6°","71.6°","1029"]],
+    tag:"Lowest, longest aero racer here — true 'long & low'. 45 mm clearance.",
+    fit:"Aggressive aero position; confident high-speed descending but a dry/fast-gravel bike, not a mud machine. 178 cm fits 54 (racy) or 56.",
+    sources:[["Cervélo Áspero-5","https://www.cervelo.com/en-US/bikes/aspero-5"],["BikeRadar review","https://www.bikeradar.com/reviews/bikes/gravel-bikes/cervelo-aspero-5-review"]]
+  },
+  {
+    brand:"Canyon", model:"Grail CFR", year:"2026", cat:"Race · Aero", category:"race",
+    frame:"Carbon (CFR layup), frame ~1,033 g", clearance:42, clearanceText:"42 mm rear / 46 mm fork",
+    di2:"yes", crank165:"no", crankText:"170–175 mm by size — no short-crank option",
+    priceNum:5199, priceText:"GRX RX825 Di2 2x — CFR Di2 $7,099; cheaper CF SLX 8 Di2 $5,199",
+    builds:[["GRX RX825 Di2 2x (CF SLX 8 Di2)","$5,199"],["GRX RX825 Di2 2x (CFR Di2)","$7,099"],["SRAM RED XPLR AXS (CFR)","$8,499"]],
+    sizes:"2XS – 2XL", weight:8.18, weightText:"~8.18 kg (CFR Di2, M); frame ~1,033 g",
+    mounts:"Integrated storage, top-tube bag, 'Gear Groove' bar accessories; no rack",
+    geo:[["M","591","411","73.5°","71.5°","1057"],["L","613","427","73.5°","71.5°","1080"]],
+    tag:"Aero GRX Di2 race bike — but only 42 mm rear and a long reach.",
+    fit:"2024 redesign dropped the double-decker bar; slacker HTA + longer rake = composed on fast descents. Note the big reach (M 411) — size with care.",
+    sources:[["Canyon Grail CFR Di2 (geometry)","https://www.canyon.com/en-us/grail-cfr-di2/3794.html"],["GranFondo review","https://granfondo-cycling.com/canyon-grail-cfr-review/"]]
+  },
+  {
+    brand:"Ridley", model:"Kanzo Fast", year:"2024", cat:"Race · Aero", category:"race",
+    frame:"Aero carbon (~1,190 g frame), D-shaped seatpost", clearance:42, clearanceText:"42 mm front & rear",
+    di2:"yes", crank165:"no", crankText:"172.5 mm stock — no short-crank option",
+    priceNum:null, priceText:"€7,999 — GRX Di2 1x + Classified PowerShift hub (USD unverified)",
+    builds:[["GRX Di2 1x + Classified 2-speed hub","€7,999 (USD TBD)"]],
+    sizes:"XS, S, M, L, XL", weight:8.92, weightText:"~8.92 kg (L, complete)",
+    mounts:"Fender mounts only (race-aero frame)",
+    geo:[["S","563","380","73.5°","72.0°","1017"],["M","587","385","72.75°","71.5°","1026"],["L","613","393","72.5°","71.5°","1044"]],
+    tag:"Most aero of the group + Classified hub — but 42 mm clearance.",
+    fit:"Long reach for its stack, short wheelbase, 1x aero cockpit. Stack ~22 mm higher than Ridley's road aero bike — racy but not brutal. 178 cm between S and M.",
+    sources:[["Ridley Kanzo Fast (official)","https://www.ridley-bikes.com/en_US/bikes/SBIKAFRID193"],["BikeRadar first ride","https://www.bikeradar.com/reviews/bikes/gravel-bikes/ridley-kanzo-fast-grx-di2-classified-first-ride-review"]]
+  },
+  {
+    brand:"3T", model:"Exploro RaceMax", year:"2024", cat:"Race", category:"race",
+    frame:"UD carbon, fully internal routing (Integrale)", clearance:46, clearanceText:"46 mm (RaceMax² Italia: 51 mm ✓)",
+    di2:"yes", crank165:"limited", crankText:"165 mm on smallest size only; 170 mm at size 51",
+    priceNum:6999, priceText:"$6,999 — Shimano GRX Di2 2x (frameset $3,499)",
+    builds:[["GRX Di2 2x (Integrale)","$6,999"],["SRAM Force AXS 2x","~$5,999"],["Frameset","$3,499"]],
+    sizes:"48, 51, 54, 56, 58, 61", weight:null, weightText:"Unverified (frame historically ~950–1,000 g)",
+    mounts:"Bottle mounts only (race frame)",
+    geo:[["51","542","366","74.0°","69.5°","1008"],["54","564","377","73.5°","71.0°","1008"],["56","584","385","73.0°","72.0°","1014"]],
+    tag:"GRX Di2 + short wheelbase — but base frame is 46 mm (Italia variant clears 51).",
+    fit:"Road-length fork (compare HTA carefully — subtract ~25 mm vs standard gravel forks). Short ~1008 mm wheelbase = quick, racy handling. Only the pricier made-in-Italy RaceMax² hits ≥50 mm.",
+    sources:[["3T gravel range","https://3t.bike/pages/gravel"],["Excel Sports — GRX Di2 build","https://www.excelsports.com/3t-exploro-racemax-grx-di2-bicycle"]]
+  },
+  {
+    brand:"Trek", model:"Checkmate SLR", year:"2025", cat:"Race", category:"race",
+    frame:"800 OCLV carbon + IsoSpeed rear decoupler", clearance:45, clearanceText:"45 mm",
+    di2:"no", crank165:"yes", crankText:"165 mm stock on small sizes; Project One customizable",
+    priceNum:11999, priceText:"SRAM AXS only (SLR 7/8 builds exist at lower prices)",
+    builds:[["SRAM RED XPLR AXS 1x13 (SLR 9)","$11,999"],["SLR 7 / SLR 8 AXS","lower (TBD)"]],
+    sizes:"XS, S, M(54), ML(56), L(58), XL(61)", weight:7.53, weightText:"~7.53 kg (M); Trek lists ~7.74 kg",
+    mounts:"3rd-bottle, fender, frame-bag mounts; no rack",
+    geo:[["M (54)","560","392","73.7°","71.5°","1022"],["ML (56)","584","399","73.5°","71.7°","1035"],["L (58)","608","404","73.6°","72.0°","1045"]],
+    tag:"Aggressive race fit + IsoSpeed compliance — but SRAM-only and 45 mm.",
+    fit:"Low STR (~1.43), very low 80 mm BB drop across sizes for straight-line stability; IsoSpeed adds rear compliance. 178 cm fits ML (racier reach) or M (size-down).",
+    sources:[["Trek Checkmate (official)","https://www.trekbikes.com/us/en_US/checkmate-gravel-race-bike/"],["GranFondo review","https://granfondo-cycling.com/trek-checkmate-slr-race-gravel-bike-review/"]]
+  },
+  {
+    brand:"Factor", model:"Ostro Gravel", year:"2025", cat:"Race · Dream", category:"race",
+    frame:"Pitch-fiber carbon, UDH (~900 g frame)", clearance:45, clearanceText:"45 mm (700c & 650b)",
+    di2:"no", crank165:"yes", crankText:"165 / 170 / 172.5 mm",
+    priceNum:9599, priceText:"SRAM AXS only — no Di2 build offered",
+    builds:[["SRAM Force XPLR (w/ power)","$9,599"],["SRAM Force AXS","$9,699"],["SRAM RED AXS","$11,699"],["Frameset","$5,999"]],
+    sizes:"49, 52, 54, 56, 58, 61", weight:8, weightText:"~7.9–8.1 kg (54)",
+    mounts:"Bottle mounts only (race frame)",
+    geo:[["52","535","385","74.0°","71.3°","1013"],["54","555","394","74.0°","72.2°","1014"],["56","580","402","73.5°","72.3°","1029"]],
+    tag:"The dream bike — but misses BOTH priorities (45 mm + SRAM-only).",
+    fit:"Aggressive road-race-derived position (from the Ostro VAM), stiff and fast. Gorgeous, but doesn't qualify if 50 mm + Di2 are hard requirements. Keep as the 'heart' option if you'd relax to 45 mm + SRAM AXS.",
+    sources:[["Factor Ostro Gravel (official)","https://factorbikes.com/bikes/ostro-gravel"],["Cyclingnews review","https://www.cyclingnews.com/reviews/factor-ostro-gravel/"]]
+  },
+  {
+    brand:"Cannondale", model:"SuperSix EVO SE", year:"2024", cat:"Race · Road-plus", category:"race",
+    frame:"SuperSix EVO CX carbon (BallisTec), Ai offset", clearance:45, clearanceText:"45 mm (ships 700×40c)",
+    di2:"no", crank165:"unverified", crankText:"SRAM Rival; short-crank availability unverified",
+    priceNum:5200, priceText:"~$5,200 — SRAM Rival eTap AXS 2x only",
+    builds:[["SRAM Rival eTap AXS 2x","~$5,200"]],
+    sizes:"48, 51, 54, 56, 58, 61", weight:8.6, weightText:"~8.6 kg (51)",
+    mounts:"Bottle mounts only (race frame)",
+    geo:[["51","535","371","73.1°","71.0°","1005"],["54","555","378","73.1°","71.0°","1020"],["56","575","385","72.9°","71.0°","1034"]],
+    tag:"Road-plus brand-loyalty option — fast & stable, but 45 mm + SRAM.",
+    fit:"'OutFront' geometry (71° HTA + long fork offset) = high-speed stability with low-speed agility; short 422 mm chainstays. Lowest stack here (51: 535/371). Confirm live geometry before buying.",
+    sources:[["Cannondale SuperSix EVO SE","https://www.cannondale.com/en-us/bikes/road/gravel/supersix-evo-se/supersix-evo-se"],["GranFondo review","https://granfondo-cycling.com/cannondale-supersix-evo-se-2022-review/"]]
+  },
+  {
+    brand:"OPEN", model:"WI.DE. 2.0", year:"2024", cat:"Race · All-road", category:"race",
+    frame:"Carbon frameset (narrow Q-factor), ~1,040 g (M)", clearance:46, clearanceText:"46 mm (700c) / 650b × 2.4\"",
+    di2:"no", crank165:"byo", crankText:"Frameset — choose any crank length on your build",
+    priceNum:8000, priceText:"Frameset $3,200–$4,000; SRAM AXS complete builds only",
+    builds:[["SRAM Force AXS / Zipp XPLR (complete)","~$8,000"],["SRAM RED AXS / Zipp XPLR","~$10,200"],["Frameset (raw → painted)","$3,200–$4,000"]],
+    sizes:"XS, S, M, L, XL", weight:null, weightText:"Frame ~1,040 g (M); fork ~390 g",
+    mounts:"Extra under-downtube bottle + toolbox; fender-compatible; bag-friendly (no rack)",
+    geo:[["M","570","370","73.5°","71.0°","1009"],["L","595","382","73.5°","71.5°","1022"]],
+    tag:"Frameset with narrow Q-factor — 650b clearance king, build it your way.",
+    fit:"Short reach (pair a longer stem for race fit); double-dropped chainstays maximize clearance. Shines on 650b for big rubber. SRAM AXS-only completes.",
+    sources:[["OPEN WI.DE (official)","https://opencycle.com/open-wide"],["CyclingWeekly — WI.DE 2.0","https://www.cyclingweekly.com/products/new-open-wi-de-2-0-takes-gravel-clearances-to-a-whole-new-level-with-provision-for-gargantuan-66mm-tyres"]]
+  },
+  {
+    brand:"ENVE", model:"Fray", year:"2025", cat:"Excluded · All-road", category:"excluded",
+    frame:"Carbon all-road chassis (integrated cockpit)", clearance:35, clearanceText:"35 mm (~40 mm w/ 1x)",
+    di2:"no", crank165:"unverified", crankText:"Unverified",
+    priceNum:8750, priceText:"SRAM AXS only — this is an all-road bike, not race gravel",
+    builds:[["Foundation Force AXS","$8,750"],["Premium RED AXS","$12,000"],["Frameset","$4,800"]],
+    sizes:"47, 50, 52, 54, 56, 58, 60", weight:null, weightText:"Unverified",
+    mounts:"Top-tube + downtube mounts, Cargo Bay storage",
+    geo:[["52","556","377","74.0°","72.0°","994"],["54","573","383","73.8°","72.0°","1006"],["56","591","389","73.5°","72.6°","1008"]],
+    tag:"All-road / fast-pavement bike — 35 mm clearance excludes it from gravel.",
+    fit:"Between the Melee (race road) and MOG (gravel). Included for completeness only — does not meet the use case.",
+    sources:[["ENVE Fray (official)","https://enve.com/collections/fray"]]
+  },
+  {
+    brand:"Allied", model:"BC40", year:"2024", cat:"Excluded · XC MTB", category:"excluded",
+    frame:"Carbon XC mountain bike — 120 mm travel, 29\" wheels", clearance:61, clearanceText:"n/a — 29\" MTB tires up to 2.4\"",
+    di2:"no", crank165:"unverified", crankText:"MTB cranks (170/175)",
+    priceNum:6835, priceText:"XC MTB builds (SRAM Eagle / Shimano XT-XTR) — NOT a gravel bike",
+    builds:[["MTB builds","$6,835–$12,930"],["Frameset","from ~$5,250"]],
+    sizes:"S, M, L, XL", weight:11.6, weightText:"~11.6 kg (M)",
+    mounts:"XC frame — bottle mount(s)",
+    geo:[["M","609","445","76.0°","66.5°","1174"]],
+    tag:"This is a 120 mm XC mountain bike — excluded from the gravel decision.",
+    fit:"Very slack 66.5° HTA, long 1174 mm wheelbase — MTB geometry. Recorded only because it was named.",
+    sources:[["Allied BC40 (official)","https://alliedcycleworks.com/collections/bc40"]]
+  }
+];
+
+const di2Label = { yes:"GRX Di2 ✓", no:"Di2 ✗", partial:"Di2 ? (US=SRAM)", "no-us":"Di2 ✗ (not US)" };
+const di2Class = { yes:"good", no:"bad", partial:"warn", "no-us":"bad" };
+const crankLabel = { yes:"165mm ✓", no:"165mm ✗", unverified:"165mm ?", limited:"165mm ~", byo:"BYO crank" };
+const crankClass = { yes:"good", no:"bad", unverified:"warn", limited:"warn", byo:"good" };
+
+function clearClass(c){ return c>=50 ? "lime" : (c>=47 ? "amber" : "rust"); }
+function isPriority(b){ return b.clearance>=50 && b.di2==="yes"; }
+function fmtPrice(b){ return b.priceNum==null ? "USD TBD" : "$"+b.priceNum.toLocaleString(); }
+
+const state = { q:"", sort:"featured", filters:new Set(), compare:new Set() };
+const MAX_COMPARE = 4;
+
+const grid = document.getElementById('grid');
+const ctEl = document.getElementById('ct');
+
+function passes(b){
+  if(state.q){
+    const hay = (b.brand+" "+b.model+" "+b.cat).toLowerCase();
+    if(!hay.includes(state.q.toLowerCase())) return false;
+  }
+  if(b.category==="excluded" && !state.filters.has("showExcluded")) return false;
+  if(state.filters.has("both") && !isPriority(b)) return false;
+  if(state.filters.has("clear50") && b.clearance<50) return false;
+  if(state.filters.has("di2") && b.di2!=="yes") return false;
+  if(state.filters.has("crank165") && !(b.crank165==="yes"||b.crank165==="byo")) return false;
+  return true;
+}
+
+function sortBikes(list){
+  const s = state.sort;
+  const arr = [...list];
+  if(s==="name") arr.sort((a,b)=> (a.brand+a.model).localeCompare(b.brand+b.model));
+  else if(s==="clearance") arr.sort((a,b)=> b.clearance-a.clearance);
+  else if(s==="priceAsc") arr.sort((a,b)=> (a.priceNum??9e9)-(b.priceNum??9e9));
+  else if(s==="priceDesc") arr.sort((a,b)=> (b.priceNum??-1)-(a.priceNum??-1));
+  else if(s==="weight") arr.sort((a,b)=> (a.weight??9e9)-(b.weight??9e9));
+  else { // featured: priority first, then clearance desc, then price asc
+    arr.sort((a,b)=>{
+      const pa=isPriority(a)?0:1, pb=isPriority(b)?0:1;
+      if(pa!==pb) return pa-pb;
+      if(a.category==="excluded" && b.category!=="excluded") return 1;
+      if(b.category==="excluded" && a.category!=="excluded") return -1;
+      if(b.clearance!==a.clearance) return b.clearance-a.clearance;
+      return (a.priceNum??9e9)-(b.priceNum??9e9);
+    });
+  }
+  return arr;
+}
+
+function render(){
+  const list = sortBikes(BIKES.filter(passes));
+  ctEl.textContent = list.length;
+  grid.innerHTML = "";
+  if(!list.length){
+    grid.innerHTML = '<div class="empty">No bikes match these filters.<br>Try removing a chip.</div>';
+    return;
+  }
+  list.forEach((b, i)=>{
+    const idx = BIKES.indexOf(b);
+    const card = document.createElement('div');
+    card.className = "card" + (isPriority(b)?" priority":"") + (b.category==="excluded"?" excluded":"");
+    card.style.animationDelay = (Math.min(i,12)*0.035)+"s";
+    card.onclick = ()=> openModal(idx);
+    card.innerHTML = `
+      <div class="card-cat">${b.cat}</div>
+      <div class="card-brand">${b.brand}</div>
+      <div class="card-model">${b.model}</div>
+      <div class="card-year">${b.year}</div>
+      <div class="card-tag">${b.tag}</div>
+      <div class="specs">
+        <div class="spec"><div class="k">Clearance</div><div class="v ${clearClass(b.clearance)}">${b.clearanceText.split(' ')[0]} mm</div></div>
+        <div class="spec"><div class="k">Elec. price</div><div class="v">${fmtPrice(b)}</div></div>
+      </div>
+      <div class="badges">
+        <span class="badge ${di2Class[b.di2]}">${di2Label[b.di2]}</span>
+        <span class="badge ${crankClass[b.crank165]}">${crankLabel[b.crank165]}</span>
+        ${b.weight?`<span class="badge">${b.weight} kg</span>`:''}
+      </div>
+      <button class="cmp-btn${state.compare.has(idx)?' on':''}" onclick="event.stopPropagation();toggleCompare(${idx})">${state.compare.has(idx)?'✓ In compare':'+ Compare'}</button>
+      <div class="card-foot">
+        <span class="view-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <a class="ext" href="${b.sources[0][1]}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${b.brand} page ↗</a>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+const modalBack = document.getElementById('modalBack');
+const modal = document.getElementById('modal');
+
+function openModal(idx){
+  const b = BIKES[idx];
+  const buildRows = b.builds.map(x=>`<li><span>${x[0]}</span><span class="price">${x[1]}</span></li>`).join('');
+  const geoRows = b.geo.map(g=>`<tr><td>${g[0]}</td><td>${g[1]}</td><td>${g[2]}</td><td>${g[3]}</td><td>${g[4]}</td><td>${g[5]}</td></tr>`).join('');
+  const srcLinks = b.sources.map((s,i)=>`<a class="src ${i===0?'primary':''}" href="${s[1]}" target="_blank" rel="noopener">
+     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>
+     ${s[0]}</a>`).join('');
+  modal.innerHTML = `
+    <div class="modal-head">
+      <button class="close" onclick="closeModal()" aria-label="Close">×</button>
+      <div class="card-cat">${b.cat}${isPriority(b)?' · ★ HITS BOTH PRIORITIES':''}</div>
+      <h2>${b.brand} ${b.model}</h2>
+      <div class="yr">Model year ${b.year}</div>
+    </div>
+    <div class="modal-body">
+      <div class="mb-section">
+        <h3>At a glance</h3>
+        <div class="kv-grid">
+          <div class="kv"><div class="k">Tire clearance</div><div class="v" style="color:var(--${clearClass(b.clearance)==='lime'?'lime':clearClass(b.clearance)==='amber'?'amber':'rust'})">${b.clearanceText}</div></div>
+          <div class="kv"><div class="k">Electronic build</div><div class="v">${fmtPrice(b)}</div></div>
+          <div class="kv"><div class="k">Frame</div><div class="v" style="font-size:12.5px">${b.frame}</div></div>
+          <div class="kv"><div class="k">Cranks</div><div class="v" style="font-size:12.5px">${b.crankText}</div></div>
+          <div class="kv"><div class="k">Sizes</div><div class="v" style="font-size:12.5px">${b.sizes}</div></div>
+          <div class="kv"><div class="k">Weight</div><div class="v" style="font-size:12.5px">${b.weightText}</div></div>
+        </div>
+      </div>
+      <div class="mb-section">
+        <h3>Groupset / build options & price</h3>
+        <p class="prose" style="margin-bottom:12px;color:var(--muted);font-size:13px">${b.priceText}</p>
+        <ul class="build-list">${buildRows}</ul>
+      </div>
+      <div class="mb-section">
+        <h3>Geometry (sizes near 178 cm) — mm / degrees</h3>
+        <table class="geo">
+          <thead><tr><th>Size</th><th>Stack</th><th>Reach</th><th>STA</th><th>HTA</th><th>Wheelbase</th></tr></thead>
+          <tbody>${geoRows}</tbody>
+        </table>
+      </div>
+      <div class="mb-section">
+        <h3>Mounts</h3>
+        <p class="prose">${b.mounts}</p>
+      </div>
+      <div class="mb-section">
+        <h3>Fit & handling notes</h3>
+        <p class="prose">${b.fit}</p>
+      </div>
+      <div class="mb-section">
+        <h3>Sources &amp; links</h3>
+        <div class="src-links">${srcLinks}</div>
+      </div>
+    </div>`;
+  modalBack.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){ modalBack.classList.remove('open'); document.body.style.overflow=''; }
+modalBack.addEventListener('click', e=>{ if(e.target===modalBack) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+document.getElementById('search').addEventListener('input', e=>{ state.q=e.target.value; render(); });
+document.getElementById('sort').addEventListener('change', e=>{ state.sort=e.target.value; render(); });
+document.getElementById('chips').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip'); if(!chip) return;
+  const f = chip.dataset.f;
+  if(state.filters.has(f)){ state.filters.delete(f); chip.classList.remove('on'); }
+  else { state.filters.add(f); chip.classList.add('on'); }
+  render();
+});
+
+// ---- Compare ----
+const cmpTray = document.getElementById('cmpTray');
+const cmpItems = document.getElementById('cmpItems');
+const cmpBack = document.getElementById('cmpBack');
+const cmpPanel = document.getElementById('cmpPanel');
+
+function toggleCompare(idx){
+  if(state.compare.has(idx)) state.compare.delete(idx);
+  else {
+    if(state.compare.size >= MAX_COMPARE){
+      const go = document.getElementById('cmpGo');
+      go.animate([{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:300});
+      return;
+    }
+    state.compare.add(idx);
+  }
+  render();
+  renderTray();
+}
+function removeCompare(idx){ state.compare.delete(idx); render(); renderTray(); if(state.compare.size<2 && cmpBack.classList.contains('open')) closeCompare(); else if(cmpBack.classList.contains('open')) openCompare(); }
+function clearCompare(){ state.compare.clear(); render(); renderTray(); closeCompare(); }
+
+function renderTray(){
+  const ids = [...state.compare];
+  document.getElementById('cmpCount').textContent = ids.length;
+  document.getElementById('cmpGo').disabled = ids.length < 2;
+  cmpItems.innerHTML = ids.map(i=>`<span class="cmp-pill">${BIKES[i].brand} ${BIKES[i].model}<button onclick="removeCompare(${i})" aria-label="Remove">×</button></span>`).join('') || '<span style="color:var(--faint);font-family:var(--mono);font-size:11.5px">Add 2–4 bikes to compare them side by side.</span>';
+  if(ids.length){ cmpTray.classList.add('show'); document.body.classList.add('tray-open'); }
+  else { cmpTray.classList.remove('show'); document.body.classList.remove('tray-open'); }
+}
+
+function openCompare(){
+  const ids = [...state.compare];
+  if(ids.length < 2) return;
+  const bikes = ids.map(i=>BIKES[i]);
+  const prices = bikes.map(b=>b.priceNum).filter(v=>v!=null);
+  const minPrice = prices.length ? Math.min(...prices) : null;
+  const maxClear = Math.max(...bikes.map(b=>b.clearance));
+  const weights = bikes.map(b=>b.weight).filter(v=>v!=null);
+  const minWeight = weights.length ? Math.min(...weights) : null;
+
+  const head = `<tr><th class="rowlabel"></th>` + ids.map(i=>{
+    const b = BIKES[i];
+    return `<th class="cmp-bikehead"><div class="b">${b.brand}</div><div class="m">${b.model}</div><div class="y">${b.year}</div><button onclick="removeCompare(${i})">remove</button></th>`;
+  }).join('') + `</tr>`;
+
+  const row = (label, fn) => `<tr><td class="rowlabel">${label}</td>` + bikes.map(fn).join('') + `</tr>`;
+
+  const body =
+    row('Category', b=>`<td>${b.cat}</td>`) +
+    row('Hits both priorities', b=>{ const p=isPriority(b); return `<td><span class="cmp-prio ${p?'yes':'no'}">${p?'★ Yes':'No'}</span></td>`; }) +
+    row('Tire clearance', b=>`<td class="${b.clearance===maxClear?'win':''}">${b.clearanceText}</td>`) +
+    row('Electronic price', b=>`<td class="${(b.priceNum!=null&&b.priceNum===minPrice)?'win':''}">${fmtPrice(b)}</td>`) +
+    row('Groupset / Di2', b=>`<td>${di2Label[b.di2]}</td>`) +
+    row('165 mm crank', b=>`<td>${crankLabel[b.crank165]}</td>`) +
+    row('Frame', b=>`<td style="white-space:normal;max-width:240px">${b.frame}</td>`) +
+    row('Sizes', b=>`<td style="white-space:normal">${b.sizes}</td>`) +
+    row('Weight', b=>`<td class="${(b.weight!=null&&b.weight===minWeight)?'win':''}">${b.weightText}</td>`) +
+    row('Geometry (Stack / Reach)', b=>`<td class="cmp-geo">${b.geo.map(g=>`${g[0]}: ${g[1]==='—'?'—':g[1]+'/'+g[2]}`).join('<br>')}</td>`) +
+    row('STA / HTA (mid size)', b=>{ const g=b.geo[Math.floor(b.geo.length/2)]; return `<td>${g[3]} / ${g[4]}</td>`; }) +
+    row('Mounts', b=>`<td style="white-space:normal;max-width:240px">${b.mounts}</td>`) +
+    row('Notes', b=>`<td style="white-space:normal;max-width:240px;color:var(--muted)">${b.tag}</td>`) +
+    row('Links', b=>`<td><a class="cmp-src" href="${b.sources[0][1]}" target="_blank" rel="noopener">${b.brand} page ↗</a></td>`);
+
+  cmpPanel.innerHTML = `
+    <div class="modal-head">
+      <button class="close" onclick="closeCompare()" aria-label="Close">×</button>
+      <div class="card-cat">Side-by-side comparison · ${ids.length} bikes</div>
+      <h2>Compare</h2>
+    </div>
+    <div class="cmp-scroll">
+      <table class="cmp-table"><thead>${head}</thead><tbody>${body}</tbody></table>
+    </div>`;
+  cmpBack.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCompare(){ cmpBack.classList.remove('open'); if(!modalBack.classList.contains('open')) document.body.style.overflow=''; }
+cmpBack.addEventListener('click', e=>{ if(e.target===cmpBack) closeCompare(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCompare(); });
+
+renderTray();
+render();
+</script>
+</body>
+</html>
