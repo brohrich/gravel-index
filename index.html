@@ -84,6 +84,8 @@
   .fp-hint { font-family: var(--mono); font-size: 10px; color: var(--faint); margin-top: 6px; display: block; letter-spacing: .02em; }
   .fp-explain { grid-column: 1/-1; font-family: var(--mono); font-size: 11px; line-height: 1.7; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 12px; margin-top: 2px; }
   .fp-explain b { color: var(--text); }
+  .fp-note { grid-column: 1/-1; font-family: var(--mono); font-size: 11px; line-height: 1.7; color: var(--text); background: rgba(199,240,50,.06); border: 1px solid rgba(199,240,50,.25); border-radius: 9px; padding: 11px 13px; margin-top: 2px; }
+  .fp-note b { color: var(--lime); }
   .fitpanel.collapsed .fitpanel-controls { display: none; }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(335px, 1fr)); gap: 16px; padding: 24px 0 60px; }
@@ -294,6 +296,7 @@
         <span class="fp-hint">how high the bars sit · lower = more aggressive</span>
       </div>
       <p class="fp-explain">Default is your <b>2017 fit (Stack 554 / Reach 379)</b> — which matches a size-54 SuperSix EVO, the road bike you ride. Each card computes the <b>best-fit size</b> for these numbers, the <b>stem length</b> it'd take (baseline 120&nbsp;mm), and the <b>stock crank</b> that size ships with. Reach is easily corrected with stem length; stack you can raise with spacers but can't easily drop below the frame — so a frame that's too tall is the real dealbreaker. Slide toward lower stack / shorter reach to explore sizing down. These are guidance estimates, not a substitute for a real fitting.</p>
+      <div class="fp-note">↕ <b>Saddle height &amp; crank length move together.</b> A shorter crank drops the pedal at the bottom of the stroke, so raise your saddle by the same amount to keep leg extension — from 172.5&nbsp;mm: 170 = <b>+2.5&nbsp;mm</b>, 165 = <b>+7.5&nbsp;mm</b>, 160 = <b>+12.5&nbsp;mm</b> saddle. Each size here ships a different stock crank, so when a size-down also shortens the crank, plan to re-set saddle height. Your reference: <b>172.5&nbsp;mm cranks, saddle ≈ 71&nbsp;cm</b> (BB → saddle top, approx. from the Salsa rental).</div>
     </div>
   </div>
   <div class="grid" id="grid"></div>
