@@ -86,6 +86,20 @@
   .fp-explain b { color: var(--text); }
   .fp-note { grid-column: 1/-1; font-family: var(--mono); font-size: 11px; line-height: 1.7; color: var(--text); background: rgba(199,240,50,.06); border: 1px solid rgba(199,240,50,.25); border-radius: 9px; padding: 11px 13px; margin-top: 2px; }
   .fp-note b { color: var(--lime); }
+  .fp-presets { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fp-reset.fp-current { border-color: rgba(199,240,50,.5); color: var(--lime); }
+  .fp-reset.fp-current:hover { background: rgba(199,240,50,.1); }
+  .fp-baseline { grid-column: 1/-1; font-family: var(--mono); font-size: 10.5px; line-height: 1.6; color: var(--muted); margin-top: 2px; }
+  .fp-baseline b { color: var(--lime); }
+  .fp-ref { grid-column: 1/-1; margin-top: 4px; border-top: 1px dashed var(--line); padding-top: 12px; }
+  .fp-ref-title { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); margin-bottom: 8px; }
+  .fp-ref-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11px; }
+  .fp-ref-table th, .fp-ref-table td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .fp-ref-table th { color: var(--faint); font-weight: 500; font-size: 9.5px; letter-spacing: .05em; text-transform: uppercase; }
+  .fp-ref-table td:first-child, .fp-ref-table th:first-child { text-align: left; color: var(--text); }
+  .fp-ref-table tbody tr:hover td { background: var(--surface); }
+  .fp-ref-note { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-top: 8px; line-height: 1.7; }
+  .fp-ref-note b { color: var(--text); }
   .fitpanel.collapsed .fitpanel-controls { display: none; }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(335px, 1fr)); gap: 16px; padding: 24px 0 60px; }
@@ -282,7 +296,10 @@
   <div class="fitpanel" id="fitpanel">
     <div class="fitpanel-head">
       <div><span class="fp-title"><span class="dot">◎</span> Your fit target</span><span class="fp-sub">drives the best-fit size on every card</span></div>
-      <button class="fp-reset" onclick="resetTarget()">↺ Reset to 2017 fit (554 / 379)</button>
+      <div class="fp-presets">
+        <button class="fp-reset" onclick="setPreset('2017')">↺ 2017 fit (554 / 379 · 120mm)</button>
+        <button class="fp-reset fp-current" onclick="setPreset('current')">◎ Current me (560 / 370 · 90mm)</button>
+      </div>
     </div>
     <div class="fitpanel-controls">
       <div class="fp-slider">
@@ -295,8 +312,21 @@
         <input type="range" id="stackSlider" min="515" max="610" step="1" value="554" />
         <span class="fp-hint">how high the bars sit · lower = more aggressive</span>
       </div>
-      <p class="fp-explain">Default is your <b>2017 fit (Stack 554 / Reach 379)</b> — which matches a size-54 SuperSix EVO, the road bike you ride. Each card computes the <b>best-fit size</b> for these numbers, the <b>stem length</b> it'd take (baseline 120&nbsp;mm), and the <b>stock crank</b> that size ships with. Reach is easily corrected with stem length; stack you can raise with spacers but can't easily drop below the frame — so a frame that's too tall is the real dealbreaker. Slide toward lower stack / shorter reach to explore sizing down. These are guidance estimates, not a substitute for a real fitting.</p>
-      <div class="fp-note">↕ <b>Saddle height &amp; crank length move together.</b> A shorter crank drops the pedal at the bottom of the stroke, so raise your saddle by the same amount to keep leg extension — from 172.5&nbsp;mm: 170 = <b>+2.5&nbsp;mm</b>, 165 = <b>+7.5&nbsp;mm</b>, 160 = <b>+12.5&nbsp;mm</b> saddle. Each size here ships a different stock crank, so when a size-down also shortens the crank, plan to re-set saddle height. Your reference: <b>172.5&nbsp;mm cranks, saddle ≈ 71&nbsp;cm</b> (BB → saddle top, approx. from the Salsa rental).</div>
+      <div class="fp-baseline">Stem baseline: <b id="baseStemVal">120</b> mm — the stem you'd run on a frame that exactly matches your target reach. Stem estimates scale from this. (<b>2017</b> ran a 120mm stem; the <b>Current me</b> preset assumes ~90mm, reflecting the shorter stems you ride now.)</div>
+      <p class="fp-explain"><b>2017 fit</b> = Stack 554 / Reach 379 (≈ your 54 SuperSix). <b>Current me</b> = Stack 560 / Reach 370 with a 90mm stem baseline — your 2017 *height* but a shorter reach and the shorter stems you favor now (drawn from the Journeyer demo below). Each card computes the <b>best-fit size</b>, the <b>stem</b> it'd take, and the <b>stock crank</b> that size ships with. Reach is corrected with stem length; stack you can raise with spacers but can't easily drop below the frame — so a too-tall frame is the real dealbreaker. Estimates, not a substitute for a fitting.</p>
+      <div class="fp-note">↕ <b>Saddle height &amp; crank length move together.</b> A shorter crank drops the pedal at the bottom of the stroke, so raise your saddle by the same amount to keep leg extension — from 172.5&nbsp;mm: 170 = <b>+2.5&nbsp;mm</b>, 165 = <b>+7.5&nbsp;mm</b>, 160 = <b>+12.5&nbsp;mm</b> saddle. Each size here ships a different stock crank, so when a size-down also shortens the crank, plan to re-set saddle height. Your reference: <b>172.5&nbsp;mm cranks, saddle ≈ 71&nbsp;cm</b> (BB → saddle top, approx. from the Journeyer demo).</div>
+      <div class="fp-ref">
+        <div class="fp-ref-title">Your reference fits — where your hands actually sat</div>
+        <table class="fp-ref-table">
+          <thead><tr><th>Reference</th><th>Stack / Reach</th><th>Stem</th><th>~Bar reach (X)</th><th>~Bar height (Y)</th></tr></thead>
+          <tbody>
+            <tr><td>2017 fit (measured)</td><td>554 / 379</td><td>120</td><td>484</td><td>620</td></tr>
+            <tr><td>Journeyer 51 (demo)</td><td>528 / 368</td><td>70</td><td>~430</td><td>~597</td></tr>
+            <tr><td>Journeyer 53 (demo)</td><td>552 / 372</td><td>80</td><td>~443</td><td>~620</td></tr>
+          </tbody>
+        </table>
+        <div class="fp-ref-note">The 2022 Journeyer Apex 1 (drop bar, 69.5° HTA, non-e-bike) you descended better on put your hands <b>~40 mm closer</b> than 2017 at <b>~the same height</b> (size 53) — driven by the <b>short stem + slack steering</b>, not a tiny frame. Hence the "Current me" preset: keep the height, shorten the reach.</div>
+      </div>
     </div>
   </div>
   <div class="grid" id="grid"></div>
@@ -596,7 +626,7 @@ function fitForRow(g, t){
   if(isNaN(S) || isNaN(R)) return null;
   const reachDelta = R - t.reach;
   const stackDelta = S - t.stack;
-  const stem = Math.round((REF_STEM - reachDelta)/5)*5;
+  const stem = Math.round(((t.baseStem||REF_STEM) - reachDelta)/5)*5;
   let stemPen;
   if(stem < 70 || stem > 135) stemPen = 40 + Math.abs(stem-100)*0.5;
   else if(stem < 90) stemPen = (90-stem)*0.8;
@@ -625,7 +655,7 @@ function bestFit(b, t){
   return fits[0];
 }
 
-const state = { q:"", sort:"fit", filters:new Set(), compare:new Set(), target:{ stack:554, reach:379 } };
+const state = { q:"", sort:"fit", filters:new Set(), compare:new Set(), target:{ stack:554, reach:379, baseStem:120 } };
 const MAX_COMPARE = 4;
 const grid = document.getElementById('grid');
 const ctEl = document.getElementById('ct');
@@ -752,7 +782,7 @@ function openModal(idx){
           <thead><tr><th>Size</th><th>Stack</th><th>Reach</th><th>STA</th><th>HTA</th><th>WB</th><th>Crank</th><th>Stem est.</th><th>Fit</th></tr></thead>
           <tbody>${geoRows}</tbody>
         </table>
-        <div class="geo-note">◀ = best-fit size for your target. <b>Stem est.</b> = stem length to land on your target reach (baseline 120 mm). <b>Crank</b> = stock length that size ships with. Estimates — confirm at a fitting.</div>
+        <div class="geo-note">◀ = best-fit size for your target. <b>Stem est.</b> = stem length to land on your target reach (baseline ${t.baseStem} mm). <b>Crank</b> = stock length that size ships with. Estimates — confirm at a fitting.</div>
       </div>
       <div class="mb-section">
         <h3>Mounts</h3>
@@ -839,12 +869,18 @@ function syncTarget(){
   state.target.stack = +stackSlider.value;
   document.getElementById('reachVal').textContent = reachSlider.value;
   document.getElementById('stackVal').textContent = stackSlider.value;
+  document.getElementById('baseStemVal').textContent = state.target.baseStem;
   render();
   if(cmpBack.classList.contains('open')) openCompare();
 }
 reachSlider.addEventListener('input', syncTarget);
 stackSlider.addEventListener('input', syncTarget);
-function resetTarget(){ reachSlider.value=379; stackSlider.value=554; syncTarget(); }
+function setPreset(which){
+  if(which==='current'){ stackSlider.value=560; reachSlider.value=370; state.target.baseStem=90; }
+  else { stackSlider.value=554; reachSlider.value=379; state.target.baseStem=120; }
+  syncTarget();
+}
+function resetTarget(){ setPreset('2017'); }
 
 document.getElementById('search').addEventListener('input', e=>{ state.q=e.target.value; render(); });
 document.getElementById('sort').addEventListener('change', e=>{ state.sort=e.target.value; render(); });
