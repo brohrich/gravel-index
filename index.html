@@ -257,6 +257,33 @@
   footer { border-top: 1px solid var(--line); padding: 30px 0 50px; color: var(--faint); font-family: var(--mono); font-size: 11.5px; line-height: 1.8; }
   footer a { color: var(--muted); }
   @media (max-width: 640px) { .fitpanel-controls { grid-template-columns: 1fr; } h1 { font-size: 2.5rem; } }
+
+  /* ===== SIZE-DOWN STUDIO ===== */
+  .studio-tabs { display: flex; gap: 6px; margin: 26px 0 0; }
+  .studio-tab { font-family: var(--mono); font-size: 13px; letter-spacing: .02em; padding: 9px 18px; border-radius: 10px; border: 1px solid var(--line2); background: var(--surface); color: var(--muted); cursor: pointer; transition: .15s; }
+  .studio-tab:hover { color: var(--text); border-color: var(--lime-dim); }
+  .studio-tab.on { background: var(--lime); color: #15170f; border-color: var(--lime); font-weight: 600; }
+  .studio { display: none; padding: 22px 0 60px; }
+  .studio-controls { display: flex; gap: 26px; align-items: flex-end; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 15px 18px; margin-bottom: 20px; }
+  .sc-group { display: flex; flex-direction: column; gap: 7px; }
+  .sc-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .07em; color: var(--faint); }
+  .sc-pills { display: flex; gap: 6px; }
+  .sc-pill { font-family: var(--mono); font-size: 12px; padding: 7px 13px; border-radius: 8px; border: 1px solid var(--line2); background: var(--surface2); color: var(--text); cursor: pointer; }
+  .sc-pill.on { background: var(--lime); color: #15170f; border-color: var(--lime); font-weight: 600; }
+  .sc-sel { font-family: var(--mono); font-size: 13px; padding: 8px 30px 8px 12px; border-radius: 8px; border: 1px solid var(--line2); background: var(--surface2); color: var(--text); cursor: pointer; appearance: none; }
+  .studio-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; }
+  .sp-h { font-size: 12px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+  .studio-panel svg { width: 100%; height: auto; display: block; }
+  .sp-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12.5px; }
+  .sp-table th { text-align: left; color: var(--faint); font-weight: 500; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; padding: 0 6px 8px; border-bottom: 1px solid var(--line); }
+  .sp-table td { padding: 9px 6px; border-bottom: 1px solid var(--line); }
+  .sp-table tr.best td { background: rgba(199,240,50,.09); }
+  .sp-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+  .sp-neg { color: var(--rust); }
+  .sp-legend { font-family: var(--mono); font-size: 11px; color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+  .sp-legend b { color: var(--text); font-weight: 500; }
+  .sp-swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: middle; margin-right: 4px; }
+  .sp-note { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -388,7 +415,33 @@
       </div>
     </div>
   </div>
+  <div class="studio-tabs" role="tablist">
+    <button class="studio-tab on" id="tabBrowse" onclick="showView('browse')">Browse bikes</button>
+    <button class="studio-tab" id="tabStudio" onclick="showView('studio')">Size-down studio</button>
+  </div>
   <div class="grid" id="grid"></div>
+  <section class="studio" id="studio" aria-label="Size-down studio">
+    <div class="studio-controls">
+      <div class="sc-group"><span class="sc-label">Baseline (known-good fit)</span><div class="sc-pills" id="studioBasePills"></div></div>
+      <div class="sc-group"><span class="sc-label">Candidate model</span><select class="sc-sel" id="studioModel"></select></div>
+      <div class="sc-group"><span class="sc-label">Side-view size</span><select class="sc-sel" id="studioSize"></select></div>
+    </div>
+    <div class="studio-panel">
+      <h3 class="sp-h">② Bar-position map — stack vs reach</h3>
+      <svg id="studioMap" viewBox="0 0 1200 460"></svg>
+      <div class="sp-legend" id="studioMapLegend"></div>
+    </div>
+    <div class="studio-panel">
+      <h3 class="sp-h">① Size-down simulator — exact adjustments</h3>
+      <table class="sp-table" id="studioTable"></table>
+      <div class="sp-note" id="studioNote"></div>
+    </div>
+    <div class="studio-panel">
+      <h3 class="sp-h">③ Scale side-view — best-fit size over baseline</h3>
+      <svg id="studioSide" viewBox="0 0 1200 380"></svg>
+      <div class="sp-legend" id="studioSideLegend"></div>
+    </div>
+  </section>
 </div>
 
 <footer>
@@ -831,6 +884,38 @@ function bestFit(b, t){
   fits.sort((a,c)=> (a.cost-c.cost) || (a.S-c.S));
   return fits[0];
 }
+
+/* ===== SIZE-DOWN STUDIO — data layer ===== */
+const STUDIO_REF_CRANK = 172.5; // rider's current crank; saddle rises by (REF - crank)
+// Known-good reference fits. stack/reach feed the shared fit target; hta/tire are studio-only metadata (not part of state.target).
+const STUDIO_BASELINES = {
+  supersix:  { name:"SuperSix EVO 54", stack:555, reach:379, hta:73.1, tire:28 },
+  otso:      { name:"Otso Waheela M",  stack:555, reach:385, hta:71.5, tire:32 },
+  journeyer: { name:"Journeyer 53",    stack:552, reach:372, hta:69.5, tire:38 },
+};
+// Extend a fitForRow() result with the two studio-only moves.
+function sizeDownExtras(stackGap, crankRaw){
+  const crank = parseFloat(crankRaw);
+  return {
+    spacer:   stackGap < 0 ? Math.abs(stackGap) : 0,      // mm of spacers to recover bar height
+    overTall: stackGap > 20,                              // frame taller than reference → "slam"
+    saddle:   isNaN(crank) ? null : +(STUDIO_REF_CRANK - crank).toFixed(1),
+    crankNum: isNaN(crank) ? null : crank,
+  };
+}
+// One row per size. Reuses fitForRow() as the single source of truth.
+function studioRows(bike, target){
+  return bike.geo.map(g=>{
+    const f = fitForRow(g, target);
+    if(!f) return null;
+    return Object.assign({ size:g[0], hta:parseFloat(g[4]) }, f, sizeDownExtras(f.stackGap, f.crank));
+  }).filter(Boolean);
+}
+function studioBestSize(rows){
+  if(!rows.length) return null;
+  return rows.reduce((a,b)=> (b.cost < a.cost || (b.cost === a.cost && b.S < a.S)) ? b : a).size;
+}
+
 // Descending confidence ≈ slacker head angle + bigger tires (benchmark: rider's Otso = 71.5° / 53mm)
 function htaOf(b){
   const vals = b.geo.map(g=>parseFloat(g[4])).filter(v=>!isNaN(v));
@@ -1086,16 +1171,132 @@ function syncTarget(){
   document.getElementById('reachVal').textContent = reachSlider.value;
   document.getElementById('stackVal').textContent = stackSlider.value;
   render();
+  if(typeof studioVisible==='function' && studioVisible()) renderStudio();
+  if(typeof updateStudioPills==='function') updateStudioPills();
   if(cmpBack.classList.contains('open')) openCompare();
 }
 reachSlider.addEventListener('input', syncTarget);
 stackSlider.addEventListener('input', syncTarget);
 function setPreset(which){
-  if(which==='journeyer'){ reachSlider.value=372; stackSlider.value=552; }
-  else { reachSlider.value=379; stackSlider.value=555; }
+  if(which==='journeyer'){ reachSlider.value=372; stackSlider.value=552; studioBaseKey='journeyer'; }
+  else { reachSlider.value=379; stackSlider.value=555; studioBaseKey='supersix'; }
   syncTarget();
 }
 function resetTarget(){ setPreset('current'); }
+
+/* ===== SIZE-DOWN STUDIO — view wiring ===== */
+const STUDIO_VCOLOR = { good:"var(--lime)", ok:"var(--amber)", poor:"var(--rust)" };
+let studioBaseKey = "supersix";
+let studioModelIdx = null;   // index into BIKES
+let studioSize = null;       // size label for the side-view overlay
+
+function studioVisible(){ return document.getElementById('studio').style.display === 'block'; }
+function showView(v){
+  const on = v === 'studio';
+  document.getElementById('grid').style.display   = on ? 'none' : '';
+  document.getElementById('studio').style.display = on ? 'block' : 'none';
+  document.getElementById('tabBrowse').classList.toggle('on', !on);
+  document.getElementById('tabStudio').classList.toggle('on', on);
+  if(on) renderStudio();
+}
+function studioBase(){
+  // Single reference: stack/reach follow state.target; baseline key supplies HTA/tire metadata.
+  const b = STUDIO_BASELINES[studioBaseKey];
+  return { name:b.name, stack:state.target.stack, reach:state.target.reach, hta:b.hta, tire:b.tire };
+}
+function renderStudio(){
+  if(studioModelIdx == null) return;
+  const base = studioBase();
+  const bike = BIKES[studioModelIdx];
+  const rows = studioRows(bike, state.target);
+  if(!rows.find(r=>r.size===studioSize)) studioSize = studioBestSize(rows);
+  const sizeSel = document.getElementById('studioSize');
+  if(sizeSel) sizeSel.value = studioSize;
+  drawStudioMap(rows, base);
+  drawStudioTable(rows, base, bike);
+  drawStudioSide(rows, base, bike);
+}
+
+function drawStudioMap(rows, base){
+  const allR=[base.reach,...rows.map(r=>r.R)], allS=[base.stack,...rows.map(r=>r.S)];
+  let minR=Math.min(...allR)-18, maxR=Math.max(...allR)+18;
+  let minS=Math.min(base.stack-30,...allS)-22, maxS=Math.max(base.stack+25,...allS)+22;
+  const L=70,Rr=30,T=26,B=48,W=1200,H=460;
+  const xs=r=>L+(r-minR)/(maxR-minR)*(W-L-Rr);
+  const ys=s=>H-B-(s-minS)/(maxS-minS)*(H-B-T);
+  let el=`<line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="var(--line2)"/><line x1="${L}" y1="${H-B}" x2="${W-Rr}" y2="${H-B}" stroke="var(--line2)"/>`;
+  el+=`<text x="${(L+W-Rr)/2}" y="${H-12}" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--faint)">REACH (longer →)</text>`;
+  el+=`<text x="18" y="${(T+H-B)/2}" font-family="var(--mono)" font-size="12" fill="var(--faint)" transform="rotate(-90 18 ${(T+H-B)/2})">STACK (taller ↑)</text>`;
+  const bx1=xs(base.reach-12),bx2=xs(base.reach+12),by1=ys(base.stack+18),by2=ys(base.stack-22);
+  el+=`<rect x="${bx1}" y="${by1}" width="${bx2-bx1}" height="${by2-by1}" fill="var(--lime)" opacity="0.07" stroke="var(--lime)" stroke-dasharray="6 4"/>`;
+  el+=`<text x="${bx1+8}" y="${by1+17}" font-family="var(--mono)" font-size="11" fill="var(--lime-dim)">your fit zone</text>`;
+  rows.forEach(r=>{ const x=xs(r.R),y=ys(r.S),tx=xs(base.reach),ty=ys(Math.max(r.S,base.stack));
+    el+=`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="${STUDIO_VCOLOR[r.verdict]}" stroke-width="1.4" stroke-dasharray="3 3" opacity="0.5" marker-end="url(#studioArr)"/>`; });
+  Object.entries(STUDIO_BASELINES).forEach(([k,bl])=>{ const me=k===studioBaseKey;
+    const x=xs(me?base.reach:bl.reach), y=ys(me?base.stack:bl.stack);
+    el+=`<circle cx="${x}" cy="${y}" r="${me?7:5}" fill="${me?'var(--text)':'var(--faint)'}"/>`;
+    el+=`<text x="${x+10}" y="${y-(me?9:-16)}" font-family="var(--mono)" font-size="${me?12:10}" fill="${me?'var(--text)':'var(--faint)'}" font-weight="${me?600:400}">${bl.name.split(' ')[0]}${me?' ◀ baseline':''}</text>`; });
+  rows.forEach(r=>{ const x=xs(r.R),y=ys(r.S);
+    el+=`<circle cx="${x}" cy="${y}" r="7.5" fill="${STUDIO_VCOLOR[r.verdict]}" stroke="var(--bg)" stroke-width="2"/>`;
+    el+=`<text x="${x}" y="${y+23}" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="${STUDIO_VCOLOR[r.verdict]}" font-weight="600">${r.size}</text>`; });
+  el+=`<defs><marker id="studioArr" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0 0 L5 2.5 L0 5 z" fill="var(--lime)"/></marker></defs>`;
+  document.getElementById('studioMap').innerHTML=el;
+  document.getElementById('studioMapLegend').innerHTML=
+    `<span><span class="sp-swatch" style="background:var(--text)"></span><b>baseline</b></span>
+     <span><span class="sp-swatch" style="background:var(--lime)"></span><b>good fit</b></span>
+     <span><span class="sp-swatch" style="background:var(--amber)"></span><b>workable</b></span>
+     <span><span class="sp-swatch" style="background:var(--rust)"></span><b>a stretch</b></span>
+     <span>dashed box = fit zone · arrow = stem+spacer move</span>`;
+}
+function drawStudioTable(rows, base, bike){
+  const best = studioBestSize(rows);
+  let h = `<tr><th>Size</th><th>Stack/Reach</th><th>Δ reach</th><th>Δ stack</th><th>Stem</th><th>Spacers</th><th>Crank → saddle</th><th>Fit</th></tr>`;
+  rows.forEach(r=>{
+    const stem = r.stemDelta===0 ? "same" : (r.stemDelta<0 ? `${r.stemDelta}mm` : `+${r.stemDelta}mm`);
+    const spc  = r.overTall ? `slam (${r.stackGap>0?'+':''}${r.stackGap})` : (r.spacer>0 ? `+${r.spacer}mm` : "—");
+    const crank = r.crankNum==null ? "—" : r.crankNum;
+    const sad  = (r.saddle && r.saddle>0) ? `${crank} → +${r.saddle}` : `${crank} → —`;
+    h += `<tr class="${r.size===best?'best':''}"><td><b>${r.size}</b></td><td>${r.S}/${r.R}</td>
+      <td class="${r.reachGap<0?'sp-neg':''}">${r.reachGap>0?'+':''}${r.reachGap}</td>
+      <td class="${r.stackGap<0?'sp-neg':''}">${r.stackGap>0?'+':''}${r.stackGap}</td>
+      <td>${stem}</td>
+      <td style="color:${r.spacer>0?'var(--lime)':'var(--faint)'}">${spc}</td>
+      <td>${sad}</td>
+      <td style="color:${STUDIO_VCOLOR[r.verdict]}"><span class="sp-dot" style="background:${STUDIO_VCOLOR[r.verdict]}"></span>${r.verdict}</td></tr>`;
+  });
+  document.getElementById('studioTable').innerHTML = h;
+  document.getElementById('studioNote').innerHTML =
+    `Best-fit highlighted: <b>${bike.brand} ${bike.model} ${best}</b>. Stem rule ~0.87&nbsp;mm bar-reach / mm stem · saddle rule +(172.5 − crank) when sizing down shortens the crank · tire clearance ${bike.clearance}&nbsp;mm.`;
+}
+function drawStudioSide(rows, base, bike){
+  const r = rows.find(x=>x.size===studioSize) || rows[0];
+  const k=0.46, H=380, bbx=210, bby=H-80;
+  const bar=(reach,stack)=>[bbx+reach*k, bby-stack*k];
+  const [bxB,byB]=bar(base.reach,base.stack), [bxC,byC]=bar(r.R,r.S);
+  function frame(reach,stack,color,op){
+    const [bx,by]=bar(reach,stack); const headTopY=by+stack*k*0.18, headX=bx-58;
+    return `<line x1="${bbx}" y1="${bby}" x2="${headX}" y2="${headTopY}" stroke="${color}" stroke-width="5" stroke-linecap="round" opacity="${op}"/>
+      <line x1="${headX}" y1="${headTopY}" x2="${bx-14}" y2="${by+4}" stroke="${color}" stroke-width="5" stroke-linecap="round" opacity="${op}"/>
+      <line x1="${bx-14}" y1="${by+4}" x2="${bx}" y2="${by}" stroke="${color}" stroke-width="5" stroke-linecap="round" opacity="${op}"/>
+      <circle cx="${bx}" cy="${by}" r="9" fill="${color}" opacity="${op}"/>`;
+  }
+  let el=`<line x1="80" y1="${bby+25}" x2="1120" y2="${bby+25}" stroke="var(--line2)" stroke-dasharray="4 4"/>`;
+  el+=`<circle cx="${bbx}" cy="${bby}" r="7" fill="var(--text)"/><text x="${bbx}" y="${bby+42}" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--faint)">BB</text>`;
+  el+=frame(base.reach,base.stack,"var(--text)",1);
+  el+=frame(r.R,r.S,STUDIO_VCOLOR[r.verdict],0.92);
+  el+=`<text x="${bxB+14}" y="${byB-4}" font-family="var(--mono)" font-size="12" fill="var(--text)" font-weight="600">${base.name} — baseline</text>`;
+  el+=`<text x="${bxC+14}" y="${byC+18}" font-family="var(--mono)" font-size="12" fill="${STUDIO_VCOLOR[r.verdict]}" font-weight="600">${bike.brand} ${bike.model} ${r.size}</text>`;
+  const gx=Math.max(bxB,bxC)+160;
+  el+=`<line x1="${gx}" y1="${byB}" x2="${gx}" y2="${byC}" stroke="var(--lime)" stroke-width="1.5"/>
+    <line x1="${gx-5}" y1="${byB}" x2="${gx+5}" y2="${byB}" stroke="var(--lime)"/><line x1="${gx-5}" y1="${byC}" x2="${gx+5}" y2="${byC}" stroke="var(--lime)"/>
+    <text x="${gx+10}" y="${(byB+byC)/2+3}" font-family="var(--mono)" font-size="11" fill="var(--lime)">Δ stack ${r.stackGap>0?'+':''}${r.stackGap} → ${r.spacer>0?'+'+r.spacer+' spacer':(r.overTall?'slam':'ok')}</text>
+    <text x="${gx+10}" y="${(byB+byC)/2+21}" font-family="var(--mono)" font-size="11" fill="var(--rust)">Δ reach ${r.reachGap>0?'+':''}${r.reachGap} → ${r.stemDelta===0?'same stem':(r.stemDelta+'mm stem')}</text>`;
+  document.getElementById('studioSide').innerHTML=el;
+  document.getElementById('studioSideLegend').innerHTML=
+    `<span><span class="sp-swatch" style="background:var(--text)"></span><b>${base.name}</b> (HTA ${base.hta}°, ${base.tire}mm)</span>
+     <span><span class="sp-swatch" style="background:${STUDIO_VCOLOR[r.verdict]}"></span><b>${bike.brand} ${bike.model} ${r.size}</b> (HTA ${isNaN(r.hta)?'—':r.hta+'°'}, ${bike.clearance}mm)</span>
+     <span>dots = handlebar position · to scale from the BB</span>`;
+}
 
 document.getElementById('search').addEventListener('input', e=>{ state.q=e.target.value; render(); });
 document.getElementById('sort').addEventListener('change', e=>{ state.sort=e.target.value; render(); });
@@ -1111,6 +1312,43 @@ document.getElementById('chips').addEventListener('click', e=>{
 
 renderTray();
 render();
+
+/* ===== SIZE-DOWN STUDIO — init ===== */
+function studioModelIndices(){
+  return BIKES.map((b,i)=> studioRows(b, state.target).length ? i : -1).filter(i=>i>=0);
+}
+function studioSetBaseline(key){
+  studioBaseKey = key;
+  reachSlider.value = STUDIO_BASELINES[key].reach;
+  stackSlider.value = STUDIO_BASELINES[key].stack;
+  syncTarget(); // re-points the shared reference → re-renders grid + studio
+  updateStudioPills();
+}
+function updateStudioPills(){
+  document.querySelectorAll('#studioBasePills .sc-pill').forEach(p=>{
+    const b = STUDIO_BASELINES[p.dataset.k];
+    p.classList.toggle('on', p.dataset.k===studioBaseKey
+      && +stackSlider.value===b.stack && +reachSlider.value===b.reach);
+  });
+}
+function studioInit(){
+  document.getElementById('studioBasePills').innerHTML =
+    Object.entries(STUDIO_BASELINES).map(([k,b])=>
+      `<button class="sc-pill ${k===studioBaseKey?'on':''}" data-k="${k}" onclick="studioSetBaseline('${k}')">${b.name}</button>`).join('');
+  const ms = document.getElementById('studioModel');
+  const indices = studioModelIndices();             // compute once
+  ms.innerHTML = indices.map(i=>`<option value="${i}">${BIKES[i].brand} ${BIKES[i].model}</option>`).join('');
+  studioModelIdx = indices[0] ?? null;
+  ms.onchange = ()=>{ studioModelIdx = +ms.value; studioSize = null; buildStudioSizes(); renderStudio(); };
+  if(studioModelIdx == null) return;                // no candidate has verified geometry — nothing to build
+  buildStudioSizes();
+}
+function buildStudioSizes(){
+  const ss = document.getElementById('studioSize');
+  ss.innerHTML = BIKES[studioModelIdx].geo.map(g=>`<option value="${g[0]}">${g[0]}</option>`).join('');
+  ss.onchange = ()=>{ studioSize = ss.value; renderStudio(); };
+}
+studioInit();
 </script>
 </body>
 </html>
