@@ -127,7 +127,7 @@
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   .card:hover { transform: translateY(-4px); border-color: var(--line2); box-shadow: var(--shadow); }
   .card.priority { border-color: rgba(199,240,50,.5); }
-  .card.priority::before { content: "BOTH ✓"; position: absolute; top: 14px; right: -34px; transform: rotate(45deg); background: var(--lime); color: #14160c; font-family: var(--mono); font-weight: 600; font-size: 9.5px; letter-spacing: .12em; padding: 4px 40px; box-shadow: 0 2px 8px rgba(0,0,0,.4); z-index: 1; }
+  .card.priority::before { content: "v2 ✓"; position: absolute; top: 14px; right: -34px; transform: rotate(45deg); background: var(--lime); color: #14160c; font-family: var(--mono); font-weight: 600; font-size: 9.5px; letter-spacing: .12em; padding: 4px 40px; box-shadow: 0 2px 8px rgba(0,0,0,.4); z-index: 1; }
   .card.excluded { opacity: .58; }
   .card-cat { font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); margin-bottom: 9px; }
   .card-brand { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--lime-dim); text-transform: uppercase; }
@@ -292,12 +292,12 @@
   <div class="wrap">
     <div class="eyebrow">Gravel Bike Research // 2026</div>
     <h1>The Gravel <span class="slash">/</span> <em>Index</em></h1>
-    <p class="sub">An interactive dossier of high-end race-gravel bikes — anchored to your fit. Set your target stack &amp; reach and every bike shows its best-fit size, the stem it'd take, and the crank that size actually ships with.</p>
+    <p class="sub">An interactive dossier of high-end gravel bikes for a road-first all-rounder (TN + Europe travel) — anchored to your fit. Set your target stack &amp; reach and every bike shows its best-fit size, the stem it'd take, and the crank that size actually ships with.</p>
     <div class="reqs">
-      <span class="req">Use: <b>race / fast gravel</b></span>
-      <span class="req">Groupset: <b>GRX / Dura-Ace Di2</b></span>
-      <span class="req">Clearance: <b>&ge;50&nbsp;mm</b></span>
-      <span class="req">Bias: <b>size down</b></span>
+      <span class="req">Use: <b>road-first all-rounder</b></span>
+      <span class="req">Gearing: <b>2x near-mandatory</b></span>
+      <span class="req">Groupset: <b>GRX Di2 / road Di2</b></span>
+      <span class="req">Clearance: <b>&ge;45&nbsp;mm (&ge;50 bonus)</b></span>
     </div>
     <div class="header-links">
       <a class="hl" href="https://github.com/brohrich/gravel-index" target="_blank" rel="noopener">
@@ -328,52 +328,52 @@
       <div class="chips" id="chips">
         <span class="chip fp-toggle on" data-act="learnpanel">💡 Learnings</span>
         <span class="chip fp-toggle on" data-act="fitpanel">◎ Fit target</span>
-        <span class="chip" data-f="both">★ Hits both priorities</span>
+        <span class="chip" data-f="both">★ v2 priorities (Di2 · 2x · ≥45mm)</span>
         <span class="chip" data-f="calm">⛰ Calm descender</span>
         <span class="chip" data-f="clear50">≥50mm clearance</span>
         <span class="chip" data-f="di2">GRX Di2</span>
-        <span class="chip" data-f="showExcluded">Show non-gravel</span>
+        <span class="chip" data-f="twox">⚙ 2x-capable</span>
+        <span class="chip" data-f="showExcluded">Show non-gravel / reference</span>
       </div>
     </div>
     <div class="meta-row">
       <span class="count"><b id="ct">0</b> bikes shown</span>
-      <span class="legend">Fit dot: <span style="color:var(--lime)">● good</span>/<span style="color:var(--amber)">● workable</span>/<span style="color:var(--red)">● compromised</span> &nbsp;|&nbsp; ⛰ descending = slacker head angle + bigger tires (vs your Otso 71.5°/53mm)</span>
+      <span class="legend">Fit dot: <span style="color:var(--lime)">● good</span>/<span style="color:var(--amber)">● workable</span>/<span style="color:var(--red)">● compromised</span> &nbsp;|&nbsp; ⛰ descending = proxy only (slacker HTA + tire room; real levers incl. trail &amp; bar height — evidence is confounded)</span>
     </div>
   </div>
 </div>
 
 <div class="wrap">
   <div class="learnpanel" id="learnpanel">
-    <div class="lp-head"><span class="lp-title">💡 What the research taught me</span><span class="lp-sub">the fit + descending insights behind these picks</span></div>
+    <div class="lp-head"><span class="lp-title">💡 What the research taught me</span><span class="lp-sub">the v2 evidence model behind these picks — honest about what's confounded</span></div>
     <div class="lp-body">
       <div class="lp-insights">
         <div class="lp-card">
-          <div class="lp-k">The natural experiment</div>
-          <p>My 2017 SuperSix (555/379, <b>73.1°</b> head angle, ~28mm tires) and my Otso Waheela C (555/385, <b>71.5°</b>, 32mm) are nearly identical in fit — yet I only descend confidently on the Otso. A shorter 80mm stem on the SuperSix didn't change that. <b>So reach isn't the lever — descending confidence comes from a slacker head angle + bigger tires.</b></p>
+          <div class="lp-k">The "experiment" was confounded</div>
+          <p>My SuperSix (nervous) and Otso (confident) differ in <b>four ways at once</b>: tires (28 vs 32mm), head angle (73.1° vs 71.5°), <b>bar height (Otso ~20mm higher — 35mm of spacers vs 15)</b>, and terrain (the Otso has never left flat-ish MN; the SuperSix descends the Alps). Any of them — including just the skinny tires — could be the story. I treat "slacker + bigger tires + higher bars" as one combined direction, not settled fact.</p>
         </div>
         <div class="lp-card">
           <div class="lp-k">Reach is a stem, not a frame size</div>
-          <p>The Journeyer's 70–80mm stem put my hands ~40mm closer than 2017 at the same bar height. I can get a short cockpit at a sane size with a short stem — I don't need to size down for it (and sizing down mostly costs the stack/bar height I want to keep).</p>
+          <p>The Journeyer's 70–80mm stem put my hands ~40mm closer than 2017 at similar bar height — and it was <b>confident on real mountain descents at a Pocatello, ID hill-climb event</b>, my strongest data point. Short cockpit at a sane size; sizing down isn't required for it.</p>
         </div>
         <div class="lp-card">
           <div class="lp-k">Saddle &amp; crank move together</div>
           <p>A shorter crank means raising the saddle by the same amount (172.5→165 = +7.5mm). Each frame size ships a different stock crank, so I check it per size.</p>
         </div>
         <div class="lp-card">
-          <div class="lp-k">Sizing down ≠ better descending</div>
-          <p>A smaller frame (Otso S vs M: −14 stack / −10 reach / −0.5° HTA) is a fit refinement, not a descending fix — the head angle &amp; tire clearance that matter are shared across sizes. Worth a test ride, but it won't transform descending the way slack-HTA + big tires did.</p>
+          <div class="lp-k">Sizing down: what it really does</div>
+          <p>Buys agility, standover, shorter reach. <b>Costs bar height</b> — the thing I most want to keep (spacer-corrected, my comfortable range is ~569–588 at the clamp). Doesn't fix descending: trail, tires, and bar height barely change across sizes, and some frames get <i>steeper</i> as they shrink. Pick the size whose stack matches my bar height, then set reach with the stem.</p>
         </div>
       </div>
       <div class="lp-recs">
         <div class="lp-k">Recommendations</div>
         <ul>
-          <li>Target <b>≤71° head angle + ≥50mm tires</b> — at least as calm as my Otso (71.5° / 53mm). Sort by <b>"Calmest descender"</b> or filter <b>⛰ Calm descender</b>.</li>
-          <li><b>GRX Di2 + "Calm" at my size:</b> <b>XDS XLAB GT8</b> &amp; <b>Ridley ASTR</b> (~71° / 52–55mm). BMC Kaius too, but US builds are SRAM.</li>
-          <li><b>SRAM, "Calm" + huge tires:</b> <b>Allied Able</b> &amp; <b>Lauf Seigla</b> (70.5° / 57mm), <b>Crux 5</b> (55mm); ENVE MOG is close ("Stable").</li>
-          <li>Watch the <b>per-size head angle</b>: Pinarello Grevil reads slack at size 50 but steepens to ~72° in my size — only "Balanced." Check the badge, not the brochure.</li>
-          <li>Avoid the <b>steep aero frames</b> (Áspero / Áspero-5, Grail, Kanzo Fast, Factor Ostro) — 42–45mm tires, nervous like the SuperSix.</li>
-          <li>Cheap test first: slacken the Otso <b>Tuning Chip</b> + run 40–45mm tires; test-ride a Small.</li>
-          <li>Book a fresh <b>professional fit</b> (overdue since 2017) before buying.</li>
+          <li>This bike <b>replaces the SuperSix</b>: road-first (32c GP5000 tubeless), TN + Europe mountains, gravel trips later. <b>2x gearing is near-mandatory</b> — filter <b>⚙ 2x-capable</b>.</li>
+          <li><b>Clearance re-scored:</b> ≥45mm acceptable, ≥50mm bonus. The old ≥50 hard filter was the MN-gravel lens.</li>
+          <li><b>Di2 + 2x + ≥45mm (the ★):</b> Orbea Terra, Pinarello Grevil (GRX Di2 2x stock, 50mm), Ridley ASTR, Áspero/Áspero-5, Scott Addict Gravel, Colnago G4-X, 3T Exploro, XDS GT8 (after 2x conversion).</li>
+          <li><b>Descending:</b> 32mm tubeless at sane pressure may be half the fix by itself. Beyond that, prefer slacker HTA at <i>my size</i> + bar height in my range — but the evidence is confounded; don't over-trust the badge.</li>
+          <li>Watch the <b>per-size head angle</b> (Grevil steepens to ~71.75° at my size) and <b>travel-ability</b> (integrated cockpits pack worse; proprietary parts are a risk abroad).</li>
+          <li>Cheap tests first: widest tire that fits the SuperSix on a TN descent; measure the Otso cockpit; book the <b>professional fit</b> (overdue since 2017).</li>
         </ul>
       </div>
     </div>
@@ -382,7 +382,8 @@
     <div class="fitpanel-head">
       <div><span class="fp-title"><span class="dot">◎</span> Your reference fit</span><span class="fp-sub">the published Stack/Reach of a bike you know fits</span></div>
       <div class="fp-presets">
-        <button class="fp-reset fp-current" onclick="setPreset('current')">◎ My bikes (555 / 379)</button>
+        <button class="fp-reset fp-current" onclick="setPreset('current')">◎ SuperSix (555 / 379)</button>
+        <button class="fp-reset" onclick="setPreset('otso')">⛰ Otso (555 / 385)</button>
         <button class="fp-reset" onclick="setPreset('journeyer')">↺ Journeyer (552 / 372)</button>
       </div>
     </div>
@@ -397,21 +398,20 @@
         <input type="range" id="stackSlider" min="530" max="590" step="1" value="555" />
         <span class="fp-hint">your bikes ≈ 555 — taller = bars sit higher</span>
       </div>
-      <p class="fp-explain">These are the <b>published Stack &amp; Reach</b> (same numbers every bike lists) of a bike you <b>know</b> fits. Default = your <b>SuperSix / Otso, 555 / 379</b>. Each card then shows that bike's published Stack/Reach for the closest size and <b>how far it is from your reference</b> — e.g. "+9 reach" means 9 mm longer, so you'd run a ~10 mm shorter stem. You only need to move these to explore a <b>different</b> fit than your current bikes — like the shorter Journeyer (372 reach). Otherwise leave them and just read the gaps.</p>
+      <p class="fp-explain">These are the <b>published Stack &amp; Reach</b> (same numbers every bike lists) of a bike you <b>know</b> fits. Default = your <b>SuperSix (555 / 379)</b>; the Otso preset (555 / 385) is the same published stack with its own reach. Each card then shows that bike's published Stack/Reach for the closest size and <b>how far it is from your reference</b> — e.g. "+9 reach" means 9 mm longer, so you'd run a ~10 mm shorter stem. You only need to move these to explore a <b>different</b> fit than your current bikes — like the shorter Journeyer (372 reach). Otherwise leave them and just read the gaps.</p>
       <div class="fp-note">↕ <b>Saddle height &amp; crank length move together.</b> A shorter crank drops the pedal at the bottom of the stroke, so raise your saddle by the same amount to keep leg extension — from 172.5&nbsp;mm: 170 = <b>+2.5&nbsp;mm</b>, 165 = <b>+7.5&nbsp;mm</b>, 160 = <b>+12.5&nbsp;mm</b> saddle. Each size here ships a different stock crank, so when a size-down also shortens the crank, plan to re-set saddle height. Your reference: <b>172.5&nbsp;mm cranks, saddle ≈ 71&nbsp;cm</b> (BB → saddle top, approx. from the Journeyer demo).</div>
       <div class="fp-ref">
-        <div class="fp-ref-title">Your bikes &amp; demos — what they taught us</div>
+        <div class="fp-ref-title">Your bikes &amp; demos — ranked evidence (terrain matters)</div>
         <table class="fp-ref-table">
-          <thead><tr><th>Reference</th><th>Stack / Reach</th><th>HTA</th><th>Tires</th><th>Descends</th></tr></thead>
+          <thead><tr><th>Reference</th><th>Published S/R</th><th>At-clamp (w/ spacers)</th><th>HTA</th><th>Tires</th><th>Terrain · verdict</th></tr></thead>
           <tbody>
-            <tr><td>2017 SuperSix EVO 54 (road)</td><td>555 / 379</td><td>73.1°</td><td>~28mm</td><td>nervous ✗</td></tr>
-            <tr><td>Otso Waheela C — M (your "54")</td><td>555 / 385</td><td>71.5°</td><td>32 (→53)</td><td>confident ✓</td></tr>
-            <tr><td>Otso Waheela C — S (the "52")</td><td>541 / 375</td><td>71.0°</td><td>→53</td><td>size-down Q</td></tr>
-            <tr><td>Journeyer demo — 51</td><td>528 / 368</td><td>69.5°</td><td>38</td><td>confident ✓</td></tr>
-            <tr><td>Journeyer demo — 53</td><td>552 / 372</td><td>69.5°</td><td>38</td><td>confident ✓</td></tr>
+            <tr><td>2017 SuperSix EVO 54 (15mm spacers)</td><td>555 / 379</td><td>~569 / ~375</td><td>73.1°</td><td>~28mm</td><td>TN + Alps · nervous ✗</td></tr>
+            <tr><td>Otso Waheela M (35mm spacers)</td><td>555 / 385</td><td>~588 / ~374</td><td>71.5°</td><td>32 (→53)</td><td>MN flat-ish · confident ✓*</td></tr>
+            <tr><td>Journeyer demo — 51</td><td>528 / 368</td><td>—</td><td>69.5°</td><td>38 (Washburn)</td><td>Pocatello mtns · confident ✓✓</td></tr>
+            <tr><td>Journeyer demo — 53</td><td>552 / 372</td><td>—</td><td>69.5°</td><td>38 (Washburn)</td><td>Pocatello mtns · confident ✓✓</td></tr>
           </tbody>
         </table>
-        <div class="fp-ref-note">Your SuperSix and Otso have <b>nearly the same published fit</b> (555 / ~380) yet descend completely differently — that's the <b>1.6° slacker head angle + bigger tires</b>, not reach (an 80mm stem didn't fix the SuperSix). The Journeyer you liked was a touch shorter (552 / 372). So — pick a frame near your reference Stack/Reach, fine-tune reach with stem length, and chase <b>slack HTA + big tires</b> for descending.</div>
+        <div class="fp-ref-note">Spacers change everything v1 missed: the Otso's bars sit <b>~20mm higher</b> than the SuperSix's despite identical published stack — so my comfortable bar height is a <b>range (~569–588 at the clamp)</b>, and "same fit, different descending" was never true. <b>*</b>The Otso has also never been on the SuperSix's roads (MN vs TN/Alps), so terrain confounds its verdict. The Journeyer at Pocatello is the strongest signal: short stem + slack front + bigger tires, confident on real mountain descents. Strategy: size for stack in my range, set reach with an 80–90mm stem, and remember <b>32mm tubeless may be half the descending fix by itself</b>.</div>
       </div>
     </div>
   </div>
@@ -446,7 +446,7 @@
 
 <footer>
   <div class="wrap">
-    Data gathered 2026-06-10 from manufacturer geometry/spec charts and reputable reviews; every spec is cited in the detail view. Per-size crank lengths are from manufacturer spec sheets where available. Best-fit size, stem, and spacer notes are <em>estimates</em> from your target stack/reach — confirm with a professional fitting. Prices USD MSRP.
+    Data gathered 2026-06-10 from manufacturer geometry/spec charts and reputable reviews; every spec is cited in the detail view. Per-size crank lengths are from manufacturer spec sheets where available. Best-fit size, stem, and spacer notes are <em>estimates</em> from your target stack/reach — confirm with a professional fitting. Prices USD MSRP. <b>v2 — reframed 2026-06-11</b> (road-first SuperSix replacement).
   </div>
 </footer>
 
@@ -475,22 +475,24 @@ const BIKES = [
     builds:[["GRX RX715 Di2 1x12 + Branta C45 wheels + power meter","$3,199"]],
     sizes:"XS, S, M, L, XL, XXL", weight:8.78, weightText:"8.78 kg (M, complete)",
     mounts:"Internal downtube storage (bag incl.), 3rd-bottle, top-tube bag, fork-leg mounts",
+    travel:"Round-bar cockpit packs easily; proprietary Branta wheels/components = thin parts support abroad; EU dealer net immature — carry spares.",
     geo:[["S","540","379","75°","70°","1032","165"],["M","565","384","74°","71°","1031","170"],["L","584","392","74°","71°","1046","170"]],
     tag:"Value blowout: Di2 + power meter + carbon wheels at ~⅓ rivals' price.",
     fit:"1x-only limits top-end road gearing. US support via Jenson USA, Go Grava, Power Meter City (thinner dealer network). Smaller sizes (XS/S) ship 165 mm cranks.",
     sources:[["XDS GT8 (official)","https://xds.co/products/gt8"],["Jenson USA","https://www.jensonusa.com/xds-x-lab-gt8-bike"],["Velo review","https://velo.outsideonline.com/gravel/gravel-gear/xds-x-lab-gt8-review/"]] },
 
-  { brand:"Pinarello", model:"Grevil F7", year:"2025", dt:["1x","yes","Ships GRX Di2 1x (50 mm clearance); takes a 2x front derailleur (clearance drops to 47 mm)."], cat:"Race", category:"race",
-    frame:"Toray T900 carbon, Adaptive Seatpost (~10 mm flex)", clearance:50, clearanceText:"50 mm (1x) / 47 mm (2x)",
+  { brand:"Pinarello", model:"Grevil F7", year:"2025", dt:["2x","yes","GRX 825 Di2 2x12 (48/31) is the stock build; SRAM XPLR builds are the 1x options. 50 mm clearance uniform (earlier 47 mm-with-2x figure unsupported)."], cat:"Race", category:"race",
+    frame:"Toray T900 carbon, Adaptive Seatpost (~10 mm flex)", clearance:50, clearanceText:"50 mm (700c, uniform)",
     di2:"yes", crankNote:"170 mm across sizes 47–55",
-    priceNum:7000, priceText:"$7,000 — Grevil F7 Shimano GRX 825 Di2 1x12",
-    builds:[["GRX 825 Di2 1x12 (F7)","$7,000"],["SRAM RED XPLR AXS (F9)","higher"],["SRAM Rival XPLR AXS (F5)","lower"]],
+    priceNum:7000, priceText:"$7,000 — Grevil F7 Shimano GRX 825 Di2 2x12 (48/31)",
+    builds:[["GRX 825 Di2 2x12 48/31 (F7)","$7,000"],["SRAM RED XPLR AXS (F9)","higher"],["SRAM Rival XPLR AXS (F5)","lower"]],
     sizes:"47, 50, 53, 55, 57.5, 60", weight:null, weightText:"Frameset ~1,490 g (complete unverified)",
     mounts:"Fidlock magnetic frame-bag mount, bottle cages, internal storage; rack-capable",
+    travel:"Conventional two-piece cockpit (MOST Jaguar stem + bar) — easy to pack; standard clamp. Strong EU dealer network (Pinarello is Italian; wide Western Europe presence).",
     geo:[["50","583","384","73.75°","70.75°","1047","170"],["53","598","390","73.5°","71.75°","1043","170"],["55","614","398","73.0°","72.0°","1053","170"]],
     tag:"Only marquee race bike with a stock GRX Di2 build at the clearance target.",
     fit:"MTB-inspired long top tube paired with short stems. Crank is 170 mm across the 47–55 band (only 57.5+ steps up), so sizing down won't drop your crank length. Pinarello size labels vary across sources — confirm at a fit.",
-    sources:[["Pinarello Grevil F7 GRX Di2","https://pinarello.com/usa/en/bikes/gravel/competition/new-grevil-f/new-grevil-f7-shimano-grx-825-di2"],["BikeRadar 2025 Grevil F","https://www.bikeradar.com/news/2025-pinarello-grevil-f"]] },
+    sources:[["Pinarello Grevil F7 GRX Di2","https://pinarello.com/usa/en/bikes/gravel/competition/new-grevil-f/new-grevil-f7-shimano-grx-825-di2"],["RA Cycles spec sheet","https://racycles.com/products/pinarello-grevil-f7-grx-di2-bike"],["BikeRadar 2025 Grevil F","https://www.bikeradar.com/news/2025-pinarello-grevil-f"]] },
 
   { brand:"Ridley", model:"ASTR / ASTR RS", year:"2025", dt:["1x & 2x","yes","Removable FD clamp — runs either; GRX Di2 2x is stock (52 mm 1x / 47 mm 2x)."], cat:"Race", category:"race",
     frame:"Carbon — RS Ultra-HM (~890 g) / ASTR HM (~1,090 g)", clearance:52, clearanceText:"52 mm (1x) / 47 mm (2x)",
@@ -499,6 +501,7 @@ const BIKES = [
     builds:[["GRX RX820 Di2 2x12 (ASTR RS)","~$6,967*"],["GRX Di2 (base ASTR, configurator upgrade)","+€1,736 over mech"]],
     sizes:"XS, S, M, L, XL", weight:null, weightText:"Frame 890 g (RS) / 1,090 g (ASTR); complete unverified",
     mounts:"3rd-bottle, recessed top-tube bag, frame-bag braze-ons; no rack/fender",
+    travel:"ASTR RS = integrated one-piece 4ZA cockpit (harder to pack; re-cable to remove); base ASTR = conventional two-piece. Ridley is Belgian — strong EU dealer/service network.",
     geo:[["XS","536","376","74°","71.0°","—","172.5"],["S","550","392","74°","71.0°","1027","172.5"],["M","571","406","74°","71.5°","1043","172.5"]],
     tag:"Newest dedicated race-gravel platform — best all-round criteria match.",
     fit:"Long reach for the size (M 406) — you'd likely run a short stem or size to S/XS. Note: crank stays 172.5 mm on ALL sizes, so sizing down does NOT get you a shorter crank here (aftermarket swap if you want one).",
@@ -511,6 +514,7 @@ const BIKES = [
     builds:[["SRAM Rival XPLR AXS (THREE)","$6,199"],["SRAM Force AXS (TWO)","$8,999"],["SRAM RED XPLR AXS (ONE)","$12,999"],["Frameset","$5,099"]],
     sizes:"47, 51, 54, 56, 58, 61", weight:7.1, weightText:"~7.1 kg claimed (54)",
     mounts:"3rd-bottle under downtube, top-tube pouch, cargo plate, integrated chain catcher",
+    travel:"BMC ICS Carbon Aero Cockpit is integrated one-piece (harder to pack; size-specific bar not swap-friendly mid-trip). BMC is Swiss — strong EU dealer network.",
     geo:[["51","530","397","—","71°","—","170"],["54","550","401","—","71°","—","172.5"],["56","570","405","—","71°","—","172.5"]],
     tag:"≥50 mm clearance, but US builds are SRAM — Di2 only 'compatible'.",
     fit:"2026 redesign raised trail + lengthened wheelbase for descending stability. Long reach. Size 51 ships a 170 mm crank vs 172.5 on 54/56. STA/wheelbase not yet published.",
@@ -523,6 +527,7 @@ const BIKES = [
     builds:[["SRAM Apex XPLR AXS (CF 6) — electronic","$2,599"],["Mechanical GRX (CF 8 ESC)","$4,699"],["GRX Di2 (CF 8 Di2)","not sold in US"]],
     sizes:"3XS – 2XL", weight:9.2, weightText:"~9.2 kg complete; frame ~1,110 g (M)",
     mounts:"Full: front/rear fender, rear rack, 3 bottles, top-tube bag — 23 inserts",
+    travel:"'Full Mounty' integrated loop cockpit (one-piece; re-cabling required to remove). Canyon direct — no EU IBD network; service abroad via canyon.com support or self-service.",
     geo:[["M","579","402","73.5°","71.5°","1045","172.5"],["L","605","409","73.5°","72.0°","1055","172.5"]],
     tag:"Clearance + mounts king (54 mm, 23 inserts) — but no US Di2 and an adventure fit.",
     fit:"Adventure geometry: taller stack, slacker, longer wheelbase — stable, not a pure racer. Chainstay 435 mm. Smaller sizes (S) ship 170 mm cranks.",
@@ -535,6 +540,7 @@ const BIKES = [
     builds:[["Foundation Force XPLR AXS","$8,250"],["Premium Force XPLR AXS","$9,750"],["Premium RED XPLR AXS","$11,250"],["Frame-only","$4,100"]],
     sizes:"49, 52, 54, 56, 58, 60", weight:null, weightText:"Frame ~950 g (56); complete unverified",
     mounts:"Integrated downtube Cargo Bay (~0.6 L); fender-compatible",
+    travel:"ENVE Aero Integrated Stem + standard round bar (IN-Route headset; bar removable conventionally). ENVE is US-based (Ogden UT) — thin EU dealer/parts network; self-sufficient service abroad.",
     geo:[["52","543","378","74°","71.25°","—","choice"],["54","565","389","73.75°","71.25°","1027","choice"],["56","587","397","73.5°","71.25°","1042","choice"]],
     tag:"Best SRAM option at ≥50 mm — crank length is your pick at order.",
     fit:"Slightly taller stack + 71.25° HTA = confidence on descents while staying fast. Crank is buyer-selected (165/170/172.5) regardless of size, so you can spec whatever you want.",
@@ -547,6 +553,7 @@ const BIKES = [
     builds:[["SRAM Rival AXS Mullet","$6,730"],["SRAM Force XPLR AXS","$8,000"],["SRAM RED XPLR AXS","$11,055"],["Frameset","~$4,500"]],
     sizes:"48, 52, 54, 56, 58, 61", weight:null, weightText:"Frame ~950 g (56); complete unverified",
     mounts:"Internal storage + bottle mounts; fender/rack/3rd-bottle unverified (contact Allied)",
+    travel:"ABLE EX variant = conventional stem (easy to pack); standard Able uses integrated routing. US-made (Rogers AR) — essentially no EU dealer network; parts/service in Europe is difficult.",
     geo:[["52","540","390","75.0°","70.5°","1039","choice"],["54","555","395","74.0°","70.5°","1049","choice"],["56","575","400","74.0°","70.5°","1061","choice"]],
     tag:"Clearance leader (57 mm) with race reach; US hand-built.",
     fit:"Slack 70.5° HTA + 55 mm offset = stable, confident descending. Built to order, so you pick crank length. SRAM/wireless-only is the catch for a Di2 buyer.",
@@ -559,6 +566,7 @@ const BIKES = [
     builds:[["Race Wireless E1","$4,790"],["Ultimate","$6,190"],["Ultimate R","$6,990"],["Frameset","$2,090"]],
     sizes:"XS, S, M, L, XL", weight:null, weightText:"Frame ~1,163 g (M); complete varies by build",
     mounts:"3 bottle cages + bento-box mount; no rack/fender",
+    travel:"Round bars pack fine; proprietary SRAM Wide DUB BB (73 mm, unverified) is a parts risk abroad; Lauf leaf-spring fork = proprietary. EU net thin — essentially US-boutique for service.",
     geo:[["M","608","394","72.5°","70.5°","1040","—"],["L","639","405","72.4°","70.5°","1061","—"]],
     tag:"Clearance leader (57 mm) + light leaf-spring front compliance.",
     fit:"Short 425 mm chainstays, low/fast position; the Grit fork adds front control on descents. Geo runs TALL (M stack 608) — likely too tall for your 554 target unless you slam it. SRAM-only; crank length unverified.",
@@ -571,6 +579,7 @@ const BIKES = [
     builds:[["SRAM Rival XPLR AXS (Comp)","~$5,800"],["SRAM Force XPLR AXS (Expert)","~$7,000"],["S-Works SRAM RED XPLR AXS","~$14,000"]],
     sizes:"49, 52, 54, 56, 58, 61", weight:7.1, weightText:"S-Works ~7.1–7.2 kg; frame ~789 g",
     mounts:"Race frame: 2 bottle cages only",
+    travel:"Higher builds use Roval Terra Aero integrated cockpit (harder to pack); Comp + lower = conventional 31.8 mm alloy stem + round bar (easy to pack). Specialized has strong EU dealer network globally.",
     geo:[["49","530","375","74.5°","70.75°","—","165"],["52","547","382","74.5°","70.75°","1016","165"],["54","560","388","74.5°","71.0°","1026","170"],["56","578","400","74.0°","71.5°","1039","170"]],
     tag:"Clearance jumped to 55 mm — and sizing down gets you a 165 mm crank.",
     fit:"Pure race/CX platform — low STR, 425 mm chainstays, descending-confident. Crux 5 cranks run 2.5 mm shorter than the old gen: 49/52 ship 165 mm, 54/56 ship 170 mm — so a size-down here also shortens your crank. SRAM-only is the catch.",
@@ -583,6 +592,7 @@ const BIKES = [
     builds:[["SRAM Rival eTap AXS / GX mullet (Expert)","$5,500"],["S-Works Diverge STR","~$12,500"]],
     sizes:"49, 52, 54, 56, 58, 61", weight:10, weightText:"~10 kg (54 Expert)",
     mounts:"3 bottles, top-tube bag, front/rear rack + fender mounts, SWAT storage",
+    travel:"Conventional round bar + standard stem — easy to pack. Front Future Shock is a proprietary Specialized suspension unit (inside head tube); rear is flex pivot. Strong EU dealer/service network.",
     geo:[["49","569","365","74.25°","70.5°","—","165"],["52","576","374","74.25°","70.5°","1027","170"],["54","593","383","74.0°","71.25°","1034","172.5"],["56","609","392","74.0°","71.75°","1044","172.5"]],
     tag:"Comfort-first endurance bike (front + rear Future Shock) — not a racer.",
     fit:"Very tall stack (54 = 593) and relaxed front end; rear Future Shock gives up to 30 mm travel. Likely too tall vs your 554 target. Size 52 ships 170 mm, 54/56 ship 172.5 mm.",
@@ -595,6 +605,7 @@ const BIKES = [
     builds:[["GRX RX825 Di2 1x","$7,050"],["SRAM Rival XPLR AXS","$5,800"],["Frameset","$2,700"]],
     sizes:"48, 51, 54, 56, 58, 61", weight:null, weightText:"Unverified (not published)",
     mounts:"3 bottle positions, top-tube bag compatible, 650b compatible",
+    travel:"Conventional separate stem (Cervélo ST36) + round bar — cables don't route through stem/bar; straightforward to pack. Cervélo is Canadian (Pon group) — good EU dealer coverage via Pon Holdings network.",
     geo:[["51","530","379","74.0°","71.5°","999","170"],["54","555","388","73.5°","72.0°","1010","170"],["56","580","397","73.0°","72.0°","1028","170"]],
     tag:"Clean GRX Di2 race bike — but clearance only 45 mm.",
     fit:"TrailMixer flip-chip preserves trail with bigger front tires. Size 51 stack/reach (530/379) is a near-perfect match to your target. Crank is 170 mm on 51/54/56 (only 58+ steps up), so sizing down won't shorten it.",
@@ -607,6 +618,7 @@ const BIKES = [
     builds:[["GRX RX825 Di2 1x","$8,850"],["SRAM Force AXS","$9,000"],["SRAM RED AXS","$12,650"],["Frameset","$5,500"]],
     sizes:"48, 51, 54, 56, 58, 61", weight:null, weightText:"Frame ~1,023 g; complete unverified",
     mounts:"3 bottle positions, top-tube bag, downtube storage (no rack)",
+    travel:"Conventional separate stem (Cervélo ST36) + round bar — cables don't route through stem/bar; straightforward to pack. Cervélo is Canadian (Pon group) — good EU dealer coverage via Pon Holdings network.",
     geo:[["51","525","377","73.6°","71.1°","1002","170"],["54","550","386","73.1°","71.6°","1012","170"],["56","575","395","72.6°","71.6°","1029","170"]],
     tag:"Lowest, longest aero racer here — true 'long & low'. 45 mm clearance.",
     fit:"Aggressive aero position; confident high-speed descending. Size 51 (525/377) is slightly lower/shorter than your target — good for an aggressive size-down. Crank 170 mm on 51/54/56.",
@@ -619,6 +631,7 @@ const BIKES = [
     builds:[["GRX RX825 Di2 2x (CF SLX 8 Di2)","$5,199"],["GRX RX825 Di2 2x (CFR Di2)","$7,099"],["SRAM RED XPLR AXS (CFR)","$8,499"]],
     sizes:"2XS – 2XL", weight:8.18, weightText:"~8.18 kg (CFR Di2, M); frame ~1,033 g",
     mounts:"Integrated storage, top-tube bag, 'Gear Groove' bar accessories; no rack",
+    travel:"Gear Groove Pro Cockpit = one-piece carbon (bar width adjustable 50 mm; re-cabling to fully remove). Canyon direct — EU via canyon.com with strong German logistics; no IBD network.",
     geo:[["S","573","394","73.5°","71.5°","—","170"],["M","591","411","73.5°","71.5°","1057","172.5"],["L","613","427","73.5°","71.5°","1080","172.5"]],
     tag:"Aero GRX Di2 race bike — but only 42 mm rear and a long reach.",
     fit:"Composed on fast descents, but very long reach (M 411) and tall-ish stack — you'd likely need the S with a short stem. Size S ships 170 mm crank, M/L ship 172.5 mm.",
@@ -631,6 +644,7 @@ const BIKES = [
     builds:[["GRX Di2 1x + Classified 2-speed hub","€7,999 (USD TBD)"]],
     sizes:"XS, S, M, L, XL", weight:8.92, weightText:"~8.92 kg (L, complete)",
     mounts:"Fender mounts only (race-aero frame)",
+    travel:"Top builds use Ridley Aero G1 integrated carbon cockpit (fully internal via F-Steerer); base builds use conventional two-piece bar+stem. Ridley is Belgian — strong EU dealer/service network.",
     geo:[["S","563","380","73.5°","72.0°","1017","172.5"],["M","587","385","72.75°","71.5°","1026","172.5"],["L","613","393","72.5°","71.5°","1044","172.5"]],
     tag:"Most aero of the group + Classified hub — but 42 mm clearance.",
     fit:"Long reach for its stack, short wheelbase, 1x aero cockpit. Rotor crank ~172.5 mm across sizes. Size S (563/380) is the size-down option.",
@@ -643,6 +657,7 @@ const BIKES = [
     builds:[["GRX Di2 2x (Integrale)","$6,999"],["SRAM Force AXS 2x","~$5,999"],["Frameset","$3,499"]],
     sizes:"48, 51, 54, 56, 58, 61", weight:null, weightText:"Unverified (frame historically ~950–1,000 g)",
     mounts:"Bottle mounts only (race frame)",
+    travel:"Conventional separate stem + round bar (non-integrated) — easy to pack. 3T is Italian (Bergamo); decent EU dealer coverage. Italia variant is made-to-order with 6–8 week lead time.",
     geo:[["48","522","355","74.0°","69.5°","—","165"],["51","542","366","74.0°","69.5°","1008","170"],["54","564","377","73.5°","71.0°","1008","172.5"],["56","584","385","73.0°","72.0°","1014","172.5"]],
     tag:"GRX Di2 + short wheelbase — base frame is 46 mm (Italia variant clears 51).",
     fit:"Road-length fork (compare HTA carefully). Short ~1008 mm wheelbase = quick handling. Crank steps cleanly by size: 48→165, 51→170, 54/56→172.5, so sizing down shortens your crank. Only the pricier Italia variant hits ≥50 mm.",
@@ -655,6 +670,7 @@ const BIKES = [
     builds:[["SRAM RED XPLR AXS 1x13 (SLR 9)","$11,999"],["SLR 7 / SLR 8 AXS","lower (TBD)"]],
     sizes:"XS, S(52), M(54), ML(56), L(58), XL(61)", weight:7.53, weightText:"~7.53 kg (M); Trek lists ~7.74 kg",
     mounts:"3rd-bottle, fender, frame-bag mounts; no rack",
+    travel:"One-piece aero bar/stem (RCS Headset System; Madone Gen 8 cockpit; RCS Universal = conventional stem alternative). Trek has very strong EU dealer/service network.",
     geo:[["S (52)","540","385","73.7°","71.5°","—","165"],["M (54)","560","392","73.7°","71.5°","1022","170"],["ML (56)","584","399","73.5°","71.7°","1035","172.5"],["L (58)","608","404","73.6°","72.0°","1045","172.5"]],
     tag:"Aggressive race fit + IsoSpeed — but SRAM-only and 45 mm.",
     fit:"Low STR (~1.43), very low 80 mm BB drop for stability; IsoSpeed adds rear compliance. Size S (52) ships a 165 mm crank, M (54) ships 170 mm — sizing down shortens the crank. SRAM-only.",
@@ -667,8 +683,9 @@ const BIKES = [
     builds:[["SRAM Force XPLR (w/ power)","$9,599"],["SRAM Force AXS","$9,699"],["SRAM RED AXS","$11,699"],["Frameset","$5,999"]],
     sizes:"49, 52, 54, 56, 58, 61", weight:8, weightText:"~7.9–8.1 kg (54)",
     mounts:"Bottle mounts only (race frame)",
+    travel:"Black Inc AB02 = one-piece integrated bar/stem (fully internal routing, Factor-proprietary) — harder to pack. Factor is UK HQ; EU dealer coverage moderate (UK, NL, DE) — no broad IBD network.",
     geo:[["49","515","377","74.0°","71.3°","—","choice"],["52","535","385","74.0°","71.3°","1013","choice"],["54","555","394","74.0°","72.2°","1014","choice"],["56","580","402","73.5°","72.3°","1029","choice"]],
-    tag:"The dream bike — but misses BOTH priorities (45 mm + SRAM-only).",
+    tag:"The dream bike — but misses v2 priorities (SRAM-only, so no Di2).",
     fit:"Aggressive road-race position, stiff and fast. Crank is buyer's choice at the configurator (165/170/172.5), any size. Size 52 (535/385) sits just under your target. Doesn't qualify if 50 mm + Di2 are hard requirements.",
     sources:[["Factor Ostro Gravel builder","https://factorbikes.com/bike-builder/ostro-gravel-sram-force-xplr-w-power-meter"],["Cyclingnews review","https://www.cyclingnews.com/reviews/factor-ostro-gravel/"]] },
 
@@ -679,6 +696,7 @@ const BIKES = [
     builds:[["SRAM Rival eTap AXS 2x","~$5,200"]],
     sizes:"48, 51, 54, 56, 58, 61", weight:8.6, weightText:"~8.6 kg (51)",
     mounts:"Bottle mounts only (race frame)",
+    travel:"Cannondale C1 Conceal stem + Vision Trimax aero bars — separate stem/bar = conventional packing. Cannondale (Dorel/cycling brands group) has strong EU dealer/service network.",
     geo:[["48","520","374","73.5°","71.0°","—","—"],["51","535","378","73.1°","71.0°","1005","—"],["54","555","384","73.1°","71.0°","1020","—"],["56","575","389","72.9°","71.0°","1034","172.5"]],
     tag:"Road-plus brand-loyalty option — fast & stable, but 45 mm + SRAM.",
     fit:"'OutFront' geometry = high-speed stability with agility; short 422 mm chainstays. Your current bike is essentially this in a 54 — so the 54 (555/384) is your reference fit, the 51 the size-down. Cannondale doesn't publish per-size crank length (confirm with dealer).",
@@ -691,6 +709,7 @@ const BIKES = [
     builds:[["SRAM Force AXS / Zipp XPLR (complete)","~$8,000"],["SRAM RED AXS / Zipp XPLR","~$10,200"],["Frameset (raw → painted)","$3,200–$4,000"]],
     sizes:"XS, S, M, L, XL", weight:null, weightText:"Frame ~1,040 g (M); fork ~390 g",
     mounts:"Extra under-downtube bottle + toolbox; fender-compatible; bag-friendly (no rack)",
+    travel:"OPEN B.A.R. = one-piece integrated bar/stem with reach-adjustment slider (±15 mm) — harder to pack than conventional. OPEN is Swiss (Geneva); decent EU availability but not mass-market IBD network.",
     geo:[["S","545","358","73.5°","71.0°","—","choice"],["M","570","370","73.5°","71.0°","1009","choice"],["L","595","382","73.5°","71.5°","1022","choice"]],
     tag:"Frameset with narrow Q-factor — 650b clearance king, build it your way.",
     fit:"Short reach (M 370) — pair a longer stem for a race fit. Double-dropped chainstays maximize clearance. Frameset, so you pick crank length. Shines on 650b for big rubber.",
@@ -703,6 +722,7 @@ const BIKES = [
     builds:[["SRAM Force AXS E1 2x12 (Advanced Pro 0)","$7,000"],["SRAM Rival AXS E1 2x12 (Advanced Pro 1)","$5,600"]],
     sizes:"XS, S, M, ML, L, XL", weight:null, weightText:"Not published by Giant; BikeRadar measured ~8.34 kg (Pro 0)",
     mounts:"Downtube internal storage (bag incl.), top-tube bag, fork & rear-dropout accessory mounts; bottle cages (fender provision unverified)",
+    travel:"Contact SLR XR D-Fuse bar = proprietary D-shaped carbon bar (not standard round bar; requires Giant-specific clamp hardware). Giant has strong EU dealer network globally; D-Fuse bar widely stocked at Giant dealers.",
     geo:[["S","570","381","73.5°","71.0°","1020","170"],["M","586","387","73.5°","71.5°","1026","172.5"],["ML","602","391","73.0°","72.0°","1031","172.5"]],
     tag:"Giant's carbon gravel-race platform — 53 mm clearance + flip-chip — but US builds are SRAM AXS, not GRX Di2.",
     fit:"Tall stack vs your 555 target (S already 570; M/ML run taller still) — expect a low/no-spacer setup. Flip-chip dropout extends wheelbase + clearance. Cranks step 170→172.5→175 by size (size-down to S gets 170 mm; no stock 160/165). GRX Di2 isn't offered on the US Revolt — only SRAM AXS.",
@@ -715,6 +735,7 @@ const BIKES = [
     builds:[["Shimano GRX RX820 mech 2x12 (Advanced 0)","$4,500"],["SRAM Apex 1 mech 1x12 (Advanced 1)","$3,200"],["Shimano GRX RX610 mech 2x12 (Advanced 2)","$2,800"],["Shimano CUES U6030 1x11 (Advanced 3)","$2,350"]],
     sizes:"XS, S, M, ML, L, XL", weight:null, weightText:"Not published by Giant (unverified)",
     mounts:"Downtube internal storage (bag incl.), top-tube / fork / rear-dropout accessory mounts, bottle cages (fender provision unverified)",
+    travel:"Same D-Fuse bar as Advanced Pro (proprietary D-shaped carbon bar; not standard round). Standard 30.9 mm seatpost. Giant EU dealer network is strong; D-Fuse bar widely stocked at Giant dealers.",
     geo:[["S","570","381","73.5°","71.0°","1020","170"],["M","586","387","73.5°","71.5°","1026","172.5"],["ML","602","391","73.0°","72.0°","1031","172.5"]],
     tag:"Same third-gen Revolt frame at a value carbon grade — 53 mm clearance, but mechanical-only in the US (no Di2).",
     fit:"Shares the Advanced Pro's geometry (tall S 570 stack vs your 555 target). Top US build is mechanical GRX 820 — electronic shifting isn't offered at this grade domestically. Cranks 170→172.5→175 by size; no stock 160/165.",
@@ -727,6 +748,7 @@ const BIKES = [
     builds:[["SRAM Force AXS 1x12 mullet + Fox 32 TC 40 mm (Pro 0)","$7,500"],["SRAM Rival AXS 1x12 mullet + RockShox Rudy Ultimate 40 mm (Pro 1)","$5,500"],["SRAM Apex AXS 1x12 + RockShox Rudy 40 mm (Pro 2)","$4,100"]],
     sizes:"XS, S, M, ML, L, XL", weight:9.53, weightText:"9.53 kg (Pro 0, M); reviews ~10.0–10.5 kg (M/L–L)",
     mounts:"Bottle mounts (seat tube + over/under downtube), top-tube bag bosses; suspension/dropper seatpost; downtube storage unverified",
+    travel:"Same D-Fuse bar as standard Revolt (proprietary D-shaped bar); suspension fork adds air-pressure servicing complexity abroad. Giant EU dealer network is strong.",
     geo:[["S","560","387","73.5°","71.0°","1024","170"],["M","576","389","73.5°","71.5°","1026","172.5"],["ML","592","393","73.0°","72.0°","1031","172.5"]],
     tag:"Suspension Revolt (40 mm fork) — 53 mm clearance and a calm front end, but SRAM-only and ~9.5 kg.",
     fit:"40 mm fork + flip-chip = the calmest-descending Revolt, but it's ~9.5 kg and 1x SRAM AXS only (no Di2). Suspension lowers/slackens the front vs the rigid Revolt (S stack 560 is closer to your 555 target). Cranks 170→172.5→175; no stock 160/165. Newest model year is 2024 — verify it's still in stock.",
@@ -739,8 +761,9 @@ const BIKES = [
     builds:[["GRX RX825 Di2 2x (M20TEAM)","$3,699"],["GRX RX825 Di2 2x (M35TEAM)","$3,999"],["GRX RX825 Di2 2x (M20iTEAM)","$5,999"],["GRX mech (M30TEAM)","$2,999"],["SRAM Force XPLR AXS (M21eTEAM)","$6,299"]],
     sizes:"XS, S, M, L, XL, XXL", weight:null, weightText:"Not published per build (unverified); frame ~1,040 g (M)",
     mounts:"LOCKR XXL downtube storage, 3 bottles, top-tube bag, fork 3-pack, hidden fender mounts",
+    travel:"MyO cockpit choice: aero integrated one-piece (harder to pack) or conventional round bar (pack-friendly). Standard 27.2 mm round seatpost. Orbea is Spanish (Basque) — excellent EU dealer network; widely available in Western Europe.",
     geo:[["S","558","392","74.0°","69.5°","1041","choice"],["M","580","400","74.0°","70.0°","1052","choice"],["L","602","406","74.0°","70.5°","1061","choice"]],
-    tag:"Hits BOTH priorities — 50 mm + stock GRX Di2 — plus slack ~70° HTA and MyO custom crank length.",
+    tag:"Hits v2 priorities — 50 mm + GRX Di2 + 2x-capable — plus slack ~70° HTA and MyO custom crank length.",
     fit:"Long-reach + slack-HTA modern geo (short-stem philosophy you already like). S stack 558 ≈ your 555 target with reach +13 → slightly shorter stem. MyO lets you spec 160/165 cranks directly — the cleanest path to your short-crank goal. Exact MyO crank set + per-size stock crank unverified (configurator is JS-gated).",
     sources:[["Orbea Terra (2025) — BikeRadar (geo/clearance/builds)","https://www.bikeradar.com/news/2025-orbea-terra"],["Bikerumor — Terra update","https://bikerumor.com/orbea-updates-its-do-it-all-terra-gravel-bike/"],["Contender Bicycles — US Terra builds/pricing","https://contenderbicycles.com/collections/orbea-terra"]] },
 
@@ -751,8 +774,9 @@ const BIKES = [
     builds:[["GRX Di2 1x13 + Miche Graff XL","$5,700"],["GRX Di2 1x12 + Miche Sterrato","$6,500"],["GRX Di2 1x11 + Miche Graff Aero 48","$8,200"],["SRAM Force XPLR AXS 1x","$9,600"],["SRAM RED XPLR AXS 1x","$12,000"]],
     sizes:"XS, S, M, L, XL, XXL", weight:8, weightText:"~8.0 kg (L, reviewed); Wilier lists 8.45–9.45 kg ±5% by build",
     mounts:"2 bottle + 3rd under downtube, top-tube/bento mounts, optional Aerokit storage; no rack/fender (race)",
+    travel:"F-BAR integrated cockpit = hardest to pack (full re-cable to remove); monocoque stem + bar unified carbon. Wilier is Italian — strong EU dealer and service network.",
     geo:[["S","546","381","74.7°","70.0°","1017","172.5"],["M","561","387","74.0°","70.8°","1022","172.5"],["L","579","393","73.5°","71.2°","1031","172.5"]],
-    tag:"Hits BOTH priorities — 52 mm + GRX Di2 — aero race gravel; the catch is 1x-only.",
+    tag:"GRX Di2 + 52 mm clearance but misses v2 priorities — 1x-only (no 2x-capable) disqualifies it.",
     fit:"Aero race geo; M stack 561 ≈ your 555 target, reach 387 (short, grows with the setback aero post). 70.8° HTA + 52 mm = a genuinely calm descender. 1x-only (no 2x GRX). Short cranks aren't stock — Wilier says crank length is customizable on request; confirm 160/165 before ordering.",
     sources:[["Wilier Rave SLR ID2 — Wilier USA (specs/geo/US pricing)","https://usa.wilier.com/products/rave-slr-id2"],["GranFondo — Rave SLR 2025 review","https://granfondo-cycling.com/wilier-rave-slr-2025-review/"],["road.cc — Rave SLR ID2","https://road.cc/content/tech-news/wilier-rave-slr-id2-future-gravel-racing-314519"]] },
 
@@ -763,6 +787,7 @@ const BIKES = [
     builds:[["GRX Di2 2x12 (Addict Gravel 15)","$5,400"],["SRAM RED XPLR AXS (Addict Gravel RC)","$9,800"],["SRAM Force XPLR AXS (10)","$5,900"],["SRAM Rival XPLR AXS (20)","$4,300"],["GRX mech 1x (30)","$3,500"]],
     sizes:"XS/49, S/52, M/54, L/56, XL/58", weight:8.7, weightText:"8.7 kg (Addict Gravel 15, GRX Di2); RC 7.9 kg",
     mounts:"2 bottle + downtube 3rd-cage/tool mount, top-tube bag mounts, hidden Syncros fender mounts; no rack/storage",
+    travel:"Syncros Creston iC = fully integrated one-piece cockpit (Syncros-proprietary; cables fully internal) — harder to pack; Syncros parts at Scott dealers but not universal. Scott is Swiss — strong EU dealer network.",
     geo:[["S (52)","544","378","74.0°","70.0°","1024","—"],["M (54)","566","386","73.5°","71.0°","1029","—"],["L (56)","589","399","73.0°","71.0°","1049","—"]],
     tag:"Race fit with a stock GRX Di2 build — but 45 mm clearance misses the 50 mm filter.",
     fit:"Pure race position, 425 mm chainstays. The GRX Di2 target is met by exactly one build (Addict Gravel 15, $5,400). S 544/378 ≈ your target. Per-size crank length isn't published — don't assume sizing down shortens it; confirm the build sheet with a dealer.",
@@ -775,6 +800,7 @@ const BIKES = [
     builds:[["SRAM Rival GX AXS (electronic)","$4,599"],["SRAM Force AXS Wide (electronic)","$5,599"],["Shimano GRX 820 2x (mech)","$3,499"],["Shimano GRX 610 1x (mech)","$2,599"],["Frameset","~$2,200"]],
     sizes:"49, 52.5, 54.5, 56, 57.5, 59, 61", weight:9.4, weightText:"~9.4 kg (GRX 820 2x, 56); GRX 610 1x ~9.9 kg",
     mounts:"2–3 bottles, downtube accessory, fork 3-packs, top-tube bag, fender mounts, rack-compatible",
+    travel:"Conventional round bar + standard stem — easiest to pack of any bike here. Standard 27.2 mm seatpost. Salsa is a QBP brand; US-focused distribution — EU parts/service network is thin; expect to ship parts from US for European trips.",
     geo:[["52.5","547","368","74.0°","70.75°","1012","170"],["54.5","566","372","73.0°","70.75°","1022","170"],["56","585","381","73.0°","70.75°","1038","172.5"]],
     tag:"Salsa's race-gravel sibling to your rental — calm 70.75° HTA, but 45 mm 700c and no Di2.",
     fit:"Direct relative of your decisive Salsa rental (Journeyer): calm 70.75° front end across sizes. 54.5 (566/372) is the short-reach/sane-stack template your rental favored; 49 is the only size with a stock 165 crank. Misses the 700c clearance + Di2 targets — best on 650b for big rubber.",
@@ -787,6 +813,7 @@ const BIKES = [
     builds:[["Shimano GRX Di2 825 2x","from $5,103 (exact unverified)"],["SRAM RED XPLR AXS 1x","unverified"],["SRAM Force XPLR AXS 1x","unverified"],["GRX 717 Di2 1x / GRX mech","unverified"],["Frameset","$3,500"]],
     sizes:"450, 480, 520, 540, 570", weight:null, weightText:"Not published (unverified); ~8.4 kg SRAM RED build, size 52 (review)",
     mounts:"3 bottle mounts (2 + under downtube), recessed top-tube bag mount; no rack/fender (race)",
+    travel:"Colnago CC.01 integrated one-piece carbon cockpit (monocoque; size-specific) — harder to pack; CC.01 is Colnago-proprietary. T47 BB widely serviceable. Colnago is Italian — strong EU dealer/service network.",
     geo:[["480","554","380","74.0°","71.5°","1016","—"],["520","573","390","73.5°","71.5°","1033","—"],["540","591","400","73.0°","71.5°","1048","—"]],
     tag:"Aspirational Italian race-gravel (V4Rs DNA) with a GRX Di2 build — but 45 mm + USD pricing unverified.",
     fit:"Race position from the V4Rs road frame; constant 71.5° HTA. The 480 (554/380) is a near-exact match to your 555/379 reference; 520 is the up-size. Stock cranks are 170+ (no short option) unless you build from the frameset. A Factor-tier 'heart' pick that, like the Ostro, misses the 50 mm clearance bar.",
@@ -799,21 +826,22 @@ const BIKES = [
     builds:[["SRAM Rival AXS (alloy wheels)","$3,999 (sale ~$1,999)"],["SRAM Force AXS XPLR (Reynolds carbon)","~$5,700"]],
     sizes:"S, M, L, XL", weight:8.3, weightText:"~8.3 kg (M, Force AXS build); L ~8.6 kg",
     mounts:"2 bottle cages only — no fork/rack/fender mounts",
+    travel:"Conventional bar + stem — straightforward to pack. Van Rysel is Decathlon's house brand; sold exclusively via Decathlon — EU coverage excellent via Decathlon stores; US stock direct-only and intermittent.",
     geo:[["S","531","361","73.0°","71.0°","994","170"],["M","552","376","72.5°","72.0°","1011","170"],["L","583","387","72.5°","72.0°","1027","172.5"]],
     tag:"Decathlon's value race-gravel rival to the XLAB — but 42 mm, SRAM-only, and US stock is intermittent.",
     fit:"Aggressive race geo (M 552/376). The Rival AXS at ~$1,999 on sale is the value play, but it misses all three locked targets (42 mm, SRAM-only, no short cranks). US via decathlon.com direct (limited distribution; sizes go in/out of stock).",
     sources:[["Van Rysel/Riverside GCR — BikeRadar review (geo/clearance)","https://www.bikeradar.com/reviews/bikes/gravel-bikes/riverside-gcr-force-axs-xplr-review"],["GCR Rival AXS — Decathlon US","https://www.decathlon.com/products/gcr-gravel-carbon-racing-bike-rival-axs-349905"],["GCR Force AXS XPLR — Decathlon US","https://www.decathlon.com/products/carbon-gravel-bike-gcr-sram-force-axs-reynolds-khaki-349969"]] },
 
-  { brand:"ENVE", model:"Fray", year:"2025", dt:["1x","unv","All-road bike (excluded from gravel use); 2x / FD provision unverified."], cat:"Excluded · All-road", category:"excluded",
+  { brand:"ENVE", model:"Fray", year:"2025", dt:["1x","unv","All-road bike; 2x / FD provision unverified."], cat:"Excluded · All-road", category:"excluded",
     frame:"Carbon all-road chassis (integrated cockpit)", clearance:35, clearanceText:"35 mm (~40 mm w/ 1x)",
     di2:"no", crankNote:"your choice (configurator)",
-    priceNum:8750, priceText:"SRAM AXS only — this is an all-road bike, not race gravel",
+    priceNum:8750, priceText:"SRAM AXS only — all-road bike, not race gravel",
     builds:[["Foundation Force AXS","$8,750"],["Premium RED AXS","$12,000"],["Frameset","$4,800"]],
     sizes:"47, 50, 52, 54, 56, 58, 60", weight:null, weightText:"Unverified",
     mounts:"Top-tube + downtube mounts, Cargo Bay storage",
     geo:[["52","556","377","74.0°","72.0°","994","choice"],["54","573","383","73.8°","72.0°","1006","choice"],["56","591","389","73.5°","72.6°","1008","choice"]],
-    tag:"All-road / fast-pavement bike — 35 mm clearance excludes it from gravel.",
-    fit:"Between the Melee (race road) and MOG (gravel). Included for completeness only — does not meet the gravel use case.",
+    tag:"All-road boundary reference (35 mm) — not a candidate; shows where road-first logic lands without gravel option value.",
+    fit:"35 mm clearance is all-road, not gravel. Geometry sits between ENVE Melee (race road) and MOG (gravel) — the natural ENVE step below the MOG. Included as a boundary reference to show what you give up in clearance/option-value when gravel is no longer the brief.",
     sources:[["ENVE Fray (official)","https://enve.com/collections/fray"]] },
 
   { brand:"Allied", model:"BC40", year:"2024", dt:["1x","na","XC mountain bike (excluded) — 1x."], cat:"Excluded · XC MTB", category:"excluded",
@@ -831,8 +859,9 @@ const BIKES = [
 
 const di2Label = { yes:"GRX Di2 ✓", no:"Di2 ✗", partial:"Di2 ? (US=SRAM)", "no-us":"Di2 ✗ (not US)" };
 const di2Class = { yes:"good", no:"bad", partial:"warn", "no-us":"bad" };
-function clearClass(c){ return c>=50 ? "lime" : (c>=47 ? "amber" : "rust"); }
-function isPriority(b){ return b.clearance>=50 && b.di2==="yes"; }
+function clearClass(c){ return c>=50 ? "lime" : (c>=45 ? "amber" : "rust"); }
+// v2 priority: Di2 path + 2x-capable (stock or verified convertible) + >=45 mm clearance
+function isPriority(b){ return b.di2==="yes" && !!b.dt && b.dt[1]==="yes" && b.clearance>=45; }
 function fmtPrice(b){ return b.priceNum==null ? "USD TBD" : "$"+b.priceNum.toLocaleString(); }
 
 function crankDisp(c){
@@ -889,9 +918,9 @@ function bestFit(b, t){
 const STUDIO_REF_CRANK = 172.5; // rider's current crank; saddle rises by (REF - crank)
 // Known-good reference fits. stack/reach feed the shared fit target; hta/tire are studio-only metadata (not part of state.target).
 const STUDIO_BASELINES = {
-  supersix:  { name:"SuperSix EVO 54", stack:555, reach:379, hta:73.1, tire:28 },
-  otso:      { name:"Otso Waheela M",  stack:555, reach:385, hta:71.5, tire:32 },
-  journeyer: { name:"Journeyer 53",    stack:552, reach:372, hta:69.5, tire:38 },
+  supersix:  { name:"SuperSix EVO 54", stack:555, reach:379, hta:73.1, tire:28, spacers:15, clampS:569, clampR:375 },
+  otso:      { name:"Otso Waheela M",  stack:555, reach:385, hta:71.5, tire:32, spacers:35, clampS:588, clampR:374 },
+  journeyer: { name:"Journeyer 53",    stack:552, reach:372, hta:69.5, tire:38, spacers:null, clampS:null, clampR:null },
 };
 // Extend a fitForRow() result with the two studio-only moves.
 function sizeDownExtras(stackGap, crankRaw){
@@ -926,9 +955,9 @@ function descendInfo(b){
   const h = htaOf(b), c = b.clearance;
   if(isNaN(h)) return { label:"—", cls:"", score:-1, hta:null };
   let label, cls, score;
-  if(h <= 71.0 && c >= 50){ label="Calm"; cls="good"; score=3; }
-  else if(h <= 71.5 && c >= 50){ label="Stable"; cls="good"; score=2; }
-  else if(h <= 71.75 || c >= 50){ label="Balanced"; cls="warn"; score=1; }
+  if(h <= 71.0 && c >= 45){ label="Calm"; cls="good"; score=3; }
+  else if(h <= 71.5 && c >= 45){ label="Stable"; cls="good"; score=2; }
+  else if(h <= 71.75 || c >= 45){ label="Balanced"; cls="warn"; score=1; }
   else { label="Quick"; cls="bad"; score=0; }
   return { label, cls, score, hta:h };
 }
@@ -944,6 +973,7 @@ function passes(b){
   if(state.filters.has("both") && !isPriority(b)) return false;
   if(state.filters.has("clear50") && b.clearance<50) return false;
   if(state.filters.has("di2") && b.di2!=="yes") return false;
+  if(state.filters.has("twox") && (!b.dt || b.dt[1]!=="yes")) return false;
   if(state.filters.has("calm") && descendInfo(b).score < 2) return false;
   return true;
 }
@@ -1050,7 +1080,7 @@ function openModal(idx){
   modal.innerHTML = `
     <div class="modal-head">
       <button class="close" onclick="closeModal()" aria-label="Close">×</button>
-      <div class="card-cat">${b.cat}${isPriority(b)?' · ★ HITS BOTH PRIORITIES':''}</div>
+      <div class="card-cat">${b.cat}${isPriority(b)?' · ★ v2 PRIORITIES (Di2 · 2x · ≥45mm)':''}</div>
       <h2>${b.brand} ${b.model}</h2>
       <div class="yr">Model year ${b.year}</div>
     </div>
@@ -1085,6 +1115,10 @@ function openModal(idx){
         <h3>Mounts</h3>
         <p class="prose">${b.mounts}</p>
       </div>
+      ${b.travel?`<div class="mb-section">
+        <h3>Travel</h3>
+        <p class="prose">${b.travel}</p>
+      </div>`:''}
       <div class="mb-section">
         <h3>Fit & handling notes</h3>
         <p class="prose">${b.fit}</p>
@@ -1142,7 +1176,7 @@ function openCompare(){
     row('Stem vs your current', (b,f)=>`<td>${f?(f.stemDelta===0?'~same':`${Math.abs(f.stemDelta)}mm ${f.stemDelta<0?'shorter':'longer'}`):'—'}</td>`) +
     row('Stock crank (that size)', (b,f)=>`<td>${f?crankDisp(f.crank):'—'}</td>`) +
     row('Cranks by size', b=>`<td style="white-space:normal;max-width:220px">${b.crankNote}</td>`) +
-    row('Hits both priorities', b=>{const p=isPriority(b);return `<td><span class="cmp-prio ${p?'yes':'no'}">${p?'★ Yes':'No'}</span></td>`;}) +
+    row('v2 priorities (Di2 · 2x · ≥45mm)', b=>{const p=isPriority(b);return `<td><span class="cmp-prio ${p?'yes':'no'}">${p?'★ Yes':'No'}</span></td>`;}) +
     row('Descending (HTA)', (b,f,k)=>{const d=descs[bikes.indexOf(b)];return `<td class="${(d.score>=0&&d.score===maxDesc)?'win':''}">⛰ ${d.label}${d.hta!=null?` · ${d.hta}°`:''}</td>`;}) +
     row('Tire clearance', b=>`<td class="${b.clearance===maxClear?'win':''}">${b.clearanceText}</td>`) +
     row('Electronic price', b=>`<td class="${(b.priceNum!=null&&b.priceNum===minPrice)?'win':''}">${fmtPrice(b)}</td>`) +
@@ -1179,6 +1213,7 @@ reachSlider.addEventListener('input', syncTarget);
 stackSlider.addEventListener('input', syncTarget);
 function setPreset(which){
   if(which==='journeyer'){ reachSlider.value=372; stackSlider.value=552; studioBaseKey='journeyer'; }
+  else if(which==='otso'){ reachSlider.value=385; stackSlider.value=555; studioBaseKey='otso'; }
   else { reachSlider.value=379; stackSlider.value=555; studioBaseKey='supersix'; }
   syncTarget();
 }
@@ -1266,7 +1301,7 @@ function drawStudioTable(rows, base, bike){
   });
   document.getElementById('studioTable').innerHTML = h;
   document.getElementById('studioNote').innerHTML =
-    `Best-fit highlighted: <b>${bike.brand} ${bike.model} ${best}</b>. Stem rule ~0.87&nbsp;mm bar-reach / mm stem · saddle rule +(172.5 − crank) when sizing down shortens the crank · tire clearance ${bike.clearance}&nbsp;mm.`;
+    `Best-fit highlighted: <b>${bike.brand} ${bike.model} ${best}</b>. Stem rule ~0.87&nbsp;mm bar-reach / mm stem · saddle rule +(172.5 − crank) when sizing down shortens the crank · tire clearance ${bike.clearance}&nbsp;mm. Sizing down buys agility/standover/short reach, costs bar height (my keep-range ≈569–588 at the clamp), and does not change the descending levers — judge HTA/trail at the size you'd buy.`;
 }
 function drawStudioSide(rows, base, bike){
   const r = rows.find(x=>x.size===studioSize) || rows[0];
@@ -1293,7 +1328,7 @@ function drawStudioSide(rows, base, bike){
     <text x="${gx+10}" y="${(byB+byC)/2+21}" font-family="var(--mono)" font-size="11" fill="var(--rust)">Δ reach ${r.reachGap>0?'+':''}${r.reachGap} → ${r.stemDelta===0?'same stem':(r.stemDelta+'mm stem')}</text>`;
   document.getElementById('studioSide').innerHTML=el;
   document.getElementById('studioSideLegend').innerHTML=
-    `<span><span class="sp-swatch" style="background:var(--text)"></span><b>${base.name}</b> (HTA ${base.hta}°, ${base.tire}mm)</span>
+    `<span><span class="sp-swatch" style="background:var(--text)"></span><b>${base.name}</b> (HTA ${base.hta}°, ${base.tire}mm${STUDIO_BASELINES[studioBaseKey].clampS != null ? ' · bars ~'+STUDIO_BASELINES[studioBaseKey].clampS+' w/ '+STUDIO_BASELINES[studioBaseKey].spacers+'mm spacers' : ''})</span>
      <span><span class="sp-swatch" style="background:${STUDIO_VCOLOR[r.verdict]}"></span><b>${bike.brand} ${bike.model} ${r.size}</b> (HTA ${isNaN(r.hta)?'—':r.hta+'°'}, ${bike.clearance}mm)</span>
      <span>dots = handlebar position · to scale from the BB</span>`;
 }
@@ -1334,7 +1369,7 @@ function updateStudioPills(){
 function studioInit(){
   document.getElementById('studioBasePills').innerHTML =
     Object.entries(STUDIO_BASELINES).map(([k,b])=>
-      `<button class="sc-pill ${k===studioBaseKey?'on':''}" data-k="${k}" onclick="studioSetBaseline('${k}')">${b.name}</button>`).join('');
+      `<button class="sc-pill ${k===studioBaseKey?'on':''}" data-k="${k}" onclick="studioSetBaseline('${k}')">${b.name}${b.clampS != null ? ' · bars ~'+b.clampS+' w/ '+b.spacers+'mm spacers' : ''}</button>`).join('');
   const ms = document.getElementById('studioModel');
   const indices = studioModelIndices();             // compute once
   ms.innerHTML = indices.map(i=>`<option value="${i}">${BIKES[i].brand} ${BIKES[i].model}</option>`).join('');
