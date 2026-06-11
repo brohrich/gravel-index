@@ -932,17 +932,37 @@ function sizeDownExtras(stackGap, crankRaw){
     crankNum: isNaN(crank) ? null : crank,
   };
 }
-// One row per size. Reuses fitForRow() as the single source of truth.
-function studioRows(bike, target){
+// Clamp plan: what it ACTUALLY takes to put this frame's bars where the baseline's bars are
+// today (clampS/clampR = baseline frame + its real spacer stack). Frame numbers stay published;
+// this layer is additive. spacersTotal is the TOTAL stack on the candidate, baseline's own included.
+function clampPlan(S, R, hta, base){
+  if(base == null || base.clampS == null || isNaN(hta)) return null;  // baseline spacers unknown
+  const rad = hta*Math.PI/180;
+  const slamGap = Math.max(0, Math.round(S - base.clampS));           // frame top already above target bars
+  const spacersTotal = Math.max(0, Math.round((base.clampS - S)/Math.sin(rad)));
+  const clampR = Math.round(R - spacersTotal*Math.cos(rad));          // spacers pull the bars back too
+  const stemDeltaClamp = -Math.round(((clampR - base.clampR)/0.87)/5)*5; // vs whatever stem the baseline runs today
+  const steerer = spacersTotal<=25 ? "ok" : (spacersTotal<=40 ? "verify" : "over"); // typical carbon limits ~30–40mm
+  let verdict;
+  if(spacersTotal<=25 && slamGap===0 && Math.abs(stemDeltaClamp)<=20) verdict="good";
+  else if(spacersTotal<=40 && slamGap<=15 && Math.abs(stemDeltaClamp)<=30) verdict="ok";
+  else verdict="poor";
+  const cost = spacersTotal + slamGap*1.5 + Math.abs(stemDeltaClamp)*1.5;
+  return { spacersTotal, slamGap, clampR, stemDeltaClamp, steerer, verdict, cost };
+}
+// One row per size. Reuses fitForRow() as the single source of truth; base (optional) adds the clamp plan.
+function studioRows(bike, target, base){
   return bike.geo.map(g=>{
     const f = fitForRow(g, target);
     if(!f) return null;
-    return Object.assign({ size:g[0], hta:parseFloat(g[4]) }, f, sizeDownExtras(f.stackGap, f.crank));
+    const hta = parseFloat(g[4]);
+    return Object.assign({ size:g[0], hta, clamp: clampPlan(f.S, f.R, hta, base) }, f, sizeDownExtras(f.stackGap, f.crank));
   }).filter(Boolean);
 }
 function studioBestSize(rows){
   if(!rows.length) return null;
-  return rows.reduce((a,b)=> (b.cost < a.cost || (b.cost === a.cost && b.S < a.S)) ? b : a).size;
+  const cost = r => r.clamp ? r.clamp.cost : r.cost;
+  return rows.reduce((a,b)=> (cost(b) < cost(a) || (cost(b) === cost(a) && b.S < a.S)) ? b : a).size;
 }
 
 // Descending confidence ≈ slacker head angle + bigger tires (benchmark: rider's Otso = 71.5° / 53mm)
@@ -1236,14 +1256,18 @@ function showView(v){
 }
 function studioBase(){
   // Single reference: stack/reach follow state.target; baseline key supplies HTA/tire metadata.
+  // Clamp data (the baseline's REAL bar position = frame + measured spacers) only applies while
+  // the sliders still sit on that bike's published numbers — a custom target has no measured bars.
   const b = STUDIO_BASELINES[studioBaseKey];
-  return { name:b.name, stack:state.target.stack, reach:state.target.reach, hta:b.hta, tire:b.tire };
+  const live = state.target.stack===b.stack && state.target.reach===b.reach;
+  return { name:b.name, stack:state.target.stack, reach:state.target.reach, hta:b.hta, tire:b.tire,
+           spacers: live ? b.spacers : null, clampS: live ? b.clampS : null, clampR: live ? b.clampR : null };
 }
 function renderStudio(){
   if(studioModelIdx == null) return;
   const base = studioBase();
   const bike = BIKES[studioModelIdx];
-  const rows = studioRows(bike, state.target);
+  const rows = studioRows(bike, state.target, base.clampS != null ? base : null);
   if(!rows.find(r=>r.size===studioSize)) studioSize = studioBestSize(rows);
   const sizeSel = document.getElementById('studioSize');
   if(sizeSel) sizeSel.value = studioSize;
@@ -1254,6 +1278,7 @@ function renderStudio(){
 
 function drawStudioMap(rows, base){
   const allR=[base.reach,...rows.map(r=>r.R)], allS=[base.stack,...rows.map(r=>r.S)];
+  if(base.clampS != null){ allR.push(base.clampR); allS.push(base.clampS); }
   let minR=Math.min(...allR)-18, maxR=Math.max(...allR)+18;
   let minS=Math.min(base.stack-30,...allS)-22, maxS=Math.max(base.stack+25,...allS)+22;
   const L=70,Rr=30,T=26,B=48,W=1200,H=460;
@@ -1266,45 +1291,79 @@ function drawStudioMap(rows, base){
   el+=`<rect x="${bx1}" y="${by1}" width="${bx2-bx1}" height="${by2-by1}" fill="var(--lime)" opacity="0.07" stroke="var(--lime)" stroke-dasharray="6 4"/>`;
   el+=`<text x="${bx1+8}" y="${by1+17}" font-family="var(--mono)" font-size="11" fill="var(--lime-dim)">your fit zone</text>`;
   rows.forEach(r=>{ const x=xs(r.R),y=ys(r.S),tx=xs(base.reach),ty=ys(Math.max(r.S,base.stack));
-    el+=`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="${STUDIO_VCOLOR[r.verdict]}" stroke-width="1.4" stroke-dasharray="3 3" opacity="0.5" marker-end="url(#studioArr)"/>`; });
+    el+=`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="${STUDIO_VCOLOR[r.clamp?r.clamp.verdict:r.verdict]}" stroke-width="1.4" stroke-dasharray="3 3" opacity="0.5" marker-end="url(#studioArr)"/>`; });
   Object.entries(STUDIO_BASELINES).forEach(([k,bl])=>{ const me=k===studioBaseKey;
     const x=xs(me?base.reach:bl.reach), y=ys(me?base.stack:bl.stack);
     el+=`<circle cx="${x}" cy="${y}" r="${me?7:5}" fill="${me?'var(--text)':'var(--faint)'}"/>`;
     el+=`<text x="${x+10}" y="${y-(me?9:-16)}" font-family="var(--mono)" font-size="${me?12:10}" fill="${me?'var(--text)':'var(--faint)'}" font-weight="${me?600:400}">${bl.name.split(' ')[0]}${me?' ◀ baseline':''}</text>`; });
+  if(base.clampS != null){ // the baseline's REAL bars: frame dot + its measured spacer stack
+    const fx=xs(base.reach), fy=ys(base.stack), cx=xs(base.clampR), cy=ys(base.clampS);
+    el+=`<line x1="${fx}" y1="${fy}" x2="${cx}" y2="${cy}" stroke="var(--text)" stroke-width="1.4" stroke-dasharray="2 3" opacity="0.7"/>`;
+    el+=`<rect x="${cx-5.5}" y="${cy-5.5}" width="11" height="11" transform="rotate(45 ${cx} ${cy})" fill="var(--bg)" stroke="var(--text)" stroke-width="2.2"/>`;
+    el+=`<text x="${cx+13}" y="${cy+4}" font-family="var(--mono)" font-size="11" fill="var(--text)" font-weight="600">your bars today (frame +${base.spacers}mm spacers)</text>`;
+  }
   rows.forEach(r=>{ const x=xs(r.R),y=ys(r.S);
-    el+=`<circle cx="${x}" cy="${y}" r="7.5" fill="${STUDIO_VCOLOR[r.verdict]}" stroke="var(--bg)" stroke-width="2"/>`;
-    el+=`<text x="${x}" y="${y+23}" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="${STUDIO_VCOLOR[r.verdict]}" font-weight="600">${r.size}</text>`; });
+    const v = r.clamp ? r.clamp.verdict : r.verdict;
+    el+=`<circle cx="${x}" cy="${y}" r="7.5" fill="${STUDIO_VCOLOR[v]}" stroke="var(--bg)" stroke-width="2"/>`;
+    el+=`<text x="${x}" y="${y+23}" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="${STUDIO_VCOLOR[v]}" font-weight="600">${r.size}</text>`; });
   el+=`<defs><marker id="studioArr" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0 0 L5 2.5 L0 5 z" fill="var(--lime)"/></marker></defs>`;
   document.getElementById('studioMap').innerHTML=el;
   document.getElementById('studioMapLegend').innerHTML=
-    `<span><span class="sp-swatch" style="background:var(--text)"></span><b>baseline</b></span>
+    `<span><span class="sp-swatch" style="background:var(--text)"></span><b>baseline frame</b></span>
+     ${base.clampS != null ? '<span>◇ <b>your bars today</b> (frame + measured spacers)</span>' : ''}
      <span><span class="sp-swatch" style="background:var(--lime)"></span><b>good fit</b></span>
      <span><span class="sp-swatch" style="background:var(--amber)"></span><b>workable</b></span>
      <span><span class="sp-swatch" style="background:var(--rust)"></span><b>a stretch</b></span>
-     <span>dashed box = fit zone · arrow = stem+spacer move</span>`;
+     <span>dots = published frames · dashed box = fit zone · arrow = stem+spacer move</span>`;
 }
 function drawStudioTable(rows, base, bike){
   const best = studioBestSize(rows);
-  let h = `<tr><th>Size</th><th>Stack/Reach</th><th>Δ reach</th><th>Δ stack</th><th>Stem</th><th>Spacers</th><th>Crank → saddle</th><th>Fit</th></tr>`;
-  rows.forEach(r=>{
-    const stem = r.stemDelta===0 ? "same" : (r.stemDelta<0 ? `${r.stemDelta}mm` : `+${r.stemDelta}mm`);
-    const spc  = r.overTall ? `slam (${r.stackGap>0?'+':''}${r.stackGap})` : (r.spacer>0 ? `+${r.spacer}mm` : "—");
-    const crank = r.crankNum==null ? "—" : r.crankNum;
-    const sad  = (r.saddle && r.saddle>0) ? `${crank} → +${r.saddle}` : `${crank} → —`;
-    h += `<tr class="${r.size===best?'best':''}"><td><b>${r.size}</b></td><td>${r.S}/${r.R}</td>
-      <td class="${r.reachGap<0?'sp-neg':''}">${r.reachGap>0?'+':''}${r.reachGap}</td>
-      <td class="${r.stackGap<0?'sp-neg':''}">${r.stackGap>0?'+':''}${r.stackGap}</td>
-      <td>${stem}</td>
-      <td style="color:${r.spacer>0?'var(--lime)':'var(--faint)'}">${spc}</td>
-      <td>${sad}</td>
-      <td style="color:${STUDIO_VCOLOR[r.verdict]}"><span class="sp-dot" style="background:${STUDIO_VCOLOR[r.verdict]}"></span>${r.verdict}</td></tr>`;
-  });
+  const clampMode = rows.length && rows[0].clamp;
+  const STEER_COLOR = { ok:"var(--lime)", verify:"var(--amber)", over:"var(--red)" };
+  let h, note;
+  if(clampMode){
+    h = `<tr><th>Size</th><th>Frame stack/reach</th><th>Δ frame reach</th><th>Δ frame stack</th><th>Spacers TOTAL → bars at</th><th>Stem vs today's</th><th>Crank → saddle</th><th>Fit</th></tr>`;
+    rows.forEach(r=>{
+      const c = r.clamp;
+      const spc = c.slamGap>0
+        ? `<span style="color:var(--red)">slam — bars still +${c.slamGap} high</span>`
+        : `<span style="color:${STEER_COLOR[c.steerer]}">${c.spacersTotal}mm → ${base.clampS}${c.steerer==='verify'?' ⚠':(c.steerer==='over'?' ✗':'')}</span>`;
+      const stem = c.stemDeltaClamp===0 ? "≈ same" : `${Math.abs(c.stemDeltaClamp)}mm ${c.stemDeltaClamp<0?'shorter':'longer'}`;
+      const crank = r.crankNum==null ? "—" : r.crankNum;
+      const sad  = (r.saddle && r.saddle>0) ? `${crank} → +${r.saddle}` : `${crank} → —`;
+      h += `<tr class="${r.size===best?'best':''}"><td><b>${r.size}</b></td><td>${r.S}/${r.R}</td>
+        <td class="${r.reachGap<0?'sp-neg':''}">${r.reachGap>0?'+':''}${r.reachGap}</td>
+        <td class="${r.stackGap<0?'sp-neg':''}">${r.stackGap>0?'+':''}${r.stackGap}</td>
+        <td>${spc}</td>
+        <td>${stem}</td>
+        <td>${sad}</td>
+        <td style="color:${STUDIO_VCOLOR[c.verdict]}"><span class="sp-dot" style="background:${STUDIO_VCOLOR[c.verdict]}"></span>${c.verdict}</td></tr>`;
+    });
+    note = `Best-fit highlighted: <b>${bike.brand} ${bike.model} ${best}</b>. <b>Spacers TOTAL</b> = the full stack this frame needs to put its bars where your <b>${base.name}</b> bars are <i>today</i> (${base.clampS} at the clamp = its published frame + its own ${base.spacers}mm of spacers — included, not hidden). ≤25mm <span style="color:var(--lime)">fine</span> · 26–40mm <span style="color:var(--amber)">⚠ verify the fork's max spacer stack</span> · &gt;40mm <span style="color:var(--red)">✗ beyond typical carbon-steerer limits</span>. <b>Stem vs today's</b> already accounts for the reach the spacers give back (each mm of spacer pulls the bars ~cos(HTA) back); it's relative to whatever stem the ${base.name} runs now. Frame stack/reach are untouched manufacturer numbers. Saddle rule +(172.5 − crank) · tire clearance ${bike.clearance}&nbsp;mm.`;
+  } else {
+    h = `<tr><th>Size</th><th>Stack/Reach</th><th>Δ reach</th><th>Δ stack</th><th>Stem</th><th>Spacers</th><th>Crank → saddle</th><th>Fit</th></tr>`;
+    rows.forEach(r=>{
+      const stem = r.stemDelta===0 ? "same" : (r.stemDelta<0 ? `${r.stemDelta}mm` : `+${r.stemDelta}mm`);
+      const spc  = r.overTall ? `slam (${r.stackGap>0?'+':''}${r.stackGap})` : (r.spacer>0 ? `+${r.spacer}mm` : "—");
+      const crank = r.crankNum==null ? "—" : r.crankNum;
+      const sad  = (r.saddle && r.saddle>0) ? `${crank} → +${r.saddle}` : `${crank} → —`;
+      h += `<tr class="${r.size===best?'best':''}"><td><b>${r.size}</b></td><td>${r.S}/${r.R}</td>
+        <td class="${r.reachGap<0?'sp-neg':''}">${r.reachGap>0?'+':''}${r.reachGap}</td>
+        <td class="${r.stackGap<0?'sp-neg':''}">${r.stackGap>0?'+':''}${r.stackGap}</td>
+        <td>${stem}</td>
+        <td style="color:${r.spacer>0?'var(--lime)':'var(--faint)'}">${spc}</td>
+        <td>${sad}</td>
+        <td style="color:${STUDIO_VCOLOR[r.verdict]}"><span class="sp-dot" style="background:${STUDIO_VCOLOR[r.verdict]}"></span>${r.verdict}</td></tr>`;
+    });
+    note = `Best-fit highlighted: <b>${bike.brand} ${bike.model} ${best}</b>. <b>Published-frames-only comparison</b> — ${base.name==='Journeyer 53' ? 'the Journeyer\'s spacer stack was never measured, so its real bar position is unknown' : 'the sliders are off the baseline\'s published numbers, so there\'s no measured bar position to target'}; the spacers column here is just the frame-stack delta (your current bike's own spacers are NOT included). Switch to the SuperSix or Otso preset for the real-cockpit math. Stem rule ~0.87&nbsp;mm bar-reach / mm stem · saddle rule +(172.5 − crank) · tire clearance ${bike.clearance}&nbsp;mm.`;
+  }
   document.getElementById('studioTable').innerHTML = h;
-  document.getElementById('studioNote').innerHTML =
-    `Best-fit highlighted: <b>${bike.brand} ${bike.model} ${best}</b>. Stem rule ~0.87&nbsp;mm bar-reach / mm stem · saddle rule +(172.5 − crank) when sizing down shortens the crank · tire clearance ${bike.clearance}&nbsp;mm. Sizing down buys agility/standover/short reach, costs bar height (my keep-range ≈569–588 at the clamp), and does not change the descending levers — judge HTA/trail at the size you'd buy.`;
+  document.getElementById('studioNote').innerHTML = note +
+    ` Sizing down buys agility/standover/short reach, costs bar height (my keep-range ≈569–588 at the clamp), and does not change the descending levers — judge HTA/trail at the size you'd buy.`;
 }
 function drawStudioSide(rows, base, bike){
   const r = rows.find(x=>x.size===studioSize) || rows[0];
+  const rv = r.clamp ? r.clamp.verdict : r.verdict;
   const k=0.46, H=380, bbx=210, bby=H-80;
   const bar=(reach,stack)=>[bbx+reach*k, bby-stack*k];
   const [bxB,byB]=bar(base.reach,base.stack), [bxC,byC]=bar(r.R,r.S);
@@ -1318,18 +1377,24 @@ function drawStudioSide(rows, base, bike){
   let el=`<line x1="80" y1="${bby+25}" x2="1120" y2="${bby+25}" stroke="var(--line2)" stroke-dasharray="4 4"/>`;
   el+=`<circle cx="${bbx}" cy="${bby}" r="7" fill="var(--text)"/><text x="${bbx}" y="${bby+42}" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--faint)">BB</text>`;
   el+=frame(base.reach,base.stack,"var(--text)",1);
-  el+=frame(r.R,r.S,STUDIO_VCOLOR[r.verdict],0.92);
+  el+=frame(r.R,r.S,STUDIO_VCOLOR[rv],0.92);
   el+=`<text x="${bxB+14}" y="${byB-4}" font-family="var(--mono)" font-size="12" fill="var(--text)" font-weight="600">${base.name} — baseline</text>`;
-  el+=`<text x="${bxC+14}" y="${byC+18}" font-family="var(--mono)" font-size="12" fill="${STUDIO_VCOLOR[r.verdict]}" font-weight="600">${bike.brand} ${bike.model} ${r.size}</text>`;
+  el+=`<text x="${bxC+14}" y="${byC+18}" font-family="var(--mono)" font-size="12" fill="${STUDIO_VCOLOR[rv]}" font-weight="600">${bike.brand} ${bike.model} ${r.size}</text>`;
   const gx=Math.max(bxB,bxC)+160;
+  const sLine = r.clamp
+    ? `bars at ${STUDIO_BASELINES[studioBaseKey].clampS}: ${r.clamp.slamGap>0 ? 'slam — still +'+r.clamp.slamGap+' high' : r.clamp.spacersTotal+'mm TOTAL spacers'+(r.clamp.steerer==='verify'?' ⚠':(r.clamp.steerer==='over'?' ✗':''))}`
+    : `Δ stack ${r.stackGap>0?'+':''}${r.stackGap} → ${r.spacer>0?'+'+r.spacer+' spacer':(r.overTall?'slam':'ok')}`;
+  const rLine = r.clamp
+    ? `stem: ${r.clamp.stemDeltaClamp===0?'≈ same as today':Math.abs(r.clamp.stemDeltaClamp)+'mm '+(r.clamp.stemDeltaClamp<0?'shorter':'longer')+' than today'}`
+    : `Δ reach ${r.reachGap>0?'+':''}${r.reachGap} → ${r.stemDelta===0?'same stem':(r.stemDelta+'mm stem')}`;
   el+=`<line x1="${gx}" y1="${byB}" x2="${gx}" y2="${byC}" stroke="var(--lime)" stroke-width="1.5"/>
     <line x1="${gx-5}" y1="${byB}" x2="${gx+5}" y2="${byB}" stroke="var(--lime)"/><line x1="${gx-5}" y1="${byC}" x2="${gx+5}" y2="${byC}" stroke="var(--lime)"/>
-    <text x="${gx+10}" y="${(byB+byC)/2+3}" font-family="var(--mono)" font-size="11" fill="var(--lime)">Δ stack ${r.stackGap>0?'+':''}${r.stackGap} → ${r.spacer>0?'+'+r.spacer+' spacer':(r.overTall?'slam':'ok')}</text>
-    <text x="${gx+10}" y="${(byB+byC)/2+21}" font-family="var(--mono)" font-size="11" fill="var(--rust)">Δ reach ${r.reachGap>0?'+':''}${r.reachGap} → ${r.stemDelta===0?'same stem':(r.stemDelta+'mm stem')}</text>`;
+    <text x="${gx+10}" y="${(byB+byC)/2+3}" font-family="var(--mono)" font-size="11" fill="var(--lime)">${sLine}</text>
+    <text x="${gx+10}" y="${(byB+byC)/2+21}" font-family="var(--mono)" font-size="11" fill="var(--rust)">${rLine}</text>`;
   document.getElementById('studioSide').innerHTML=el;
   document.getElementById('studioSideLegend').innerHTML=
     `<span><span class="sp-swatch" style="background:var(--text)"></span><b>${base.name}</b> (HTA ${base.hta}°, ${base.tire}mm${STUDIO_BASELINES[studioBaseKey].clampS != null ? ' · bars ~'+STUDIO_BASELINES[studioBaseKey].clampS+' w/ '+STUDIO_BASELINES[studioBaseKey].spacers+'mm spacers' : ''})</span>
-     <span><span class="sp-swatch" style="background:${STUDIO_VCOLOR[r.verdict]}"></span><b>${bike.brand} ${bike.model} ${r.size}</b> (HTA ${isNaN(r.hta)?'—':r.hta+'°'}, ${bike.clearance}mm)</span>
+     <span><span class="sp-swatch" style="background:${STUDIO_VCOLOR[rv]}"></span><b>${bike.brand} ${bike.model} ${r.size}</b> (HTA ${isNaN(r.hta)?'—':r.hta+'°'}, ${bike.clearance}mm)</span>
      <span>dots = handlebar position · to scale from the BB</span>`;
 }
 
