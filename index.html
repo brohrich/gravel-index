@@ -415,7 +415,7 @@
 <script>
 // geo rows: [size, stack, reach, STA, HTA, wheelbase, stockCrank]   ('—' = unverified, 'choice' = buyer picks)
 const BIKES = [
-  { brand:"XDS", model:"XLAB GT8", year:"2026", cat:"Race · Value", category:"race",
+  { brand:"XDS", model:"XLAB GT8", year:"2026", dt:["1x","yes","Ships GRX Di2 1x; XDS says the frame has an FD mount and accepts a 2x (up to 48/31) — convertible."], cat:"Race · Value", category:"race",
     frame:"Carbon (Toray T800), UDH", clearance:55, clearanceText:"55 mm (700×45c stock)",
     di2:"yes", crankNote:"165 (XS/S) → 170 (M/L), per size",
     priceNum:3199, priceText:"$3,199 — GRX Di2 1x + power meter + carbon wheels (only build)",
@@ -427,7 +427,7 @@ const BIKES = [
     fit:"1x-only limits top-end road gearing. US support via Jenson USA, Go Grava, Power Meter City (thinner dealer network). Smaller sizes (XS/S) ship 165 mm cranks.",
     sources:[["XDS GT8 (official)","https://xds.co/products/gt8"],["Jenson USA","https://www.jensonusa.com/xds-x-lab-gt8-bike"],["Velo review","https://velo.outsideonline.com/gravel/gravel-gear/xds-x-lab-gt8-review/"]] },
 
-  { brand:"Pinarello", model:"Grevil F7", year:"2025", cat:"Race", category:"race",
+  { brand:"Pinarello", model:"Grevil F7", year:"2025", dt:["1x","yes","Ships GRX Di2 1x (50 mm clearance); takes a 2x front derailleur (clearance drops to 47 mm)."], cat:"Race", category:"race",
     frame:"Toray T900 carbon, Adaptive Seatpost (~10 mm flex)", clearance:50, clearanceText:"50 mm (1x) / 47 mm (2x)",
     di2:"yes", crankNote:"170 mm across sizes 47–55",
     priceNum:7000, priceText:"$7,000 — Grevil F7 Shimano GRX 825 Di2 1x12",
@@ -439,7 +439,7 @@ const BIKES = [
     fit:"MTB-inspired long top tube paired with short stems. Crank is 170 mm across the 47–55 band (only 57.5+ steps up), so sizing down won't drop your crank length. Pinarello size labels vary across sources — confirm at a fit.",
     sources:[["Pinarello Grevil F7 GRX Di2","https://pinarello.com/usa/en/bikes/gravel/competition/new-grevil-f/new-grevil-f7-shimano-grx-825-di2"],["BikeRadar 2025 Grevil F","https://www.bikeradar.com/news/2025-pinarello-grevil-f"]] },
 
-  { brand:"Ridley", model:"ASTR / ASTR RS", year:"2025", cat:"Race", category:"race",
+  { brand:"Ridley", model:"ASTR / ASTR RS", year:"2025", dt:["1x & 2x","yes","Removable FD clamp — runs either; GRX Di2 2x is stock (52 mm 1x / 47 mm 2x)."], cat:"Race", category:"race",
     frame:"Carbon — RS Ultra-HM (~890 g) / ASTR HM (~1,090 g)", clearance:52, clearanceText:"52 mm (1x) / 47 mm (2x)",
     di2:"yes", crankNote:"172.5 mm on every size (XS–M)",
     priceNum:6967, priceText:"~$6,967 (ASTR RS GRX Di2; Ridley US lists EUR — confirm USD)",
@@ -451,7 +451,7 @@ const BIKES = [
     fit:"Long reach for the size (M 406) — you'd likely run a short stem or size to S/XS. Note: crank stays 172.5 mm on ALL sizes, so sizing down does NOT get you a shorter crank here (aftermarket swap if you want one).",
     sources:[["Ridley ASTR (official)","https://www.ridley-bikes.com/en_US/bikes/SBIASTRID023"],["Bikerumor — ASTR RS","https://bikerumor.com/ridley-astr-rs-lightweight-aero-carbon-gravel-race-bike/"],["Velo — 52mm clearance","https://velo.outsideonline.com/gravel/gravel-gear/ridley-astr-rs-fast-gravel-bike-52mm-clearance/"]] },
 
-  { brand:"BMC", model:"Kaius 01", year:"2026", cat:"Race", category:"race",
+  { brand:"BMC", model:"Kaius 01", year:"2026", dt:["1x","no","2026 redesign deleted the FD mount — 1x-only (gained clearance + aero). Prior gen had a 2x option."], cat:"Race", category:"race",
     frame:"High-modulus carbon (2026 gen)", clearance:52, clearanceText:"52 mm",
     di2:"partial", crankNote:"170 (47/51) → 172.5 (54/56), per size",
     priceNum:6199, priceText:"US builds are SRAM AXS; GRX Di2 listed 'compatible' but no confirmed US build",
@@ -463,7 +463,7 @@ const BIKES = [
     fit:"2026 redesign raised trail + lengthened wheelbase for descending stability. Long reach. Size 51 ships a 170 mm crank vs 172.5 on 54/56. STA/wheelbase not yet published.",
     sources:[["GranFondo 2026 review","https://granfondo-cycling.com/bmc-kaius-01-2026-review/"],["BMC US frameset (per-size crank)","https://us.bmc-switzerland.com/products/kaius-01-frs-frames-bmc-26a-000002"],["BikeRadar 2026 Kaius","https://www.bikeradar.com/news/2026-bmc-kaius"]] },
 
-  { brand:"Canyon", model:"Grizl CF", year:"2026", cat:"Adventure", category:"adventure",
+  { brand:"Canyon", model:"Grizl CF", year:"2026", dt:["1x","no","2026 CF reportedly dropped the FD mount to reach 54 mm clearance — 1x-focused (older Grizl ran 2x). Confirm if you need 2x."], cat:"Adventure", category:"adventure",
     frame:"Carbon (CF); frame ~1,110 g (M)", clearance:54, clearanceText:"54 mm (50 mm w/ fenders)",
     di2:"no-us", crankNote:"170 (S) → 172.5 (M/L), per size",
     priceNum:2599, priceText:"No US GRX Di2; US top-Shimano is mechanical GRX. Electronic in US = SRAM Apex AXS",
@@ -475,7 +475,7 @@ const BIKES = [
     fit:"Adventure geometry: taller stack, slacker, longer wheelbase — stable, not a pure racer. Chainstay 435 mm. Smaller sizes (S) ship 170 mm cranks.",
     sources:[["Canyon Grizl lineup","https://www.canyon.com/en-us/gravel-bikes/adventure/grizl/"],["Canyon Grizl CF 8 Di2 (crank spec)","https://www.canyon.com/en-us/gravel-bikes/adventure/grizl/cf/grizl-cf-8-di2/4143.html"],["n minus 1 — 2026 review","https://nminus1bikes.substack.com/p/2026-canyon-grizl-cf-gravel-bike-review"]] },
 
-  { brand:"ENVE", model:"MOG", year:"2025", cat:"Race", category:"race",
+  { brand:"ENVE", model:"MOG", year:"2025", dt:["1x","yes","Ships SRAM XPLR 1x; a removable FD hanger lets you run 2x (~47 mm chainline)."], cat:"Race", category:"race",
     frame:"ENVE M.O.D carbon, T47, fender-compatible (~950 g frame)", clearance:50, clearanceText:"50 mm",
     di2:"no", crankNote:"your choice (165/170/172.5 configurator)",
     priceNum:8250, priceText:"SRAM AXS only — sold as full chassis (frame/fork/bar/stem/post)",
@@ -487,7 +487,7 @@ const BIKES = [
     fit:"Slightly taller stack + 71.25° HTA = confidence on descents while staying fast. Crank is buyer-selected (165/170/172.5) regardless of size, so you can spec whatever you want.",
     sources:[["ENVE MOG (official)","https://enve.com/products/mog"],["MOG specs","https://enve.com/pages/mog-specs"],["MOG Force XPLR (crank options)","https://enve.com/products/mog-foundation-force-xplr"]] },
 
-  { brand:"Allied", model:"Able", year:"2025", cat:"Race", category:"race",
+  { brand:"Allied", model:"Able", year:"2025", dt:["1x","no","Gen-2 Able is 1x-only — no FD mount (the cost of 57 mm clearance + short stays)."], cat:"Race", category:"race",
     frame:"US-made carbon, threaded BB, UDH, internal storage", clearance:57, clearanceText:"57 mm (700×45 min)",
     di2:"no", crankNote:"buyer's choice (custom build)",
     priceNum:6730, priceText:"SRAM / wireless only (1x frame)",
@@ -499,7 +499,7 @@ const BIKES = [
     fit:"Slack 70.5° HTA + 55 mm offset = stable, confident descending. Built to order, so you pick crank length. SRAM/wireless-only is the catch for a Di2 buyer.",
     sources:[["Allied Able (custom build)","https://alliedcycleworks.com/products/able-frameset-custom"],["BikeRadar 2025 Able","https://www.bikeradar.com/news/2025-allied-able"],["Escape Collective review","https://escapecollective.com/2025-allied-able-review-big-tires-for-fast-gravel/"]] },
 
-  { brand:"Lauf", model:"Seigla", year:"2025", cat:"Race", category:"race",
+  { brand:"Lauf", model:"Seigla", year:"2025", dt:["1x","no","1x-only frame — the 73 mm Wide-DUB BB + 57 mm clearance leave no room for a front derailleur."], cat:"Race", category:"race",
     frame:"Carbon; leaf-spring 'Grit' fork on most builds", clearance:57, clearanceText:"57 mm (fits 2.25\" 29er)",
     di2:"no", crankNote:"SRAM Wide DUB — confirm length (no GRX option)",
     priceNum:4790, priceText:"SRAM only — proprietary 73 mm DUB-Wide BB blocks GRX",
@@ -511,7 +511,7 @@ const BIKES = [
     fit:"Short 425 mm chainstays, low/fast position; the Grit fork adds front control on descents. Geo runs TALL (M stack 608) — likely too tall for your 554 target unless you slam it. SRAM-only; crank length unverified.",
     sources:[["Lauf Seigla (official)","https://www.laufcycles.com/product/lauf-seigla"],["Seigla tire clearance","https://www.laufcycles.com/support/seigla-tire-clearance"]] },
 
-  { brand:"Specialized", model:"Crux 5", year:"2026", cat:"Race", category:"race",
+  { brand:"Specialized", model:"Crux 5", year:"2026", dt:["1x","no","New Crux 5 dropped the FD mount the old Crux had (which offered GRX Di2 2x) — now strictly 1x, for 55 mm + 425 mm stays."], cat:"Race", category:"race",
     frame:"FACT carbon (S-Works frame ~789 g)", clearance:55, clearanceText:"55 mm (up from 47); fits 52T ring",
     di2:"no", crankNote:"165 (49/52) → 170 (54/56), per size",
     priceNum:5800, priceText:"New gen is SRAM AXS only. (Any 'GRX Di2 Crux' for sale is the OLD 47 mm frame.)",
@@ -523,7 +523,7 @@ const BIKES = [
     fit:"Pure race/CX platform — low STR, 425 mm chainstays, descending-confident. Crux 5 cranks run 2.5 mm shorter than the old gen: 49/52 ship 165 mm, 54/56 ship 170 mm — so a size-down here also shortens your crank. SRAM-only is the catch.",
     sources:[["Crux 5 Comp (per-size crank spec)","https://www.specialized.com/us/en/crux-5-comp-sram-rival-xplr/p/4294832"],["BikeRadar — 2026 Crux 5","https://www.bikeradar.com/news/2026-specialized-crux-5"]] },
 
-  { brand:"Specialized", model:"Diverge STR", year:"2024", cat:"Endurance", category:"endurance",
+  { brand:"Specialized", model:"Diverge STR", year:"2024", dt:["1x","no","1x-only frame (SWAT downtube storage; no FD mount)."], cat:"Endurance", category:"endurance",
     frame:"FACT 11r carbon, front + rear Future Shock suspension", clearance:47, clearanceText:"47 mm (650b × 2.1\")",
     di2:"no", crankNote:"165 (49) → 170 (52) → 172.5 (54/56), per size",
     priceNum:5500, priceText:"SRAM AXS only",
@@ -535,7 +535,7 @@ const BIKES = [
     fit:"Very tall stack (54 = 593) and relaxed front end; rear Future Shock gives up to 30 mm travel. Likely too tall vs your 554 target. Size 52 ships 170 mm, 54/56 ship 172.5 mm.",
     sources:[["Diverge STR Expert (per-size crank)","https://www.specialized.com/us/en/diverge-str-expert-sram-rival-etap-axs--gx-eagle-axs/p/221357"],["Bikepacking review","https://bikepacking.com/bikes/specialized-diverge-str-review/"]] },
 
-  { brand:"Cervélo", model:"Áspero", year:"2025", cat:"Race", category:"race",
+  { brand:"Cervélo", model:"Áspero", year:"2025", dt:["1x & 2x","yes","Removable FD mount — runs 1x or 2x; ships GRX Di2 1x or GRX 2x."], cat:"Race", category:"race",
     frame:"Carbon, T47 threaded BB, TrailMixer flip-chip fork", clearance:45, clearanceText:"45 mm (650b up to 48 mm)",
     di2:"yes", crankNote:"170 mm across 48–56 (no size-down drop)",
     priceNum:7050, priceText:"$7,050 — Shimano GRX RX825 Di2 1x",
@@ -547,7 +547,7 @@ const BIKES = [
     fit:"TrailMixer flip-chip preserves trail with bigger front tires. Size 51 stack/reach (530/379) is a near-perfect match to your target. Crank is 170 mm on 51/54/56 (only 58+ steps up), so sizing down won't shorten it.",
     sources:[["Cervélo Áspero","https://www.cervelo.com/en-US/bikes/aspero"],["Áspero GRX Di2 (per-size crank)","https://racycles.com/products/cervelo-aspero-grx-rx825-di2-bike"]] },
 
-  { brand:"Cervélo", model:"Áspero-5", year:"2025", cat:"Race", category:"race",
+  { brand:"Cervélo", model:"Áspero-5", year:"2025", dt:["1x","yes","US builds are 1x, but the frame keeps a removable FD mount — 2x-capable."], cat:"Race", category:"race",
     frame:"Carbon (~1,023 g frame), T47, UDH", clearance:45, clearanceText:"45 mm (optimized 40 f / 44 r)",
     di2:"yes", crankNote:"170 mm across 48–56 (no size-down drop)",
     priceNum:8850, priceText:"$8,850 — Shimano GRX RX825 Di2 1x",
@@ -559,7 +559,7 @@ const BIKES = [
     fit:"Aggressive aero position; confident high-speed descending. Size 51 (525/377) is slightly lower/shorter than your target — good for an aggressive size-down. Crank 170 mm on 51/54/56.",
     sources:[["Cervélo Áspero-5","https://www.cervelo.com/en-US/bikes/aspero-5"],["Áspero-5 GRX Di2 (per-size crank)","https://99spokes.com/bikes/cervelo/2026/aspero-5-grx-rx825-di2-1"]] },
 
-  { brand:"Canyon", model:"Grail CFR", year:"2026", cat:"Race · Aero", category:"race",
+  { brand:"Canyon", model:"Grail CFR", year:"2026", dt:["2x","yes","Ships GRX Di2 2x (FD-RX825); SRAM builds in the Grail line are 1x."], cat:"Race · Aero", category:"race",
     frame:"Carbon (CFR layup), frame ~1,033 g", clearance:42, clearanceText:"42 mm rear / 46 mm fork",
     di2:"yes", crankNote:"170 (S) → 172.5 (M/L), per size",
     priceNum:5199, priceText:"GRX RX825 Di2 2x — CFR Di2 $7,099; cheaper CF SLX 8 Di2 $5,199",
@@ -571,7 +571,7 @@ const BIKES = [
     fit:"Composed on fast descents, but very long reach (M 411) and tall-ish stack — you'd likely need the S with a short stem. Size S ships 170 mm crank, M/L ship 172.5 mm.",
     sources:[["Canyon Grail CFR Di2","https://www.canyon.com/en-us/gravel-bikes/race/grail/"],["Grail CF SLX 8 Di2 (crank spec)","https://www.canyon.com/en-us/gravel-bikes/race/grail/cf-slx/grail-cf-slx-8-di2/4474.html"]] },
 
-  { brand:"Ridley", model:"Kanzo Fast", year:"2024", cat:"Race · Aero", category:"race",
+  { brand:"Ridley", model:"Kanzo Fast", year:"2024", dt:["1x","no","Designed around 1x; a Classified PowerShift hub adds 2x-like range from a single ring. No FD mount."], cat:"Race · Aero", category:"race",
     frame:"Aero carbon (~1,190 g frame), D-shaped seatpost", clearance:42, clearanceText:"42 mm front & rear",
     di2:"yes", crankNote:"172.5 mm (172 listed on XS/S — likely spec-sheet artifact)",
     priceNum:null, priceText:"€7,999 — GRX Di2 1x + Classified PowerShift hub (USD unverified)",
@@ -583,7 +583,7 @@ const BIKES = [
     fit:"Long reach for its stack, short wheelbase, 1x aero cockpit. Rotor crank ~172.5 mm across sizes. Size S (563/380) is the size-down option.",
     sources:[["Ridley Kanzo Fast (official)","https://www.ridley-bikes.com/en_US/bikes/SBIKAFRID193"],["BikeRadar first ride","https://www.bikeradar.com/reviews/bikes/gravel-bikes/ridley-kanzo-fast-grx-di2-classified-first-ride-review"]] },
 
-  { brand:"3T", model:"Exploro RaceMax", year:"2024", cat:"Race", category:"race",
+  { brand:"3T", model:"Exploro RaceMax", year:"2024", dt:["1x & 2x","yes","Takes both 1x and 2x (electronic); ships GRX Di2 2x with FD-RX825."], cat:"Race", category:"race",
     frame:"UD carbon, fully internal routing (Integrale)", clearance:46, clearanceText:"46 mm (RaceMax² Italia: 51 mm ✓)",
     di2:"yes", crankNote:"165 (48) → 170 (51) → 172.5 (54/56), per size",
     priceNum:6999, priceText:"$6,999 — Shimano GRX Di2 2x (frameset $3,499)",
@@ -595,7 +595,7 @@ const BIKES = [
     fit:"Road-length fork (compare HTA carefully). Short ~1008 mm wheelbase = quick handling. Crank steps cleanly by size: 48→165, 51→170, 54/56→172.5, so sizing down shortens your crank. Only the pricier Italia variant hits ≥50 mm.",
     sources:[["3T RaceMax GRX Di2 (per-size crank)","https://us.3t.bike/products/racemax-integrale-grx-di2-2x12-700c"],["Excel Sports","https://www.excelsports.com/3t-exploro-racemax-grx-di2-bicycle"]] },
 
-  { brand:"Trek", model:"Checkmate SLR", year:"2025", cat:"Race", category:"race",
+  { brand:"Trek", model:"Checkmate SLR", year:"2025", dt:["1x","yes","Ships 1x (RED XPLR full-mount); Project One offers a 2x build — the frame has FD provision."], cat:"Race", category:"race",
     frame:"800 OCLV carbon + IsoSpeed rear decoupler", clearance:45, clearanceText:"45 mm",
     di2:"no", crankNote:"165 (52) → 170 (54)+, per size",
     priceNum:11999, priceText:"SRAM AXS only (SLR 7/8 builds exist at lower prices)",
@@ -607,7 +607,7 @@ const BIKES = [
     fit:"Low STR (~1.43), very low 80 mm BB drop for stability; IsoSpeed adds rear compliance. Size S (52) ships a 165 mm crank, M (54) ships 170 mm — sizing down shortens the crank. SRAM-only.",
     sources:[["Trek Checkmate (official)","https://www.trekbikes.com/us/en_US/checkmate-gravel-race-bike/"],["GranFondo review","https://granfondo-cycling.com/trek-checkmate-slr-race-gravel-bike-review/"]] },
 
-  { brand:"Factor", model:"Ostro Gravel", year:"2025", cat:"Race · Dream", category:"race",
+  { brand:"Factor", model:"Ostro Gravel", year:"2025", dt:["1x & 2x","yes","Completes ship 1x, but Factor sells a braze-on FD hanger plate so the frame runs 2x."], cat:"Race · Dream", category:"race",
     frame:"Pitch-fiber carbon, UDH (~900 g frame)", clearance:45, clearanceText:"45 mm (700c & 650b)",
     di2:"no", crankNote:"your choice (165/170/172.5 configurator)",
     priceNum:9599, priceText:"SRAM AXS only — no Di2 build offered",
@@ -619,7 +619,7 @@ const BIKES = [
     fit:"Aggressive road-race position, stiff and fast. Crank is buyer's choice at the configurator (165/170/172.5), any size. Size 52 (535/385) sits just under your target. Doesn't qualify if 50 mm + Di2 are hard requirements.",
     sources:[["Factor Ostro Gravel builder","https://factorbikes.com/bike-builder/ostro-gravel-sram-force-xplr-w-power-meter"],["Cyclingnews review","https://www.cyclingnews.com/reviews/factor-ostro-gravel/"]] },
 
-  { brand:"Cannondale", model:"SuperSix EVO SE", year:"2024", cat:"Race · Road-plus", category:"race",
+  { brand:"Cannondale", model:"SuperSix EVO SE", year:"2024", dt:["2x","yes","Ships SRAM Rival AXS 2x (braze-on FD); road-derived frame, could run 1x."], cat:"Race · Road-plus", category:"race",
     frame:"SuperSix EVO CX carbon (BallisTec), Ai offset", clearance:45, clearanceText:"45 mm (ships 700×40c)",
     di2:"no", crankNote:"unverified per size (56 = 172.5 owner-confirmed)",
     priceNum:5200, priceText:"~$5,200 — SRAM Rival eTap AXS 2x only",
@@ -631,7 +631,7 @@ const BIKES = [
     fit:"'OutFront' geometry = high-speed stability with agility; short 422 mm chainstays. Your current bike is essentially this in a 54 — so the 54 (555/384) is your reference fit, the 51 the size-down. Cannondale doesn't publish per-size crank length (confirm with dealer).",
     sources:[["Cannondale SuperSix EVO SE","https://www.cannondale.com/en-us/bikes/road/gravel/supersix-evo-se/supersix-evo-se"],["Size chart","https://www.theproscloset.com/collections/cannondale-supersix-size-chart"]] },
 
-  { brand:"OPEN", model:"WI.DE. 2.0", year:"2024", cat:"Race · All-road", category:"race",
+  { brand:"OPEN", model:"WI.DE. 2.0", year:"2024", dt:["1x","no","1x-by-design — no FD mount; that is what enables 2.4in 650b tires at a narrow Q-factor."], cat:"Race · All-road", category:"race",
     frame:"Carbon frameset (narrow Q-factor), ~1,040 g (M)", clearance:46, clearanceText:"46 mm (700c) / 650b × 2.4\"",
     di2:"no", crankNote:"buyer's choice (frameset)",
     priceNum:8000, priceText:"Frameset $3,200–$4,000; SRAM AXS complete builds only",
@@ -643,7 +643,7 @@ const BIKES = [
     fit:"Short reach (M 370) — pair a longer stem for a race fit. Double-dropped chainstays maximize clearance. Frameset, so you pick crank length. Shines on 650b for big rubber.",
     sources:[["OPEN WI.DE (official)","https://opencycle.com/open-wide"],["CyclingWeekly — WI.DE 2.0","https://www.cyclingweekly.com/products/new-open-wi-de-2-0-takes-gravel-clearances-to-a-whole-new-level-with-provision-for-gargantuan-66mm-tyres"]] },
 
-  { brand:"Giant", model:"Revolt Advanced Pro", year:"2026", cat:"Race · Gravel", category:"race",
+  { brand:"Giant", model:"Revolt Advanced Pro", year:"2026", dt:["2x","yes","Ships SRAM AXS 2x (FD present); the frame also accepts 1x."], cat:"Race · Gravel", category:"race",
     frame:"Advanced-grade composite; D-Fuse SLR seatpost + Contact SLR XR D-Fuse bar; flip-chip dropout; downtube storage", clearance:53, clearanceText:"53 mm (long flip-chip; ~45 mm short)",
     di2:"no-us", crankNote:"170 (XS/S) → 172.5 (M/ML) → 175 (L/XL), per size",
     priceNum:7000, priceText:"No US GRX Di2 — current US builds are SRAM AXS (GRX Di2 has appeared on the Revolt abroad / in prior years)",
@@ -655,7 +655,7 @@ const BIKES = [
     fit:"Tall stack vs your 555 target (S already 570; M/ML run taller still) — expect a low/no-spacer setup. Flip-chip dropout extends wheelbase + clearance. Cranks step 170→172.5→175 by size (size-down to S gets 170 mm; no stock 160/165). GRX Di2 isn't offered on the US Revolt — only SRAM AXS.",
     sources:[["Revolt Advanced Pro 0 (2026)","https://www.giant-bicycles.com/us/revolt-advanced-pro-0"],["Revolt Advanced Pro 1 (2026)","https://www.giant-bicycles.com/us/revolt-advanced-pro-1"],["Revolt Advanced Pro lineup","https://www.giant-bicycles.com/us/bikes-revolt-advanced-pro"],["BikeRadar — Revolt Advanced Pro 0","https://www.bikeradar.com/reviews/bikes/gravel-bikes/giant-revolt-advanced-pro-0-2025-review"]] },
 
-  { brand:"Giant", model:"Revolt Advanced", year:"2026", cat:"Gravel · All-road", category:"race",
+  { brand:"Giant", model:"Revolt Advanced", year:"2026", dt:["1x & 2x","yes","Same frame ships 2x (GRX) and 1x (Apex) — fully convertible."], cat:"Gravel · All-road", category:"race",
     frame:"Advanced-grade composite; D-Fuse seatpost + Contact SL XR D-Fuse alloy bar; flip-chip dropout; downtube storage", clearance:53, clearanceText:"53 mm (long flip-chip; 45 mm short)",
     di2:"no", crankNote:"170 (XS/S) → 172.5 (M/ML) → 175 (L/XL), per size",
     priceNum:4500, priceText:"No electronic build at this grade in the US — top trim is mechanical GRX RX820 (EU has listed a GRX Di2 Advanced; not US)",
@@ -667,7 +667,7 @@ const BIKES = [
     fit:"Shares the Advanced Pro's geometry (tall S 570 stack vs your 555 target). Top US build is mechanical GRX 820 — electronic shifting isn't offered at this grade domestically. Cranks 170→172.5→175 by size; no stock 160/165.",
     sources:[["Revolt Advanced 0 (2026)","https://www.giant-bicycles.com/us/revolt-advanced-0"],["Revolt Advanced lineup","https://www.giant-bicycles.com/us/bikes-revolt-advanced"],["Revolt Advanced 1 (geometry/spec)","https://www.giant-bicycles.com/us/revolt-advanced-1"]] },
 
-  { brand:"Giant", model:"Revolt X Advanced Pro", year:"2024", cat:"Adventure · Suspension", category:"adventure",
+  { brand:"Giant", model:"Revolt X Advanced Pro", year:"2024", dt:["1x","no","Revolt X deleted the FD mount (unlike the standard Revolt) — 1x-only."], cat:"Adventure · Suspension", category:"adventure",
     frame:"Advanced-grade composite + 40 mm-travel gravel suspension fork (Fox 32 TC / RockShox Rudy XPLR by trim)", clearance:53, clearanceText:"53 mm (long flip-chip; 45 mm short)",
     di2:"no", crankNote:"170 (XS/S) → 172.5 (M/ML) → 175 (L/XL), per size",
     priceNum:7500, priceText:"SRAM AXS only (1x) — no GRX Di2 offered; likely sold-through/discontinued for 2026 (confirm dealer stock)",
@@ -679,7 +679,7 @@ const BIKES = [
     fit:"40 mm fork + flip-chip = the calmest-descending Revolt, but it's ~9.5 kg and 1x SRAM AXS only (no Di2). Suspension lowers/slackens the front vs the rigid Revolt (S stack 560 is closer to your 555 target). Cranks 170→172.5→175; no stock 160/165. Newest model year is 2024 — verify it's still in stock.",
     sources:[["Revolt X Advanced Pro 0 (2024)","https://www.giant-bicycles.com/us/revolt-x-advanced-pro-0"],["Revolt X Advanced Pro 1","https://www.giant-bicycles.com/us/revolt-x-advanced-pro-1"],["Revolt X Advanced Pro 2","https://www.giant-bicycles.com/us/revolt-x-advanced-pro-2"],["GranFondo — Revolt X review","https://granfondo-cycling.com/giant-revolt-x-review/"]] },
 
-  { brand:"Orbea", model:"Terra", year:"2026", cat:"Race · All-road", category:"race",
+  { brand:"Orbea", model:"Terra", year:"2026", dt:["1x & 2x","yes","Same OMR frame ships GRX Di2 2x or SRAM XPLR 1x — your pick at MyO."], cat:"Race · All-road", category:"race",
     frame:"OMR carbon, UDH, LOCKR downtube storage; 27.2 mm round post (dropper-ready)", clearance:50, clearanceText:"50 mm (45 mm w/ fenders); 700c-only this gen",
     di2:"yes", crankNote:"MyO buyer's choice (GRX RX820: 160/165/170/172.5/175)",
     priceNum:3699, priceText:"$3,699 — Terra M20TEAM GRX RX825 Di2 2x12 (MyO; up to M20iTEAM $5,999)",
@@ -691,7 +691,7 @@ const BIKES = [
     fit:"Long-reach + slack-HTA modern geo (short-stem philosophy you already like). S stack 558 ≈ your 555 target with reach +13 → slightly shorter stem. MyO lets you spec 160/165 cranks directly — the cleanest path to your short-crank goal. Exact MyO crank set + per-size stock crank unverified (configurator is JS-gated).",
     sources:[["Orbea Terra (2025) — BikeRadar (geo/clearance/builds)","https://www.bikeradar.com/news/2025-orbea-terra"],["Bikerumor — Terra update","https://bikerumor.com/orbea-updates-its-do-it-all-terra-gravel-bike/"],["Contender Bicycles — US Terra builds/pricing","https://contenderbicycles.com/collections/orbea-terra"]] },
 
-  { brand:"Wilier", model:"Rave SLR ID2", year:"2026", cat:"Race · Aero", category:"race",
+  { brand:"Wilier", model:"Rave SLR ID2", year:"2026", dt:["1x","no","1x-only by design — no FD mount (native UDH). The catch on an otherwise top-criteria bike."], cat:"Race · Aero", category:"race",
     frame:"HUS-MOD + LCP carbon (frame ~990 g), F-BAR integrated cockpit, aero seatpost, UDH", clearance:52, clearanceText:"52 mm (fits ~2.1\" MTB)",
     di2:"yes", crankNote:"172.5 stock (1x); 160/165 custom on request — confirm with Wilier USA",
     priceNum:5700, priceText:"$5,700 — GRX Di2 1x13 (Wilier USA; GRX Di2 range $5,700–$8,200; 1x-only)",
@@ -703,7 +703,7 @@ const BIKES = [
     fit:"Aero race geo; M stack 561 ≈ your 555 target, reach 387 (short, grows with the setback aero post). 70.8° HTA + 52 mm = a genuinely calm descender. 1x-only (no 2x GRX). Short cranks aren't stock — Wilier says crank length is customizable on request; confirm 160/165 before ordering.",
     sources:[["Wilier Rave SLR ID2 — Wilier USA (specs/geo/US pricing)","https://usa.wilier.com/products/rave-slr-id2"],["GranFondo — Rave SLR 2025 review","https://granfondo-cycling.com/wilier-rave-slr-2025-review/"],["road.cc — Rave SLR ID2","https://road.cc/content/tech-news/wilier-rave-slr-id2-future-gravel-racing-314519"]] },
 
-  { brand:"Scott", model:"Addict Gravel", year:"2026", cat:"Race", category:"race",
+  { brand:"Scott", model:"Addict Gravel", year:"2026", dt:["1x & 2x","yes","Removable FD plate — runs 1x or 2x; GRX Di2 2x is the Addict Gravel 15."], cat:"Race", category:"race",
     frame:"HMX/HMF carbon (frame ~930 g), Syncros Creston iC integrated cockpit, D-shaped carbon post", clearance:45, clearanceText:"45 mm (40 mm w/ fenders)",
     di2:"yes", crankNote:"unverified per size (172.5 tested; 160/165 via SRAM/GRX — confirm)",
     priceNum:5400, priceText:"$5,400 — Addict Gravel 15, GRX Di2 2x12 (the only Di2 build)",
@@ -715,7 +715,7 @@ const BIKES = [
     fit:"Pure race position, 425 mm chainstays. The GRX Di2 target is met by exactly one build (Addict Gravel 15, $5,400). S 544/378 ≈ your target. Per-size crank length isn't published — don't assume sizing down shortens it; confirm the build sheet with a dealer.",
     sources:[["Scott Addict Gravel 15 (GRX Di2, US)","https://www.scott-sports.com/us/en/product/scott-addict-gravel-15-bike"],["Addict Gravel RC (frame/geo)","https://www.scott-sports.com/us/en/product/scott-addict-gravel-rc-bike"],["road.cc — Addict Gravel review","https://road.cc/offroad/content/review/bikes/scott-addict-gravel-10-gravel-bike-review-14677"]] },
 
-  { brand:"Salsa", model:"Warbird C", year:"2025", cat:"Race · Gravel", category:"race",
+  { brand:"Salsa", model:"Warbird C", year:"2025", dt:["1x & 2x","yes","Frame takes 1x, 2x, mechanical or electronic; some front derailleurs trim tire clearance."], cat:"Race · Gravel", category:"race",
     frame:"Warbird Carbon, Class 5 VRS rear compliance, Waxwing carbon fork, 27.2 mm post", clearance:45, clearanceText:"45 mm 700c (38 w/ fenders); 650b up to 51 mm",
     di2:"no", crankNote:"49→165 · 52.5/54.5→170 · 56→172.5 · 57.5→172.5 · 59/61→175, per size",
     priceNum:4599, priceText:"No GRX Di2 — top electronic is SRAM AXS; GRX is mechanical only",
@@ -727,7 +727,7 @@ const BIKES = [
     fit:"Direct relative of your decisive Salsa rental (Journeyer): calm 70.75° front end across sizes. 54.5 (566/372) is the short-reach/sane-stack template your rental favored; 49 is the only size with a stock 165 crank. Misses the 700c clearance + Di2 targets — best on 650b for big rubber.",
     sources:[["Salsa Warbird C GRX 820 2x (geo/clearance/crank)","https://www.salsacycles.com/products/2025-warbird-c-grx-820-2x"],["Warbird lineup/pricing","https://www.salsacycles.com/collections/warbird"],["Warbird C frameset","https://www.salsacycles.com/products/2024-warbird-c-frameset"]] },
 
-  { brand:"Colnago", model:"G4-X", year:"2026", cat:"Race · Dream", category:"race",
+  { brand:"Colnago", model:"G4-X", year:"2026", dt:["1x & 2x","yes","Native 1x or 2x, mechanical or electronic; the GRX Di2 2x build uses FD-RX820 48/31."], cat:"Race · Dream", category:"race",
     frame:"Monocoque carbon (V4Rs-derived), CC.01 integrated cockpit, T47 BB, UDH", clearance:45, clearanceText:"45 mm (ships 40c Pirelli)",
     di2:"yes", crankNote:"170/172.5/175 stock (no 160/165); frameset = your choice",
     priceNum:5103, priceText:"GRX Di2 825 2x build offered; exact USD unverified (from $5,103; frameset $3,500)",
@@ -739,7 +739,7 @@ const BIKES = [
     fit:"Race position from the V4Rs road frame; constant 71.5° HTA. The 480 (554/380) is a near-exact match to your 555/379 reference; 520 is the up-size. Stock cranks are 170+ (no short option) unless you build from the frameset. A Factor-tier 'heart' pick that, like the Ostro, misses the 50 mm clearance bar.",
     sources:[["Colnago G4-X (official, geo/builds)","https://www.colnago.com/en-us/products/g4-x-bike"],["BikeRadar — Colnago G4-X","https://www.bikeradar.com/news/colnago-g4-x"],["Ra Cycles — G4-X frameset (US $3,500)","https://racycles.com/products/colnago-g4-x-frameset"]] },
 
-  { brand:"Van Rysel", model:"GCR", year:"2025", cat:"Race · Value", category:"race",
+  { brand:"Van Rysel", model:"GCR", year:"2025", dt:["1x","yes","Ships SRAM XPLR 1x; a seat-tube FD boss means it can run 2x."], cat:"Race · Value", category:"race",
     frame:"Carbon (HM at BB/head tube), carbon fork; Decathlon direct", clearance:42, clearanceText:"42 mm (built around 40c)",
     di2:"no", crankNote:"170 (S/M) → 172.5 (L) → 175 (XL); no stock 160/165",
     priceNum:3999, priceText:"SRAM AXS only — Rival AXS $3,999 (often on sale ~$1,999); via decathlon.com",
@@ -751,7 +751,7 @@ const BIKES = [
     fit:"Aggressive race geo (M 552/376). The Rival AXS at ~$1,999 on sale is the value play, but it misses all three locked targets (42 mm, SRAM-only, no short cranks). US via decathlon.com direct (limited distribution; sizes go in/out of stock).",
     sources:[["Van Rysel/Riverside GCR — BikeRadar review (geo/clearance)","https://www.bikeradar.com/reviews/bikes/gravel-bikes/riverside-gcr-force-axs-xplr-review"],["GCR Rival AXS — Decathlon US","https://www.decathlon.com/products/gcr-gravel-carbon-racing-bike-rival-axs-349905"],["GCR Force AXS XPLR — Decathlon US","https://www.decathlon.com/products/carbon-gravel-bike-gcr-sram-force-axs-reynolds-khaki-349969"]] },
 
-  { brand:"ENVE", model:"Fray", year:"2025", cat:"Excluded · All-road", category:"excluded",
+  { brand:"ENVE", model:"Fray", year:"2025", dt:["1x","unv","All-road bike (excluded from gravel use); 2x / FD provision unverified."], cat:"Excluded · All-road", category:"excluded",
     frame:"Carbon all-road chassis (integrated cockpit)", clearance:35, clearanceText:"35 mm (~40 mm w/ 1x)",
     di2:"no", crankNote:"your choice (configurator)",
     priceNum:8750, priceText:"SRAM AXS only — this is an all-road bike, not race gravel",
@@ -763,7 +763,7 @@ const BIKES = [
     fit:"Between the Melee (race road) and MOG (gravel). Included for completeness only — does not meet the gravel use case.",
     sources:[["ENVE Fray (official)","https://enve.com/collections/fray"]] },
 
-  { brand:"Allied", model:"BC40", year:"2024", cat:"Excluded · XC MTB", category:"excluded",
+  { brand:"Allied", model:"BC40", year:"2024", dt:["1x","na","XC mountain bike (excluded) — 1x."], cat:"Excluded · XC MTB", category:"excluded",
     frame:"Carbon XC mountain bike — 120 mm travel, 29\" wheels", clearance:61, clearanceText:"n/a — 29\" MTB tires up to 2.4\"",
     di2:"no", crankNote:"n/a (MTB)",
     priceNum:6835, priceText:"XC MTB builds (SRAM Eagle / Shimano XT-XTR) — NOT a gravel bike",
@@ -787,6 +787,18 @@ function crankDisp(c){
   if(c==="—"||c==="?"||c==="unverified") return "unverified";
   return c+" mm";
 }
+// dt = [stock, 2x-capable, note]   2x-capable: yes|no|unv|na
+function dtBadge(dt){
+  if(!dt) return "";
+  const stock = dt[0], cap = dt[1];
+  if(cap==="na") return stock;
+  if(cap==="no") return stock+"-only";
+  if(cap==="unv") return stock+" · 2x?";
+  if(stock==="2x") return "2x (1x ok)";
+  if(stock.indexOf("&")>=0) return "1x & 2x";
+  return stock+" · 2x-ready";
+}
+function dtClass(dt){ return dt && dt[1]==="no" ? "warn" : ""; }
 // Compare a frame's PUBLISHED stack/reach to the rider's reference fit box (t.stack / t.reach).
 // reachGap/stackGap are in the same published mm as every bike's spec sheet.
 const STEM_K = 0.87; // ~horizontal fraction of a stem's length
@@ -918,6 +930,7 @@ function render(){
         <span class="badge ${di2Class[b.di2]}">${di2Label[b.di2]}</span>
         ${b.weight?`<span class="badge">${b.weight} kg</span>`:''}
         <span class="badge">cranks: ${b.crankNote.split(',')[0]}</span>
+        ${b.dt?`<span class="badge ${dtClass(b.dt)}">⛓ ${dtBadge(b.dt)}</span>`:''}
       </div>
       <button class="cmp-btn${state.compare.has(idx)?' on':''}" onclick="event.stopPropagation();toggleCompare(${idx})">${state.compare.has(idx)?'✓ In compare':'+ Compare'}</button>
       <div class="card-foot">
@@ -965,6 +978,7 @@ function openModal(idx){
           <div class="kv"><div class="k">Tire clearance</div><div class="v" style="color:var(--${clearClass(b.clearance)==='lime'?'lime':clearClass(b.clearance)==='amber'?'amber':'rust'})">${b.clearanceText}</div></div>
           <div class="kv"><div class="k">Electronic build</div><div class="v">${fmtPrice(b)}</div></div>
           <div class="kv"><div class="k">Cranks by size</div><div class="v" style="font-size:12px">${b.crankNote}</div></div>
+          ${b.dt?`<div class="kv"><div class="k">Drivetrain (1x / 2x)</div><div class="v" style="font-size:12px"><b style="color:var(--${b.dt[1]==='no'?'amber':b.dt[1]==='yes'?'lime':'muted'})">${dtBadge(b.dt)}</b> — ${b.dt[2]}</div></div>`:''}
           <div class="kv"><div class="k">Frame</div><div class="v" style="font-size:12px">${b.frame}</div></div>
           <div class="kv"><div class="k">Weight</div><div class="v" style="font-size:12px">${b.weightText}</div></div>
         </div>
